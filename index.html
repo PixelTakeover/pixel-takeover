@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel Takeover</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: white;
+}
+
+header {
+  text-align: center;
+  padding: 25px 15px 15px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: 3px;
+}
+
+.subtitle {
+  margin-top: 8px;
+  font-size: 15px;
+  opacity: .8;
+}
+
+.info {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+  padding: 15px;
+  font-size: 16px;
+}
+
+#canvasWrapper {
+  width: 100%;
+  overflow: auto;
+  padding: 15px;
+}
+
+#pixelCanvas {
+  display: grid;
+  grid-template-columns: repeat(30, 22px);
+  grid-auto-rows: 22px;
+  gap: 1px;
+  width: max-content;
+  margin: auto;
+  background: #333;
+  padding: 1px;
+}
+
+.pixel {
+  width: 22px;
+  height: 22px;
+  background: #222;
+  border: 1px solid #444;
+  cursor: pointer;
+}
+
+.pixel:hover {
+  background: #555;
+}
+
+.pixel.selected {
+  background: #fff;
+}
+
+.pixel.claimed {
+  background: #777;
+  cursor: not-allowed;
+}
+
+.controls {
+  text-align: center;
+  padding: 20px;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#claimButton {
+  background: white;
+  color: #111;
+}
+
+#claimButton:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+.note {
+  text-align: center;
+  padding: 0 20px 30px;
+  font-size: 13px;
+  opacity: .65;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>PIXEL TAKEOVER</h1>
+  <div class="subtitle">45 DAYS. ONE GIANT CANVAS.</div>
+</header>
+
+<div class="info">
+  <div>💲 $1 = 1 PIXEL</div>
+  <div>Selected: <strong id="selectedCount">0</strong></div>
+  <div>Total: $<strong id="totalPrice">0</strong></div>
+</div>
+
+<div id="canvasWrapper">
+  <div id="pixelCanvas"></div>
+</div>
+
+<div class="controls">
+  <button id="claimButton" disabled>
+    Continue With Selected Pixels
+  </button>
+</div>
+
+<div class="note">
+  Select available pixels to create your space on the growing Pixel Takeover canvas.
+</div>
+
+<script>
+/*
+==================================================
+PIXEL TAKEOVER
+SUPABASE CONNECTION
+==================================================
+
+We will add your Supabase information here next.
+Do NOT put your service-role key here.
+Only the public/anon key belongs in a website.
+*/
+
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+/*
+==================================================
+BASIC PIXEL CANVAS
+==================================================
+*/
+
+const canvas = document.getElementById("pixelCanvas");
+const selectedCount = document.getElementById("selectedCount");
+const totalPrice = document.getElementById("totalPrice");
+const claimButton = document.getElementById("claimButton");
+
+const GRID_WIDTH = 30;
+const GRID_HEIGHT = 20;
+
+const selectedPixels = new Set();
+const claimedPixels = new Set();
+
+function pixelKey(x, y) {
+  return `${x},${y}`;
+}
+
+function createCanvas() {
+
+  canvas.innerHTML = "";
+
+  for (let y = 0; y < GRID_HEIGHT; y++) {
+
+    for (let x = 0; x < GRID_WIDTH; x++) {
+
+      const pixel = document.createElement("div");
+
+      pixel.className = "pixel";
+
+      pixel.dataset.x = x;
+      pixel.dataset.y = y;
+
+      const key = pixelKey(x, y);
+
+      if (claimedPixels.has(key)) {
+        pixel.classList.add("claimed");
+      }
+
+      pixel.addEventListener("click", () => {
+
+        if (claimedPixels.has(key)) {
+          return;
+        }
+
+        if (selectedPixels.has(key)) {
+          selectedPixels.delete(key);
+          pixel.classList.remove("selected");
+        } else {
+          selectedPixels.add(key);
+          pixel.classList.add("selected");
+        }
+
+        updateSelection();
+
+      });
+
+      canvas.appendChild(pixel);
+    }
+  }
+}
+
+function updateSelection() {
+
+  const count = selectedPixels.size;
+
+  selectedCount.textContent = count;
+  totalPrice.textContent = count;
+
+  claimButton.disabled = count === 0;
+}
+
+claimButton.addEventListener("click", () => {
+
+  if (selectedPixels.size === 0) {
+    return;
+  }
+
+  alert(
+    "Great! You selected " +
+    selectedPixels.size +
+    " pixels.\n\n" +
+    "The next step will connect this selection to payment and the design editor."
+  );
+
+});
+
+createCanvas();
+updateSelection();
+
+</script>
+
+</body>
+</html>
