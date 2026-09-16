@@ -1,57 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Design Your Pixels - Pixel Takeover</title>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Pixel Takeover - Design Your Pixels</title>
 
 <style>
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  padding: 20px;
   font-family: Arial, sans-serif;
   background: #111;
   color: white;
-  text-align: center;
 }
 
-header {
-  padding: 25px 15px 10px;
+.container {
+  max-width: 700px;
+  margin: auto;
 }
 
 h1 {
-  margin: 0;
-  font-size: 30px;
-  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .subtitle {
-  margin-top: 10px;
-  opacity: .8;
+  text-align: center;
+  color: #bbb;
+  margin-bottom: 25px;
 }
 
-#selectedInfo {
-  margin: 20px;
-  font-size: 18px;
-}
-
-.editor {
-  width: 92%;
-  max-width: 700px;
-  margin: 20px auto;
+.card {
+  background: #1c1c1c;
   padding: 20px;
-  background: #222;
-  border-radius: 12px;
+  border-radius: 15px;
+  margin-bottom: 20px;
 }
 
 label {
   display: block;
-  text-align: left;
-  margin-bottom: 8px;
+  margin-top: 15px;
+  margin-bottom: 7px;
   font-weight: bold;
 }
 
@@ -60,9 +58,10 @@ textarea,
 select {
   width: 100%;
   padding: 12px;
-  margin-bottom: 20px;
   border-radius: 8px;
-  border: none;
+  border: 1px solid #555;
+  background: #2a2a2a;
+  color: white;
   font-size: 16px;
 }
 
@@ -71,75 +70,106 @@ textarea {
   resize: vertical;
 }
 
-.colorRow {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.colorBox {
-  flex: 1;
-  text-align: left;
-}
-
 input[type="color"] {
-  width: 100%;
-  height: 55px;
+  height: 50px;
   padding: 4px;
   cursor: pointer;
 }
 
 input[type="range"] {
   padding: 0;
-  cursor: pointer;
+}
+
+input[type="file"] {
+  background: #2a2a2a;
+}
+
+#pixelCount {
+  color: #00ff99;
+  font-weight: bold;
 }
 
 #preview {
   position: relative;
-  margin: 25px auto;
   width: 100%;
-  min-height: 250px;
+  min-height: 280px;
+  margin: 25px auto;
+  padding: 15px;
   border: 2px dashed #666;
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #ffffff;
+  background: #080808;
+}
+
+#pixelPreview {
+  display: grid;
+  gap: 1px;
+  width: min(90vw, 500px);
+  max-width: 100%;
+  margin: auto;
+  background: #333;
+  padding: 2px;
+  overflow: hidden;
+
+  --pixel-bg: #ffffff;
+}
+
+.previewPixel {
+  aspect-ratio: 1 / 1;
+  min-width: 8px;
+  min-height: 8px;
+}
+
+.previewPixel.selected {
+  background: var(--pixel-bg, #ffffff);
+}
+
+.previewPixel.empty {
+  background: #111111;
+  opacity: 0.25;
 }
 
 #previewImage {
-  max-width: 90%;
-  max-height: 220px;
-  display: none;
+  position: absolute;
+  max-width: 70%;
+  max-height: 70%;
   object-fit: contain;
+  display: none;
+  pointer-events: none;
+  z-index: 5;
 }
 
 #previewMessage {
   position: absolute;
-  max-width: 90%;
+  max-width: 80%;
   word-wrap: break-word;
-  font-size: 28px;
+  text-align: center;
   font-weight: bold;
   pointer-events: none;
+  z-index: 6;
 }
 
-#previewPlaceholder {
-  color: #777;
+.buttonRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 button {
+  flex: 1;
+  padding: 15px;
   border: none;
-  border-radius: 8px;
-  padding: 14px 24px;
-  font-size: 16px;
+  border-radius: 10px;
+  font-size: 17px;
   font-weight: bold;
   cursor: pointer;
-  margin: 5px;
 }
 
 #saveButton {
-  background: white;
+  background: #00ff99;
   color: #111;
 }
 
@@ -148,332 +178,576 @@ button {
   color: white;
 }
 
-.note {
-  padding: 10px 25px 30px;
-  font-size: 13px;
-  opacity: .7;
+button:hover {
+  opacity: 0.85;
 }
+
+.smallText {
+  color: #aaa;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
 </style>
+
 </head>
 
 <body>
 
-<header>
+<div class="container">
 
-<h1>DESIGN YOUR PIXELS</h1>
+  <h1>Design Your Pixels</h1>
 
-<div class="subtitle">
-Make the space you claimed yours.
-</div>
-
-</header>
-
-<div id="selectedInfo">
-Pixels selected: <strong id="pixelCount">0</strong>
-</div>
-
-<div class="editor">
-
-<label for="title">
-Design Title
-</label>
-
-<input
-type="text"
-id="title"
-placeholder="Give your creation a name"
->
-
-<label for="message">
-Your Message
-</label>
-
-<textarea
-id="message"
-placeholder="Add your message, business name, idea, artwork, or anything you want."
-></textarea>
+  <div class="subtitle">
+    Make your space yours.
+  </div>
 
 
-<div class="colorRow">
+  <div class="card">
 
-<div class="colorBox">
+    <h2>
+      Your Selection:
+      <span id="pixelCount">0</span> Pixels
+    </h2>
 
-<label for="backgroundColor">
-Background Color
-</label>
-
-<input
-type="color"
-id="backgroundColor"
-value="#ffffff"
->
-
-</div>
+    <p>
+      Your selected pixels will appear in the preview below.
+    </p>
 
 
-<div class="colorBox">
+    <label for="designTitle">
+      Design Title
+    </label>
 
-<label for="textColor">
-Message Color
-</label>
-
-<input
-type="color"
-id="textColor"
-value="#111111"
->
-
-</div>
-
-</div>
+    <input
+      type="text"
+      id="designTitle"
+      placeholder="Give your design a name"
+    >
 
 
-<label for="textSize">
-Message Size
-</label>
+    <label for="message">
+      Your Message
+    </label>
 
-<input
-type="range"
-id="textSize"
-min="12"
-max="60"
-value="28"
->
+    <textarea
+      id="message"
+      placeholder="Type something..."
+    ></textarea>
 
 
-<label for="image">
-Upload Your Design
-</label>
+    <label for="backgroundColor">
+      Pixel Background Color
+    </label>
 
-<input
-type="file"
-id="image"
-accept="image/*"
->
-
-
-<div id="preview">
-
-<div id="previewPlaceholder">
-Your design preview will appear here
-</div>
-
-<img
-id="previewImage"
-alt="Design preview"
->
-
-<div id="previewMessage"></div>
-
-</div>
+    <input
+      type="color"
+      id="backgroundColor"
+      value="#ffffff"
+    >
 
 
-<button id="saveButton">
-Save My Design
-</button>
+    <label for="messageColor">
+      Text Color
+    </label>
 
-<button id="backButton">
-Go Back
-</button>
+    <input
+      type="color"
+      id="messageColor"
+      value="#000000"
+    >
 
-</div>
 
-<div class="note">
-Your design will become part of the growing Pixel Takeover canvas.
+    <label for="fontFamily">
+      Font
+    </label>
+
+    <select id="fontFamily">
+
+      <option value="Arial">
+        Arial
+      </option>
+
+      <option value="Verdana">
+        Verdana
+      </option>
+
+      <option value="Georgia">
+        Georgia
+      </option>
+
+      <option value="Times New Roman">
+        Times New Roman
+      </option>
+
+      <option value="Courier New">
+        Courier New
+      </option>
+
+      <option value="Impact">
+        Impact
+      </option>
+
+      <option value="Trebuchet MS">
+        Trebuchet MS
+      </option>
+
+    </select>
+
+
+    <label for="messageSize">
+      Text Size:
+      <span id="sizeValue">28</span>px
+    </label>
+
+    <input
+      type="range"
+      id="messageSize"
+      min="10"
+      max="100"
+      value="28"
+    >
+
+
+    <label for="designImage">
+      Upload Your Design
+    </label>
+
+    <input
+      type="file"
+      id="designImage"
+      accept="image/*"
+    >
+
+    <div class="smallText">
+      You can upload a logo, artwork, photo, or other image.
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>Live Preview</h2>
+
+    <p>
+      This shows the actual area you selected.
+    </p>
+
+    <div id="preview">
+
+      <div id="pixelPreview"></div>
+
+      <img
+        id="previewImage"
+        alt="Your uploaded design"
+      >
+
+      <div id="previewMessage"></div>
+
+    </div>
+
+  </div>
+
+
+  <div class="buttonRow">
+
+    <button
+      id="backButton"
+      type="button"
+    >
+      Go Back
+    </button>
+
+    <button
+      id="saveButton"
+      type="button"
+    >
+      Save My Design
+    </button>
+
+  </div>
+
 </div>
 
 
 <script>
 
+/* ---------------------------------
+   READ SELECTED PIXELS
+---------------------------------- */
+
 const params =
-new URLSearchParams(window.location.search);
+  new URLSearchParams(window.location.search);
 
 const pixelData =
-params.get("pixels");
+  params.get("pixels");
 
 let selectedPixels = [];
 
 if (pixelData) {
 
-try {
+  try {
 
-selectedPixels =
-JSON.parse(
-decodeURIComponent(pixelData)
-);
+    selectedPixels =
+      JSON.parse(
+        decodeURIComponent(pixelData)
+      );
 
-} catch (error) {
+  } catch (error) {
 
-console.error(
-"Could not read selected pixels:",
-error
-);
+    console.error(
+      "Could not read selected pixels:",
+      error
+    );
+
+  }
 
 }
 
-}
 
-document.getElementById(
-"pixelCount"
-).textContent =
-selectedPixels.length;
+/* ---------------------------------
+   PAGE ELEMENTS
+---------------------------------- */
 
+const pixelCount =
+  document.getElementById("pixelCount");
+
+const pixelPreview =
+  document.getElementById("pixelPreview");
+
+const designTitle =
+  document.getElementById("designTitle");
 
 const message =
-document.getElementById("message");
+  document.getElementById("message");
 
 const backgroundColor =
-document.getElementById("backgroundColor");
+  document.getElementById("backgroundColor");
 
-const textColor =
-document.getElementById("textColor");
+const messageColor =
+  document.getElementById("messageColor");
 
-const textSize =
-document.getElementById("textSize");
+const fontFamily =
+  document.getElementById("fontFamily");
 
-const preview =
-document.getElementById("preview");
+const messageSize =
+  document.getElementById("messageSize");
 
-const previewMessage =
-document.getElementById("previewMessage");
+const sizeValue =
+  document.getElementById("sizeValue");
 
-const previewPlaceholder =
-document.getElementById("previewPlaceholder");
-
-const imageInput =
-document.getElementById("image");
+const designImage =
+  document.getElementById("designImage");
 
 const previewImage =
-document.getElementById("previewImage");
+  document.getElementById("previewImage");
 
+const previewMessage =
+  document.getElementById("previewMessage");
+
+const saveButton =
+  document.getElementById("saveButton");
+
+const backButton =
+  document.getElementById("backButton");
+
+
+/* ---------------------------------
+   PIXEL COUNT
+---------------------------------- */
+
+pixelCount.textContent =
+  selectedPixels.length;
+
+
+/* ---------------------------------
+   DRAW EXACT PIXEL SELECTION
+---------------------------------- */
+
+function renderPixelPreview() {
+
+  pixelPreview.innerHTML = "";
+
+  if (selectedPixels.length === 0) {
+
+    pixelPreview.style.gridTemplateColumns =
+      "repeat(1, 1fr)";
+
+    return;
+
+  }
+
+
+  const coords =
+    selectedPixels.map(value => {
+
+      const parts =
+        value.split(",").map(Number);
+
+      return {
+        x: parts[0],
+        y: parts[1]
+      };
+
+    });
+
+
+  const minX =
+    Math.min(...coords.map(p => p.x));
+
+  const maxX =
+    Math.max(...coords.map(p => p.x));
+
+  const minY =
+    Math.min(...coords.map(p => p.y));
+
+  const maxY =
+    Math.max(...coords.map(p => p.y));
+
+
+  const width =
+    maxX - minX + 1;
+
+
+  const selectedSet =
+    new Set(selectedPixels);
+
+
+  pixelPreview.style.gridTemplateColumns =
+    `repeat(${width}, 1fr)`;
+
+
+  for (
+    let y = minY;
+    y <= maxY;
+    y++
+  ) {
+
+    for (
+      let x = minX;
+      x <= maxX;
+      x++
+    ) {
+
+      const cell =
+        document.createElement("div");
+
+      cell.className =
+        "previewPixel";
+
+
+      const key =
+        `${x},${y}`;
+
+
+      if (
+        selectedSet.has(key)
+      ) {
+
+        cell.classList.add(
+          "selected"
+        );
+
+      } else {
+
+        cell.classList.add(
+          "empty"
+        );
+
+      }
+
+
+      pixelPreview.appendChild(
+        cell
+      );
+
+    }
+
+  }
+
+}
+
+
+/* ---------------------------------
+   UPDATE LIVE PREVIEW
+---------------------------------- */
 
 function updatePreview() {
 
-preview.style.backgroundColor =
-backgroundColor.value;
+  /* Pixel background */
 
-previewMessage.textContent =
-message.value;
+  pixelPreview.style.setProperty(
+    "--pixel-bg",
+    backgroundColor.value
+  );
 
-previewMessage.style.color =
-textColor.value;
 
-previewMessage.style.fontSize =
-textSize.value + "px";
+  /* Message */
 
-if (
-message.value ||
-previewImage.style.display === "block"
-) {
+  previewMessage.textContent =
+    message.value;
 
-previewPlaceholder.style.display =
-"none";
 
-} else {
+  previewMessage.style.color =
+    messageColor.value;
 
-previewPlaceholder.style.display =
-"block";
+
+  previewMessage.style.fontFamily =
+    fontFamily.value;
+
+
+  previewMessage.style.fontSize =
+    messageSize.value + "px";
+
+
+  sizeValue.textContent =
+    messageSize.value;
 
 }
 
-}
 
+/* ---------------------------------
+   MESSAGE CHANGES
+---------------------------------- */
 
 message.addEventListener(
-"input",
-updatePreview
+  "input",
+  updatePreview
 );
 
+
+/* ---------------------------------
+   BACKGROUND COLOR
+---------------------------------- */
 
 backgroundColor.addEventListener(
-"input",
-updatePreview
+  "input",
+  updatePreview
 );
 
 
-textColor.addEventListener(
-"input",
-updatePreview
+/* ---------------------------------
+   TEXT COLOR
+---------------------------------- */
+
+messageColor.addEventListener(
+  "input",
+  updatePreview
 );
 
 
-textSize.addEventListener(
-"input",
-updatePreview
+/* ---------------------------------
+   FONT
+---------------------------------- */
+
+fontFamily.addEventListener(
+  "change",
+  updatePreview
 );
 
 
-imageInput.addEventListener(
-"change",
-function() {
+/* ---------------------------------
+   FONT SIZE
+---------------------------------- */
 
-const file =
-this.files[0];
-
-if (!file) {
-return;
-}
-
-const reader =
-new FileReader();
-
-reader.onload =
-function(event) {
-
-previewImage.src =
-event.target.result;
-
-previewImage.style.display =
-"block";
-
-updatePreview();
-
-};
-
-reader.readAsDataURL(file);
-
-});
-
-
-document.getElementById(
-"saveButton"
-).addEventListener(
-"click",
-function() {
-
-if (
-!message.value &&
-!imageInput.files[0]
-) {
-
-alert(
-"Please add a message or upload a design first."
+messageSize.addEventListener(
+  "input",
+  updatePreview
 );
 
-return;
 
-}
+/* ---------------------------------
+   IMAGE UPLOAD
+---------------------------------- */
 
-alert(
-"Your design is ready! " +
-selectedPixels.length +
-" pixels are selected."
+designImage.addEventListener(
+  "change",
+  function() {
+
+    const file =
+      designImage.files[0];
+
+    if (!file) {
+
+      previewImage.style.display =
+        "none";
+
+      return;
+
+    }
+
+
+    const reader =
+      new FileReader();
+
+
+    reader.onload =
+      function(event) {
+
+        previewImage.src =
+          event.target.result;
+
+        previewImage.style.display =
+          "block";
+
+      };
+
+
+    reader.readAsDataURL(file);
+
+  }
 );
 
-});
+
+/* ---------------------------------
+   SAVE DESIGN
+---------------------------------- */
+
+saveButton.addEventListener(
+  "click",
+  function() {
+
+    if (
+      selectedPixels.length === 0
+    ) {
+
+      alert(
+        "Please go back and select your pixels first."
+      );
+
+      return;
+
+    }
 
 
-document.getElementById(
-"backButton"
-).addEventListener(
-"click",
-function() {
+    alert(
+      "Your design preview is ready! The next step will connect this design to payment and permanently save it to the Pixel Takeover canvas."
+    );
 
-window.location.href =
-"index.html";
+  }
+);
 
-});
 
+/* ---------------------------------
+   GO BACK
+---------------------------------- */
+
+backButton.addEventListener(
+  "click",
+  function() {
+
+    window.history.back();
+
+  }
+);
+
+
+/* ---------------------------------
+   START
+---------------------------------- */
+
+renderPixelPreview();
 
 updatePreview();
 
