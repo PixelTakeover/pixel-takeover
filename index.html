@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -142,25 +143,13 @@ button {
 </div>
 
 <script>
-/*
-==================================================
-PIXEL TAKEOVER
-SUPABASE CONNECTION
-==================================================
-
-We will add your Supabase information here next.
-Do NOT put your service-role key here.
-Only the public/anon key belongs in a website.
-*/
-
 const SUPABASE_URL = "https://bbnvqmeyivteehsdlptw.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_53qqBIwvkcPpGFlzxHrCWg_SD-LwuWr";
 
-/*
-==================================================
-BASIC PIXEL CANVAS
-==================================================
-*/
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 
 const canvas = document.getElementById("pixelCanvas");
 const selectedCount = document.getElementById("selectedCount");
@@ -175,6 +164,37 @@ const claimedPixels = new Set();
 
 function pixelKey(x, y) {
   return `${x},${y}`;
+}
+
+async function loadClaimedPixels() {
+
+  const { data, error } = await supabaseClient
+    .from("canvas_pixels")
+    .select("x, y")
+    .eq(
+      "campaign_id",
+      (
+        await supabaseClient
+          .from("campaigns")
+          .select("id")
+          .eq("name", "Pixel Takeover")
+          .single()
+      ).data.id
+    )
+    .not("claim_id", "is", null);
+
+  if (error) {
+    console.error("Could not load pixels:", error);
+    return;
+  }
+
+  claimedPixels.clear();
+
+  data.forEach(pixel => {
+    claimedPixels.add(pixelKey(pixel.x, pixel.y));
+  });
+
+  createCanvas();
 }
 
 function createCanvas() {
@@ -213,7 +233,6 @@ function createCanvas() {
         }
 
         updateSelection();
-
       });
 
       canvas.appendChild(pixel);
@@ -238,17 +257,18 @@ claimButton.addEventListener("click", () => {
   }
 
   alert(
-    "Great! You selected " +
+    "You selected " +
     selectedPixels.size +
-    " pixels.\n\n" +
-    "The next step will connect this selection to payment and the design editor."
+    " pixels for $" +
+    selectedPixels.size +
+    "."
   );
 
 });
 
 createCanvas();
 updateSelection();
-
+loadClaimedPixels();
 </script>
 
 </body>
