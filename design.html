@@ -20,7 +20,7 @@ body {
 }
 
 header {
-  padding: 25px 15px 15px;
+  padding: 25px 15px 10px;
 }
 
 h1 {
@@ -40,7 +40,7 @@ h1 {
 }
 
 .editor {
-  width: 90%;
+  width: 92%;
   max-width: 700px;
   margin: 20px auto;
   padding: 20px;
@@ -50,6 +50,7 @@ h1 {
 
 label {
   display: block;
+  text-align: left;
   margin-bottom: 8px;
   font-weight: bold;
 }
@@ -58,15 +59,38 @@ input,
 textarea {
   width: 100%;
   padding: 12px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
   border-radius: 8px;
   border: none;
   font-size: 16px;
 }
 
 textarea {
-  min-height: 120px;
+  min-height: 110px;
   resize: vertical;
+}
+
+#preview {
+  margin: 20px auto;
+  width: 100%;
+  min-height: 180px;
+  border: 2px dashed #666;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #181818;
+}
+
+#preview img {
+  max-width: 100%;
+  max-height: 350px;
+  display: none;
+}
+
+#previewText {
+  color: #777;
 }
 
 button {
@@ -76,6 +100,7 @@ button {
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
+  margin: 5px;
 }
 
 #saveButton {
@@ -84,7 +109,6 @@ button {
 }
 
 #backButton {
-  margin-top: 15px;
   background: #444;
   color: white;
 }
@@ -100,60 +124,79 @@ button {
 <body>
 
 <header>
-  <h1>DESIGN YOUR PIXELS</h1>
-  <div class="subtitle">
-    Make the space you claimed yours.
-  </div>
+
+<h1>DESIGN YOUR PIXELS</h1>
+
+<div class="subtitle">
+Make the space you claimed yours.
+</div>
+
 </header>
 
 <div id="selectedInfo">
-  Pixels selected: <strong id="pixelCount">0</strong>
+Pixels selected: <strong id="pixelCount">0</strong>
 </div>
 
 <div class="editor">
 
-  <label for="title">Design Title</label>
+<label for="title">
+Design Title
+</label>
 
-  <input
-    type="text"
-    id="title"
-    placeholder="Give your creation a name"
-  >
+<input
+type="text"
+id="title"
+placeholder="Give your creation a name"
+>
 
-  <label for="message">Your Message</label>
+<label for="message">
+Your Message
+</label>
 
-  <textarea
-    id="message"
-    placeholder="Add a message, business name, artwork description, or anything you want."
-  ></textarea>
+<textarea
+id="message"
+placeholder="Add your message, business name, idea, artwork, or anything you want."
+></textarea>
 
-  <label for="image">Upload Your Design</label>
+<label for="image">
+Upload Your Design
+</label>
 
-  <input
-    type="file"
-    id="image"
-    accept="image/*"
-  >
+<input
+type="file"
+id="image"
+accept="image/*"
+>
 
-  <button id="saveButton">
-    Save My Design
-  </button>
+<div id="preview">
 
-  <br>
+<div id="previewText">
+Your design preview will appear here
+</div>
 
-  <button id="backButton">
-    Go Back
-  </button>
+<img id="previewImage" alt="Design preview">
+
+</div>
+
+<button id="saveButton">
+Save My Design
+</button>
+
+<button id="backButton">
+Go Back
+</button>
 
 </div>
 
 <div class="note">
-  Your design will eventually become part of the growing Pixel Takeover canvas.
+Your design will become part of the growing Pixel Takeover canvas.
 </div>
 
 <script>
 
-const params = new URLSearchParams(window.location.search);
+const params = new URLSearchParams(
+window.location.search
+);
 
 const pixelData = params.get("pixels");
 
@@ -161,39 +204,118 @@ let selectedPixels = [];
 
 if (pixelData) {
 
-  try {
+try {
 
-    selectedPixels = JSON.parse(
-      decodeURIComponent(pixelData)
-    );
+selectedPixels = JSON.parse(
+decodeURIComponent(pixelData)
+);
 
-  } catch (error) {
+} catch (error) {
 
-    console.error(
-      "Could not read selected pixels:",
-      error
-    );
-
-  }
+console.error(
+"Could not read selected pixels:",
+error
+);
 
 }
 
-document.getElementById("pixelCount").textContent =
-  selectedPixels.length;
+}
 
-document.getElementById("saveButton").addEventListener("click", () => {
+document.getElementById(
+"pixelCount"
+).textContent = selectedPixels.length;
 
-  alert(
-    "Your design editor is working! " +
-    selectedPixels.length +
-    " pixels are selected."
-  );
+
+const imageInput =
+document.getElementById("image");
+
+const previewImage =
+document.getElementById("previewImage");
+
+const previewText =
+document.getElementById("previewText");
+
+
+imageInput.addEventListener(
+"change",
+function() {
+
+const file = this.files[0];
+
+if (!file) {
+return;
+}
+
+const reader = new FileReader();
+
+reader.onload = function(event) {
+
+previewImage.src =
+event.target.result;
+
+previewImage.style.display =
+"block";
+
+previewText.style.display =
+"none";
+
+};
+
+reader.readAsDataURL(file);
 
 });
 
-document.getElementById("backButton").addEventListener("click", () => {
 
-  window.location.href = "index.html";
+document.getElementById(
+"saveButton"
+).addEventListener(
+"click",
+function() {
+
+const title =
+document.getElementById(
+"title"
+).value.trim();
+
+const message =
+document.getElementById(
+"message"
+).value.trim();
+
+const image =
+document.getElementById(
+"image"
+).files[0];
+
+
+if (!title && !message && !image) {
+
+alert(
+"Please add a title, message, or image before saving your design."
+);
+
+return;
+
+}
+
+
+alert(
+"Your design preview is ready! " +
+selectedPixels.length +
+" pixels are selected."
+);
+
+});
+
+
+document.getElementById(
+"backButton"
+).addEventListener(
+"click",
+function() {
+
+window.location.href =
+"index.html";
 
 });
 
