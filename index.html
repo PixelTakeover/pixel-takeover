@@ -256,14 +256,14 @@ claimButton.addEventListener("click", () => {
     return;
   }
 
-  alert(
-    "You selected " +
-    selectedPixels.size +
-    " pixels for $" +
-    selectedPixels.size +
-    "."
+  const pixels = Array.from(selectedPixels);
+
+  const pixelData = encodeURIComponent(
+    JSON.stringify(pixels)
   );
 
+  window.location.href =
+    "design.html?pixels=" + pixelData;
 });
 
 createCanvas();
