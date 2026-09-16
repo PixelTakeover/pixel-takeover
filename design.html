@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Design Your Pixels - Pixel Takeover</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: white;
+  text-align: center;
+}
+
+header {
+  padding: 25px 15px 15px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 30px;
+  letter-spacing: 2px;
+}
+
+.subtitle {
+  margin-top: 10px;
+  opacity: .8;
+}
+
+#selectedInfo {
+  margin: 20px;
+  font-size: 18px;
+}
+
+.editor {
+  width: 90%;
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #222;
+  border-radius: 12px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 18px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#saveButton {
+  background: white;
+  color: #111;
+}
+
+#backButton {
+  margin-top: 15px;
+  background: #444;
+  color: white;
+}
+
+.note {
+  padding: 10px 25px 30px;
+  font-size: 13px;
+  opacity: .7;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>DESIGN YOUR PIXELS</h1>
+  <div class="subtitle">
+    Make the space you claimed yours.
+  </div>
+</header>
+
+<div id="selectedInfo">
+  Pixels selected: <strong id="pixelCount">0</strong>
+</div>
+
+<div class="editor">
+
+  <label for="title">Design Title</label>
+
+  <input
+    type="text"
+    id="title"
+    placeholder="Give your creation a name"
+  >
+
+  <label for="message">Your Message</label>
+
+  <textarea
+    id="message"
+    placeholder="Add a message, business name, artwork description, or anything you want."
+  ></textarea>
+
+  <label for="image">Upload Your Design</label>
+
+  <input
+    type="file"
+    id="image"
+    accept="image/*"
+  >
+
+  <button id="saveButton">
+    Save My Design
+  </button>
+
+  <br>
+
+  <button id="backButton">
+    Go Back
+  </button>
+
+</div>
+
+<div class="note">
+  Your design will eventually become part of the growing Pixel Takeover canvas.
+</div>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+const pixelData = params.get("pixels");
+
+let selectedPixels = [];
+
+if (pixelData) {
+
+  try {
+
+    selectedPixels = JSON.parse(
+      decodeURIComponent(pixelData)
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Could not read selected pixels:",
+      error
+    );
+
+  }
+
+}
+
+document.getElementById("pixelCount").textContent =
+  selectedPixels.length;
+
+document.getElementById("saveButton").addEventListener("click", () => {
+
+  alert(
+    "Your design editor is working! " +
+    selectedPixels.length +
+    " pixels are selected."
+  );
+
+});
+
+document.getElementById("backButton").addEventListener("click", () => {
+
+  window.location.href = "index.html";
+
+});
+
+</script>
+
+</body>
+</html>
