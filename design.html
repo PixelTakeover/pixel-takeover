@@ -56,7 +56,8 @@ label {
 }
 
 input,
-textarea {
+textarea,
+select {
   width: 100%;
   padding: 12px;
   margin-bottom: 20px;
@@ -66,30 +67,64 @@ textarea {
 }
 
 textarea {
-  min-height: 110px;
+  min-height: 100px;
   resize: vertical;
 }
 
-#preview {
-  margin: 20px auto;
+.colorRow {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.colorBox {
+  flex: 1;
+  text-align: left;
+}
+
+input[type="color"] {
   width: 100%;
-  min-height: 180px;
+  height: 55px;
+  padding: 4px;
+  cursor: pointer;
+}
+
+input[type="range"] {
+  padding: 0;
+  cursor: pointer;
+}
+
+#preview {
+  position: relative;
+  margin: 25px auto;
+  width: 100%;
+  min-height: 250px;
   border: 2px dashed #666;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #181818;
+  background: #ffffff;
 }
 
-#preview img {
-  max-width: 100%;
-  max-height: 350px;
+#previewImage {
+  max-width: 90%;
+  max-height: 220px;
   display: none;
+  object-fit: contain;
 }
 
-#previewText {
+#previewMessage {
+  position: absolute;
+  max-width: 90%;
+  word-wrap: break-word;
+  font-size: 28px;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+#previewPlaceholder {
   color: #777;
 }
 
@@ -158,6 +193,54 @@ id="message"
 placeholder="Add your message, business name, idea, artwork, or anything you want."
 ></textarea>
 
+
+<div class="colorRow">
+
+<div class="colorBox">
+
+<label for="backgroundColor">
+Background Color
+</label>
+
+<input
+type="color"
+id="backgroundColor"
+value="#ffffff"
+>
+
+</div>
+
+
+<div class="colorBox">
+
+<label for="textColor">
+Message Color
+</label>
+
+<input
+type="color"
+id="textColor"
+value="#111111"
+>
+
+</div>
+
+</div>
+
+
+<label for="textSize">
+Message Size
+</label>
+
+<input
+type="range"
+id="textSize"
+min="12"
+max="60"
+value="28"
+>
+
+
 <label for="image">
 Upload Your Design
 </label>
@@ -168,15 +251,22 @@ id="image"
 accept="image/*"
 >
 
+
 <div id="preview">
 
-<div id="previewText">
+<div id="previewPlaceholder">
 Your design preview will appear here
 </div>
 
-<img id="previewImage" alt="Design preview">
+<img
+id="previewImage"
+alt="Design preview"
+>
+
+<div id="previewMessage"></div>
 
 </div>
+
 
 <button id="saveButton">
 Save My Design
@@ -192,13 +282,14 @@ Go Back
 Your design will become part of the growing Pixel Takeover canvas.
 </div>
 
+
 <script>
 
-const params = new URLSearchParams(
-window.location.search
-);
+const params =
+new URLSearchParams(window.location.search);
 
-const pixelData = params.get("pixels");
+const pixelData =
+params.get("pixels");
 
 let selectedPixels = [];
 
@@ -206,7 +297,8 @@ if (pixelData) {
 
 try {
 
-selectedPixels = JSON.parse(
+selectedPixels =
+JSON.parse(
 decodeURIComponent(pixelData)
 );
 
@@ -223,8 +315,30 @@ error
 
 document.getElementById(
 "pixelCount"
-).textContent = selectedPixels.length;
+).textContent =
+selectedPixels.length;
 
+
+const message =
+document.getElementById("message");
+
+const backgroundColor =
+document.getElementById("backgroundColor");
+
+const textColor =
+document.getElementById("textColor");
+
+const textSize =
+document.getElementById("textSize");
+
+const preview =
+document.getElementById("preview");
+
+const previewMessage =
+document.getElementById("previewMessage");
+
+const previewPlaceholder =
+document.getElementById("previewPlaceholder");
 
 const imageInput =
 document.getElementById("image");
@@ -232,23 +346,79 @@ document.getElementById("image");
 const previewImage =
 document.getElementById("previewImage");
 
-const previewText =
-document.getElementById("previewText");
+
+function updatePreview() {
+
+preview.style.backgroundColor =
+backgroundColor.value;
+
+previewMessage.textContent =
+message.value;
+
+previewMessage.style.color =
+textColor.value;
+
+previewMessage.style.fontSize =
+textSize.value + "px";
+
+if (
+message.value ||
+previewImage.style.display === "block"
+) {
+
+previewPlaceholder.style.display =
+"none";
+
+} else {
+
+previewPlaceholder.style.display =
+"block";
+
+}
+
+}
+
+
+message.addEventListener(
+"input",
+updatePreview
+);
+
+
+backgroundColor.addEventListener(
+"input",
+updatePreview
+);
+
+
+textColor.addEventListener(
+"input",
+updatePreview
+);
+
+
+textSize.addEventListener(
+"input",
+updatePreview
+);
 
 
 imageInput.addEventListener(
 "change",
 function() {
 
-const file = this.files[0];
+const file =
+this.files[0];
 
 if (!file) {
 return;
 }
 
-const reader = new FileReader();
+const reader =
+new FileReader();
 
-reader.onload = function(event) {
+reader.onload =
+function(event) {
 
 previewImage.src =
 event.target.result;
@@ -256,8 +426,7 @@ event.target.result;
 previewImage.style.display =
 "block";
 
-previewText.style.display =
-"none";
+updatePreview();
 
 };
 
@@ -272,35 +441,21 @@ document.getElementById(
 "click",
 function() {
 
-const title =
-document.getElementById(
-"title"
-).value.trim();
-
-const message =
-document.getElementById(
-"message"
-).value.trim();
-
-const image =
-document.getElementById(
-"image"
-).files[0];
-
-
-if (!title && !message && !image) {
+if (
+!message.value &&
+!imageInput.files[0]
+) {
 
 alert(
-"Please add a title, message, or image before saving your design."
+"Please add a message or upload a design first."
 );
 
 return;
 
 }
 
-
 alert(
-"Your design preview is ready! " +
+"Your design is ready! " +
 selectedPixels.length +
 " pixels are selected."
 );
@@ -318,6 +473,9 @@ window.location.href =
 "index.html";
 
 });
+
+
+updatePreview();
 
 </script>
 
