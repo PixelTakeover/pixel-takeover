@@ -708,11 +708,9 @@ designImage.addEventListener(
 
 saveButton.addEventListener(
   "click",
-  function() {
+  async function() {
 
-    if (
-      selectedPixels.length === 0
-    ) {
+    if (selectedPixels.length === 0) {
 
       alert(
         "Please go back and select your pixels first."
@@ -722,10 +720,101 @@ saveButton.addEventListener(
 
     }
 
+    if (!designTitle.value.trim()) {
 
-    alert(
-      "Your design preview is ready! The next step will connect this design to payment and permanently save it to the Pixel Takeover canvas."
-    );
+      alert(
+        "Please give your design a title."
+      );
+
+      designTitle.focus();
+
+      return;
+
+    }
+
+    saveButton.disabled = true;
+    saveButton.textContent = "Saving...";
+
+    try {
+
+      const designData = {
+
+        title: designTitle.value.trim(),
+
+        message: message.value,
+
+        backgroundColor: backgroundColor.value,
+
+        messageColor: messageColor.value,
+
+        fontFamily: fontFamily.value,
+
+        messageSize: Number(messageSize.value),
+
+        selectedPixels: selectedPixels
+
+      };
+
+
+      const { data, error } =
+        await supabase
+          .from("Pixel_claims")
+          .insert([
+            {
+              campaign_id: c40f5b21-b3a5-45ed-8643-a0b590e0,
+              owner_email: "",
+              design_data: designData
+            }
+          ])
+          .select();
+
+
+      if (error) {
+
+        console.error(
+          "Supabase save error:",
+          error
+        );
+
+        alert(
+          "There was a problem saving your design: " +
+          error.message
+        );
+
+        return;
+
+      }
+
+
+      console.log(
+        "Design saved:",
+        data
+      );
+
+
+      alert(
+        "Your design has been saved!"
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Unexpected error:",
+        error
+      );
+
+      alert(
+        "Something went wrong while saving your design."
+      );
+
+    } finally {
+
+      saveButton.disabled = false;
+      saveButton.textContent =
+        "Save My Design";
+
+    }
 
   }
 );
