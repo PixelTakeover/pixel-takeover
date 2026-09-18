@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Pixel Takeover</title>
 
@@ -18,75 +15,133 @@ content="width=device-width, initial-scale=1.0">
 
 body {
   margin: 0;
-  padding: 20px;
+  font-family: Arial, sans-serif;
   background: #111;
   color: white;
-  font-family: Arial, sans-serif;
+}
+
+header {
   text-align: center;
+  padding: 25px 15px 15px;
 }
 
 h1 {
-  margin-bottom: 5px;
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: 3px;
 }
 
 .subtitle {
-  color: #aaa;
-  margin-bottom: 20px;
+  margin-top: 8px;
+  font-size: 15px;
+  opacity: .8;
+}
+
+.info {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+  padding: 15px;
+  font-size: 16px;
+}
+
+#canvasWrapper {
+  width: 100%;
+  overflow: auto;
+  padding: 15px;
+  touch-action: none;
 }
 
 #pixelCanvas {
   display: grid;
-  grid-template-columns: repeat(30, 1fr);
-  width: min(95vw, 750px);
-  margin: 20px auto;
+
+  grid-template-columns: repeat(100, 7px);
+  grid-template-rows: repeat(100, 7px);
+
   gap: 1px;
+
+  width: max-content;
+  margin: auto;
+
   background: #333;
-  padding: 3px;
+  padding: 2px;
+
+  user-select: none;
+  touch-action: none;
 }
 
 .pixel {
-  aspect-ratio: 1 / 1;
-  background: #eee;
+  width: 7px;
+  height: 7px;
+
+  background: #222;
+
+  border: 1px solid #333;
+
   cursor: pointer;
 }
 
 .pixel:hover {
-  opacity: 0.75;
+  background: #555;
 }
 
 .pixel.selected {
-  background: #00ff99;
+  background: #fff;
 }
 
 .pixel.claimed {
-  background: #555;
+  background: #777;
   cursor: not-allowed;
 }
 
-.info {
-  margin: 15px;
-  font-size: 18px;
-}
-
-.price {
-  font-size: 24px;
-  font-weight: bold;
+.controls {
+  text-align: center;
+  padding: 20px;
 }
 
 button {
-  padding: 15px 25px;
   border: none;
-  border-radius: 10px;
-  background: #00ff99;
-  color: #111;
-  font-size: 17px;
+  border-radius: 8px;
+
+  padding: 14px 24px;
+
+  font-size: 16px;
   font-weight: bold;
+
   cursor: pointer;
 }
 
-button:disabled {
-  opacity: 0.4;
+#claimButton {
+  background: white;
+  color: #111;
+}
+
+#claimButton:disabled {
+  opacity: .4;
   cursor: not-allowed;
+}
+
+#clearButton {
+  background: #444;
+  color: white;
+  margin-left: 8px;
+}
+
+.note {
+  text-align: center;
+  padding: 0 20px 30px;
+
+  font-size: 13px;
+
+  opacity: .65;
+}
+
+.selectionHint {
+  text-align: center;
+  margin: 0 20px 10px;
+  color: #aaa;
+  font-size: 14px;
 }
 
 </style>
@@ -95,41 +150,79 @@ button:disabled {
 
 <body>
 
+<header>
+
 <h1>PIXEL TAKEOVER</h1>
 
 <div class="subtitle">
-  Choose your pixels. Make them yours.
+45 DAYS. ONE GIANT CANVAS.
 </div>
+
+</header>
+
 
 <div class="info">
-  Selected Pixels:
-  <strong id="selectedCount">0</strong>
+
+<div>
+💲 $1 = 1 PIXEL
 </div>
 
-<div class="price">
-  $<span id="totalPrice">0</span>
+<div>
+Selected:
+<strong id="selectedCount">0</strong>
 </div>
+
+<div>
+Total: $
+<strong id="totalPrice">0</strong>
+</div>
+
+</div>
+
+
+<div class="selectionHint">
+
+Tap individual pixels, or drag across an area to select multiple pixels.
+
+</div>
+
+
+<div id="canvasWrapper">
 
 <div id="pixelCanvas"></div>
 
-<button id="claimButton" disabled>
-  Continue With Selected Pixels
+</div>
+
+
+<div class="controls">
+
+<button
+id="claimButton"
+disabled
+type="button"
+>
+Continue With Selected Pixels
 </button>
+
+<button
+id="clearButton"
+type="button"
+>
+Clear Selection
+</button>
+
+</div>
+
+
+<div class="note">
+
+Select the exact area you want to design.
+Your finished design will appear in the same location on the giant canvas.
+
+</div>
 
 
 <script>
-
-/* ---------------------------------
-   SETTINGS
----------------------------------- */
-
-const GRID_WIDTH = 30;
-const GRID_HEIGHT = 20;
-
-
-/* ---------------------------------
-   ELEMENTS
----------------------------------- */
 
 const canvas =
   document.getElementById("pixelCanvas");
@@ -143,16 +236,26 @@ const totalPrice =
 const claimButton =
   document.getElementById("claimButton");
 
+const clearButton =
+  document.getElementById("clearButton");
 
-/* ---------------------------------
-   PIXEL DATA
----------------------------------- */
+
+const GRID_WIDTH = 100;
+
+const GRID_HEIGHT = 100;
+
 
 const selectedPixels =
   new Set();
 
+
 const claimedPixels =
   new Set();
+
+
+let isDragging = false;
+
+let dragMode = "select";
 
 
 function pixelKey(x, y) {
@@ -161,103 +264,6 @@ function pixelKey(x, y) {
 
 }
 
-
-/* ---------------------------------
-   CREATE CANVAS
----------------------------------- */
-
-function createCanvas() {
-
-  canvas.innerHTML = "";
-
-  for (
-    let y = 0;
-    y < GRID_HEIGHT;
-    y++
-  ) {
-
-    for (
-      let x = 0;
-      x < GRID_WIDTH;
-      x++
-    ) {
-
-      const pixel =
-        document.createElement("div");
-
-      pixel.className =
-        "pixel";
-
-      pixel.dataset.x = x;
-      pixel.dataset.y = y;
-
-      const key =
-        pixelKey(x, y);
-
-
-      if (
-        claimedPixels.has(key)
-      ) {
-
-        pixel.classList.add(
-          "claimed"
-        );
-
-      }
-
-
-      pixel.addEventListener(
-        "click",
-        function() {
-
-          if (
-            claimedPixels.has(key)
-          ) {
-
-            return;
-
-          }
-
-
-          if (
-            selectedPixels.has(key)
-          ) {
-
-            selectedPixels.delete(key);
-
-            pixel.classList.remove(
-              "selected"
-            );
-
-          } else {
-
-            selectedPixels.add(key);
-
-            pixel.classList.add(
-              "selected"
-            );
-
-          }
-
-
-          updateSelection();
-
-        }
-      );
-
-
-      canvas.appendChild(pixel);
-
-    }
-
-  }
-
-}
-
-
-/* ---------------------------------
-   UPDATE SELECTION
----------------------------------- */
 
 function updateSelection() {
 
@@ -276,32 +282,214 @@ function updateSelection() {
 }
 
 
-/* ---------------------------------
-   SEND PIXELS TO DESIGN PAGE
----------------------------------- */
+function selectPixel(x, y) {
 
-claimButton.addEventListener("click", function() {
+  const key =
+    pixelKey(x, y);
 
-  if (selectedPixels.size === 0) {
+  if (claimedPixels.has(key)) {
     return;
   }
 
-  const pixels = Array.from(selectedPixels);
+  const pixel =
+    document.querySelector(
+      `.pixel[data-key="${key}"]`
+    );
 
-  const pixelData = encodeURIComponent(
-    JSON.stringify(pixels)
-  );
-
-  window.location.href =
-    "design.html?pixels=" + pixelData;
-
-});
+  if (!pixel) {
+    return;
+  }
 
 
-  
-/* ---------------------------------
-   START
----------------------------------- */
+  if (dragMode === "select") {
+
+    selectedPixels.add(key);
+
+    pixel.classList.add("selected");
+
+  } else {
+
+    selectedPixels.delete(key);
+
+    pixel.classList.remove("selected");
+
+  }
+
+
+  updateSelection();
+
+}
+
+
+function createCanvas() {
+
+  canvas.innerHTML = "";
+
+  const fragment =
+    document.createDocumentFragment();
+
+
+  for (
+    let y = 0;
+    y < GRID_HEIGHT;
+    y++
+  ) {
+
+    for (
+      let x = 0;
+      x < GRID_WIDTH;
+      x++
+    ) {
+
+      const pixel =
+        document.createElement("div");
+
+      const key =
+        pixelKey(x, y);
+
+
+      pixel.className =
+        "pixel";
+
+      pixel.dataset.x =
+        x;
+
+      pixel.dataset.y =
+        y;
+
+      pixel.dataset.key =
+        key;
+
+
+      if (
+        claimedPixels.has(key)
+      ) {
+
+        pixel.classList.add(
+          "claimed"
+        );
+
+      }
+
+
+      pixel.addEventListener(
+        "pointerdown",
+        function(event) {
+
+          if (
+            claimedPixels.has(key)
+          ) {
+
+            return;
+
+          }
+
+
+          event.preventDefault();
+
+          isDragging = true;
+
+
+          dragMode =
+            selectedPixels.has(key)
+              ? "remove"
+              : "select";
+
+
+          selectPixel(x, y);
+
+        }
+      );
+
+
+      pixel.addEventListener(
+        "pointerenter",
+        function() {
+
+          if (!isDragging) {
+            return;
+          }
+
+          selectPixel(x, y);
+
+        }
+      );
+
+
+      fragment.appendChild(pixel);
+
+    }
+
+  }
+
+
+  canvas.appendChild(fragment);
+
+}
+
+
+document.addEventListener(
+  "pointerup",
+  function() {
+
+    isDragging = false;
+
+  }
+);
+
+
+clearButton.addEventListener(
+  "click",
+  function() {
+
+    selectedPixels.clear();
+
+    document
+      .querySelectorAll(".pixel.selected")
+      .forEach(function(pixel) {
+
+        pixel.classList.remove(
+          "selected"
+        );
+
+      });
+
+    updateSelection();
+
+  }
+);
+
+
+claimButton.addEventListener(
+  "click",
+  function() {
+
+    if (
+      selectedPixels.size === 0
+    ) {
+
+      return;
+
+    }
+
+
+    const pixels =
+      Array.from(selectedPixels);
+
+
+    const pixelData =
+      encodeURIComponent(
+        JSON.stringify(pixels)
+      );
+
+
+    window.location.href =
+      "design.html?pixels=" +
+      pixelData;
+
+  }
+);
+
 
 createCanvas();
 
@@ -310,5 +498,4 @@ updateSelection();
 </script>
 
 </body>
-
 </html>
