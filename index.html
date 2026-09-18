@@ -1,278 +1,326 @@
 <!DOCTYPE html>
 <html lang="en">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <title>Pixel Takeover</title>
 
 <style>
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  padding: 20px;
   background: #111;
   color: white;
-}
-
-header {
+  font-family: Arial, sans-serif;
   text-align: center;
-  padding: 25px 15px 15px;
 }
 
 h1 {
-  margin: 0;
-  font-size: 32px;
-  letter-spacing: 3px;
+  margin-bottom: 5px;
 }
 
 .subtitle {
-  margin-top: 8px;
-  font-size: 15px;
-  opacity: .8;
-}
-
-.info {
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-  flex-wrap: wrap;
-  padding: 15px;
-  font-size: 16px;
-}
-
-#canvasWrapper {
-  width: 100%;
-  overflow: auto;
-  padding: 15px;
+  color: #aaa;
+  margin-bottom: 20px;
 }
 
 #pixelCanvas {
   display: grid;
-  grid-template-columns: repeat(30, 22px);
-  grid-auto-rows: 22px;
+  grid-template-columns: repeat(30, 1fr);
+  width: min(95vw, 750px);
+  margin: 20px auto;
   gap: 1px;
-  width: max-content;
-  margin: auto;
   background: #333;
-  padding: 1px;
+  padding: 3px;
 }
 
 .pixel {
-  width: 22px;
-  height: 22px;
-  background: #222;
-  border: 1px solid #444;
+  aspect-ratio: 1 / 1;
+  background: #eee;
   cursor: pointer;
 }
 
 .pixel:hover {
-  background: #555;
+  opacity: 0.75;
 }
 
 .pixel.selected {
-  background: #fff;
+  background: #00ff99;
 }
 
 .pixel.claimed {
-  background: #777;
+  background: #555;
   cursor: not-allowed;
 }
 
-.controls {
-  text-align: center;
-  padding: 20px;
+.info {
+  margin: 15px;
+  font-size: 18px;
+}
+
+.price {
+  font-size: 24px;
+  font-weight: bold;
 }
 
 button {
+  padding: 15px 25px;
   border: none;
-  border-radius: 8px;
-  padding: 14px 24px;
-  font-size: 16px;
+  border-radius: 10px;
+  background: #00ff99;
+  color: #111;
+  font-size: 17px;
   font-weight: bold;
   cursor: pointer;
 }
 
-#claimButton {
-  background: white;
-  color: #111;
-}
-
-#claimButton:disabled {
-  opacity: .4;
+button:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
-.note {
-  text-align: center;
-  padding: 0 20px 30px;
-  font-size: 13px;
-  opacity: .65;
-}
 </style>
+
 </head>
 
 <body>
 
-<header>
-  <h1>PIXEL TAKEOVER</h1>
-  <div class="subtitle">45 DAYS. ONE GIANT CANVAS.</div>
-</header>
+<h1>PIXEL TAKEOVER</h1>
+
+<div class="subtitle">
+  Choose your pixels. Make them yours.
+</div>
 
 <div class="info">
-  <div>💲 $1 = 1 PIXEL</div>
-  <div>Selected: <strong id="selectedCount">0</strong></div>
-  <div>Total: $<strong id="totalPrice">0</strong></div>
+  Selected Pixels:
+  <strong id="selectedCount">0</strong>
 </div>
 
-<div id="canvasWrapper">
-  <div id="pixelCanvas"></div>
+<div class="price">
+  $<span id="totalPrice">0</span>
 </div>
 
-<div class="controls">
-  <button id="claimButton" disabled>
-    Continue With Selected Pixels
-  </button>
-</div>
+<div id="pixelCanvas"></div>
 
-<div class="note">
-  Select available pixels to create your space on the growing Pixel Takeover canvas.
-</div>
+<button id="claimButton" disabled>
+  Continue With Selected Pixels
+</button>
+
 
 <script>
-const SUPABASE_URL = "https://bbnvqmeyivteehsdlptw.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_53qqBIwvkcPpGFlzxHrCWg_SD-LwuWr";
 
-const supabaseClient = supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
-const canvas = document.getElementById("pixelCanvas");
-const selectedCount = document.getElementById("selectedCount");
-const totalPrice = document.getElementById("totalPrice");
-const claimButton = document.getElementById("claimButton");
+/* ---------------------------------
+   SETTINGS
+---------------------------------- */
 
 const GRID_WIDTH = 30;
 const GRID_HEIGHT = 20;
 
-const selectedPixels = new Set();
-const claimedPixels = new Set();
+
+/* ---------------------------------
+   ELEMENTS
+---------------------------------- */
+
+const canvas =
+  document.getElementById("pixelCanvas");
+
+const selectedCount =
+  document.getElementById("selectedCount");
+
+const totalPrice =
+  document.getElementById("totalPrice");
+
+const claimButton =
+  document.getElementById("claimButton");
+
+
+/* ---------------------------------
+   PIXEL DATA
+---------------------------------- */
+
+const selectedPixels =
+  new Set();
+
+const claimedPixels =
+  new Set();
+
 
 function pixelKey(x, y) {
+
   return `${x},${y}`;
+
 }
 
-async function loadClaimedPixels() {
 
-  const { data, error } = await supabaseClient
-    .from("canvas_pixels")
-    .select("x, y")
-    .eq(
-      "campaign_id",
-      (
-        await supabaseClient
-          .from("campaigns")
-          .select("id")
-          .eq("name", "Pixel Takeover")
-          .single()
-      ).data.id
-    )
-    .not("claim_id", "is", null);
-
-  if (error) {
-    console.error("Could not load pixels:", error);
-    return;
-  }
-
-  claimedPixels.clear();
-
-  data.forEach(pixel => {
-    claimedPixels.add(pixelKey(pixel.x, pixel.y));
-  });
-
-  createCanvas();
-}
+/* ---------------------------------
+   CREATE CANVAS
+---------------------------------- */
 
 function createCanvas() {
 
   canvas.innerHTML = "";
 
-  for (let y = 0; y < GRID_HEIGHT; y++) {
+  for (
+    let y = 0;
+    y < GRID_HEIGHT;
+    y++
+  ) {
 
-    for (let x = 0; x < GRID_WIDTH; x++) {
+    for (
+      let x = 0;
+      x < GRID_WIDTH;
+      x++
+    ) {
 
-      const pixel = document.createElement("div");
+      const pixel =
+        document.createElement("div");
 
-      pixel.className = "pixel";
+      pixel.className =
+        "pixel";
 
       pixel.dataset.x = x;
       pixel.dataset.y = y;
 
-      const key = pixelKey(x, y);
+      const key =
+        pixelKey(x, y);
 
-      if (claimedPixels.has(key)) {
-        pixel.classList.add("claimed");
+
+      if (
+        claimedPixels.has(key)
+      ) {
+
+        pixel.classList.add(
+          "claimed"
+        );
+
       }
 
-      pixel.addEventListener("click", () => {
 
-        if (claimedPixels.has(key)) {
-          return;
+      pixel.addEventListener(
+        "click",
+        function() {
+
+          if (
+            claimedPixels.has(key)
+          ) {
+
+            return;
+
+          }
+
+
+          if (
+            selectedPixels.has(key)
+          ) {
+
+            selectedPixels.delete(key);
+
+            pixel.classList.remove(
+              "selected"
+            );
+
+          } else {
+
+            selectedPixels.add(key);
+
+            pixel.classList.add(
+              "selected"
+            );
+
+          }
+
+
+          updateSelection();
+
         }
+      );
 
-        if (selectedPixels.has(key)) {
-          selectedPixels.delete(key);
-          pixel.classList.remove("selected");
-        } else {
-          selectedPixels.add(key);
-          pixel.classList.add("selected");
-        }
-
-        updateSelection();
-      });
 
       canvas.appendChild(pixel);
+
     }
+
   }
+
 }
+
+
+/* ---------------------------------
+   UPDATE SELECTION
+---------------------------------- */
 
 function updateSelection() {
 
-  const count = selectedPixels.size;
+  const count =
+    selectedPixels.size;
 
-  selectedCount.textContent = count;
-  totalPrice.textContent = count;
+  selectedCount.textContent =
+    count;
 
-  claimButton.disabled = count === 0;
+  totalPrice.textContent =
+    count;
+
+  claimButton.disabled =
+    count === 0;
+
 }
 
-claimButton.addEventListener("click", () => {
 
-  if (selectedPixels.size === 0) return;
+/* ---------------------------------
+   SEND PIXELS TO DESIGN PAGE
+---------------------------------- */
 
-  const pixels = Array.from(selectedPixels);
+claimButton.addEventListener(
+  "click",
+  function() {
 
-  sessionStorage.setItem(
-    "pixelTakeoverSelection",
-    JSON.stringify(pixels)
-  );
+    if (
+      selectedPixels.size === 0
+    ) {
 
-  alert(
-    "I saved " + pixels.length + " pixels."
-  );
+      return;
 
-  window.location.href = "design.html";
+    }
 
-});
+
+    const pixels =
+      Array.from(selectedPixels);
+
+
+    const pixelData =
+      encodeURIComponent(
+        JSON.stringify(pixels)
+      );
+
+
+    window.location.href =
+      "design.html?pixels=" +
+      pixelData;
+
+  }
+);
+
+
+/* ---------------------------------
+   START
+---------------------------------- */
 
 createCanvas();
+
 updateSelection();
-loadClaimedPixels();
+
 </script>
 
 </body>
+
 </html>
