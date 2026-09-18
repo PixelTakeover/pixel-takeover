@@ -280,27 +280,25 @@ function updateSelection() {
    SEND PIXELS TO DESIGN PAGE
 ---------------------------------- */
 
-claimButton.addEventListener(
-  "click",
-  function() {
+claimButton.addEventListener("click", function() {
 
-    if (selectedPixels.size === 0) {
-      return;
-    }
-
-    const pixels =
-      Array.from(selectedPixels);
-
-    sessionStorage.setItem(
-      "pixelTakeoverSelection",
-      JSON.stringify(pixels)
-    );
-
-    window.location.href =
-      "design.html";
-
+  if (selectedPixels.size === 0) {
+    return;
   }
-);
+
+  const pixels = Array.from(selectedPixels);
+
+  const pixelData = encodeURIComponent(
+    JSON.stringify(pixels)
+  );
+
+  window.location.href =
+    "design.html?pixels=" + pixelData;
+
+});
+
+
+  
 /* ---------------------------------
    START
 ---------------------------------- */
