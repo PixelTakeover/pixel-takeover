@@ -284,33 +284,23 @@ claimButton.addEventListener(
   "click",
   function() {
 
-    if (
-      selectedPixels.size === 0
-    ) {
-
+    if (selectedPixels.size === 0) {
       return;
-
     }
-
 
     const pixels =
       Array.from(selectedPixels);
 
-
-    const pixelData =
-      encodeURIComponent(
-        JSON.stringify(pixels)
-      );
-
+    sessionStorage.setItem(
+      "pixelTakeoverSelection",
+      JSON.stringify(pixels)
+    );
 
     window.location.href =
-      "design.html?pixels=" +
-      pixelData;
+      "design.html";
 
   }
 );
-
-
 /* ---------------------------------
    START
 ---------------------------------- */
