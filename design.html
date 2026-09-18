@@ -659,29 +659,29 @@ Save My Design
 ---------------------------------- */
 
 
-  const savedPixels =
-  sessionStorage.getItem(
-    "pixelTakeoverSelection"
-  );
+const params = new URLSearchParams(
+  window.location.search
+);
+
+const pixelData = params.get("pixels");
 
 let selectedPixels = [];
 
-if (savedPixels) {
+if (pixelData) {
 
   try {
 
-    selectedPixels =
-      JSON.parse(savedPixels);
+    selectedPixels = JSON.parse(pixelData);
 
     console.log(
-      "Pixels received:",
+      "PIXELS RECEIVED:",
       selectedPixels
     );
 
   } catch (error) {
 
     console.error(
-      "Could not read saved pixels:",
+      "PIXEL ERROR:",
       error
     );
 
