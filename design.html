@@ -379,38 +379,28 @@ button:hover {
    READ SELECTED PIXELS
 ---------------------------------- */
 
-const params =
-  new URLSearchParams(window.location.search);
-
-const pixelData =
-  params.get("pixels");
+const savedPixels =
+  sessionStorage.getItem("pixelTakeoverSelection");
 
 let selectedPixels = [];
 
-if (pixelData) {
+if (savedPixels) {
 
   try {
 
-    selectedPixels =
-      JSON.parse(pixelData);
+    selectedPixels = JSON.parse(savedPixels);
+
+    console.log(
+      "Pixels received:",
+      selectedPixels
+    );
 
   } catch (error) {
 
-    try {
-
-      selectedPixels =
-        JSON.parse(
-          decodeURIComponent(pixelData)
-        );
-
-    } catch (secondError) {
-
-      console.error(
-        "Could not read selected pixels:",
-        secondError
-      );
-
-    }
+    console.error(
+      "Could not read saved pixels:",
+      error
+    );
 
   }
 
