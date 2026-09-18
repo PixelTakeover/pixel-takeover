@@ -256,13 +256,17 @@ claimButton.addEventListener("click", () => {
 
   const pixels = Array.from(selectedPixels);
 
-  sessionStorage.setItem( 
+  sessionStorage.setItem(
     "pixelTakeoverSelection",
     JSON.stringify(pixels)
   );
 
+  alert(
+    "I saved " + pixels.length + " pixels."
+  );
+
   window.location.href = "design.html";
-  
+
 });
 
 createCanvas();
