@@ -50,34 +50,34 @@ h1 {
   width: 100%;
   overflow: auto;
   padding: 15px;
-  touch-action: none;
+  touch-action: pan-x pan-y;
 }
 
 #pixelCanvas {
   display: grid;
 
-  grid-template-columns: repeat(100, 7px);
-  grid-template-rows: repeat(100, 7px);
+  grid-template-columns: repeat(100, 18px);
+  grid-template-rows: repeat(100, 18px);
 
-  gap: 1px;
+  gap: 2px;
 
   width: max-content;
   margin: auto;
 
   background: #333;
-  padding: 2px;
+  padding: 3px;
 
   user-select: none;
   touch-action: none;
 }
 
 .pixel {
-  width: 7px;
-  height: 7px;
+  width: 18px;
+  height: 18px;
 
   background: #222;
 
-  border: 1px solid #333;
+  border: 1px solid #444;
 
   cursor: pointer;
 }
@@ -87,7 +87,7 @@ h1 {
 }
 
 .pixel.selected {
-  background: #fff;
+  background: white;
 }
 
 .pixel.claimed {
@@ -140,7 +140,9 @@ button {
 .selectionHint {
   text-align: center;
   margin: 0 20px 10px;
+
   color: #aaa;
+
   font-size: 14px;
 }
 
@@ -240,21 +242,23 @@ const clearButton =
   document.getElementById("clearButton");
 
 
-const GRID_WIDTH = 100;
+/* CURRENT TEST CANVAS */
 
+const GRID_WIDTH = 100;
 const GRID_HEIGHT = 100;
 
 
-const selectedPixels =
-  new Set();
+/* SELECTED PIXELS */
+
+const selectedPixels = new Set();
 
 
-const claimedPixels =
-  new Set();
+/* PIXELS THAT ARE ALREADY SOLD */
+
+const claimedPixels = new Set();
 
 
 let isDragging = false;
-
 let dragMode = "select";
 
 
@@ -281,6 +285,8 @@ function updateSelection() {
 
 }
 
+
+/* SELECT OR REMOVE A PIXEL */
 
 function selectPixel(x, y) {
 
@@ -320,6 +326,8 @@ function selectPixel(x, y) {
 
 }
 
+
+/* CREATE THE CANVAS */
 
 function createCanvas() {
 
@@ -372,6 +380,8 @@ function createCanvas() {
       }
 
 
+      /* TOUCH / MOUSE START */
+
       pixel.addEventListener(
         "pointerdown",
         function(event) {
@@ -390,10 +400,17 @@ function createCanvas() {
           isDragging = true;
 
 
-          dragMode =
+          if (
             selectedPixels.has(key)
-              ? "remove"
-              : "select";
+          ) {
+
+            dragMode = "remove";
+
+          } else {
+
+            dragMode = "select";
+
+          }
 
 
           selectPixel(x, y);
@@ -402,31 +419,114 @@ function createCanvas() {
       );
 
 
-      claimButton.addEventListener(
-  "click",
-  function(event) {
+      /* DRAG ACROSS PIXELS */
 
-    event.preventDefault();
+      pixel.addEventListener(
+        "pointerenter",
+        function() {
 
-    if (selectedPixels.size === 0) {
-      alert("Please select at least one pixel.");
-      return;
+          if (!isDragging) {
+            return;
+          }
+
+          selectPixel(x, y);
+
+        }
+      );
+
+
+      fragment.appendChild(pixel);
+
     }
 
-    const pixels = Array.from(selectedPixels);
+  }
 
-    const pixelData = encodeURIComponent(
-      JSON.stringify(pixels)
-    );
 
-    window.location.href =
-      "./design.html?pixels=" + pixelData;
+  canvas.appendChild(fragment);
+
+}
+
+
+/* END DRAG */
+
+document.addEventListener(
+  "pointerup",
+  function() {
+
+    isDragging = false;
 
   }
 );
 
 
+/* CLEAR */
+
+clearButton.addEventListener(
+  "click",
+  function() {
+
+    selectedPixels.clear();
+
+    document
+      .querySelectorAll(".pixel.selected")
+      .forEach(function(pixel) {
+
+        pixel.classList.remove(
+          "selected"
+        );
+
+      });
+
+    updateSelection();
+
+  }
+);
+
+
+/* CONTINUE TO DESIGN PAGE */
+
+claimButton.addEventListener(
+  "click",
+  function(event) {
+
+    event.preventDefault();
+
+
+    if (
+      selectedPixels.size === 0
+    ) {
+
+      alert(
+        "Please select at least one pixel."
+      );
+
+      return;
+
+    }
+
+
+    const pixels =
+      Array.from(selectedPixels);
+
+
+    const pixelData =
+      encodeURIComponent(
+        JSON.stringify(pixels)
+      );
+
+
+    window.location.href =
+      "./design.html?pixels=" +
+      pixelData;
+
+  }
+);
+
+
+/* START */
+
 createCanvas();
+
 updateSelection();
 
 </script>
