@@ -1,29 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>Pixel Takeover - Design Your Pixels</title>
-
-
-<!-- EXTRA FONTS -->
-
-<link rel="preconnect"
-href="https://fonts.googleapis.com">
-
-<link rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
-
-<link
-href="https://fonts.googleapis.com/css2?family=Bangers&family=Cinzel:wght@400;700;900&family=Creepster&family=Dancing+Script:wght@400;700&family=Lobster&family=Nosifer&family=Pacifico&family=Permanent+Marker&family=Press+Start+2P&display=swap"
-rel="stylesheet">
-
+<title>Pixel Takeover</title>
 
 <style>
 
@@ -31,1124 +13,489 @@ rel="stylesheet">
   box-sizing: border-box;
 }
 
-
 body {
-
   margin: 0;
-
-  padding: 20px;
-
-  background: #111;
-
-  color: white;
-
   font-family: Arial, sans-serif;
-
+  background: #111;
+  color: white;
 }
 
-
-.container {
-
-  width: 100%;
-
-  max-width: 750px;
-
-  margin: auto;
-
+header {
+  text-align: center;
+  padding: 25px 15px 15px;
 }
-
 
 h1 {
-
-  text-align: center;
-
-  margin-bottom: 5px;
-
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: 3px;
 }
-
 
 .subtitle {
-
-  text-align: center;
-
-  color: #aaa;
-
-  margin-bottom: 25px;
-
+  margin-top: 8px;
+  font-size: 15px;
+  opacity: .8;
 }
 
-
-.card {
-
-  background: #1c1c1c;
-
-  padding: 20px;
-
-  border-radius: 15px;
-
-  margin-bottom: 20px;
-
-}
-
-
-label {
-
-  display: block;
-
-  margin-top: 16px;
-
-  margin-bottom: 7px;
-
-  font-weight: bold;
-
-}
-
-
-input,
-textarea,
-select {
-
-  width: 100%;
-
-  padding: 12px;
-
-  border-radius: 8px;
-
-  border: 1px solid #555;
-
-  background: #2a2a2a;
-
-  color: white;
-
-  font-size: 16px;
-
-}
-
-
-textarea {
-
-  min-height: 90px;
-
-  resize: vertical;
-
-}
-
-
-input[type="color"] {
-
-  height: 50px;
-
-  padding: 4px;
-
-  cursor: pointer;
-
-}
-
-
-input[type="range"] {
-
-  padding: 0;
-
-}
-
-
-input[type="file"] {
-
-  padding: 10px;
-
-}
-
-
-#pixelCount {
-
-  color: #00ff99;
-
-}
-
-
-#preview {
-
-  position: relative;
-
-  width: 100%;
-
-  min-height: 330px;
-
-  margin-top: 20px;
-
-  padding: 20px;
-
-  border: 2px dashed #666;
-
-  border-radius: 12px;
-
+.info {
   display: flex;
-
-  align-items: center;
-
   justify-content: center;
-
-  overflow: hidden;
-
-  background: #080808;
-
+  gap: 25px;
+  flex-wrap: wrap;
+  padding: 15px;
+  font-size: 16px;
 }
 
+#canvasWrapper {
+  width: 100%;
+  overflow: auto;
+  padding: 15px;
+  touch-action: none;
+}
 
-#pixelPreview {
-
+#pixelCanvas {
   display: grid;
+
+  grid-template-columns: repeat(100, 7px);
+  grid-template-rows: repeat(100, 7px);
 
   gap: 1px;
 
-  width: min(90vw, 550px);
-
-  max-width: 100%;
-
+  width: max-content;
   margin: auto;
 
+  background: #333;
   padding: 2px;
 
-  background: #333;
-
-  --pixel-bg: #ffffff;
-
+  user-select: none;
+  touch-action: none;
 }
 
+.pixel {
+  width: 7px;
+  height: 7px;
 
-.previewPixel {
+  background: #222;
 
-  aspect-ratio: 1 / 1;
+  border: 1px solid #333;
 
-  min-width: 6px;
-
-  min-height: 6px;
-
+  cursor: pointer;
 }
 
-
-.previewPixel.selected {
-
-  background: var(--pixel-bg);
-
+.pixel:hover {
+  background: #555;
 }
 
-
-.previewPixel.empty {
-
-  background: #111;
-
-  opacity: 0.25;
-
+.pixel.selected {
+  background: #fff;
 }
 
-
-#previewImage {
-
-  position: absolute;
-
-  z-index: 5;
-
-  max-width: 70%;
-
-  max-height: 70%;
-
-  object-fit: contain;
-
-  display: none;
-
-  pointer-events: none;
-
+.pixel.claimed {
+  background: #777;
+  cursor: not-allowed;
 }
 
-
-#previewMessage {
-
-  position: absolute;
-
-  z-index: 6;
-
-  max-width: 80%;
-
+.controls {
   text-align: center;
-
-  word-wrap: break-word;
-
-  font-weight: bold;
-
-  pointer-events: none;
-
+  padding: 20px;
 }
-
-
-.buttonRow {
-
-  display: flex;
-
-  gap: 10px;
-
-}
-
 
 button {
-
-  flex: 1;
-
-  padding: 15px;
-
   border: none;
+  border-radius: 8px;
 
-  border-radius: 10px;
+  padding: 14px 24px;
 
-  font-size: 17px;
-
+  font-size: 16px;
   font-weight: bold;
 
   cursor: pointer;
-
 }
 
-
-#saveButton {
-
-  background: #00ff99;
-
+#claimButton {
+  background: white;
   color: #111;
-
 }
 
+#claimButton:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
 
-#backButton {
-
+#clearButton {
   background: #444;
-
   color: white;
-
+  margin-left: 8px;
 }
 
-
-button:hover {
-
-  opacity: 0.85;
-
-}
-
-
-.smallText {
-
-  color: #999;
+.note {
+  text-align: center;
+  padding: 0 20px 30px;
 
   font-size: 13px;
 
-  margin-top: 6px;
-
+  opacity: .65;
 }
 
+.selectionHint {
+  text-align: center;
+  margin: 0 20px 10px;
+  color: #aaa;
+  font-size: 14px;
+}
 
 </style>
 
 </head>
 
-
 <body>
 
+<header>
 
-<div class="container">
-
-
-<h1>
-  Design Your Pixels
-</h1>
-
+<h1>PIXEL TAKEOVER</h1>
 
 <div class="subtitle">
-  Make your space yours.
+45 DAYS. ONE GIANT CANVAS.
 </div>
 
+</header>
 
-<div class="card">
 
+<div class="info">
 
-<h2>
+<div>
+💲 $1 = 1 PIXEL
+</div>
 
-Your Selection:
+<div>
+Selected:
+<strong id="selectedCount">0</strong>
+</div>
 
-<span id="pixelCount">
-0
-</span>
-
-Pixels
-
-</h2>
-
-
-<p>
-
-These are the exact pixels you selected.
-
-Design them below and watch your space come to life.
-
-</p>
-
-
-<label for="designTitle">
-  Design Title
-</label>
-
-
-<input
-  type="text"
-  id="designTitle"
-  placeholder="Give your design a name"
->
-
-
-<label for="message">
-  Your Message
-</label>
-
-
-<textarea
-  id="message"
-  placeholder="Type something..."
-></textarea>
-
-
-<label for="backgroundColor">
-  Pixel Background Color
-</label>
-
-
-<input
-  type="color"
-  id="backgroundColor"
-  value="#ffffff"
->
-
-
-<label for="messageColor">
-  Text Color
-</label>
-
-
-<input
-  type="color"
-  id="messageColor"
-  value="#000000"
->
-
-
-<label for="fontFamily">
-  Choose Your Font
-</label>
-
-
-<select id="fontFamily">
-
-
-<option value="Arial">
-  Arial
-</option>
-
-
-<option value="Verdana">
-  Verdana
-</option>
-
-
-<option value="Georgia">
-  Georgia
-</option>
-
-
-<option value="Times New Roman">
-  Times New Roman
-</option>
-
-
-<option value="Courier New">
-  Courier New
-</option>
-
-
-<option value="Impact">
-  Impact - Bold
-</option>
-
-
-<option value="Arial Black">
-  Arial Black - Extra Bold
-</option>
-
-
-<option value="Trebuchet MS">
-  Trebuchet MS
-</option>
-
-
-<option value="Comic Sans MS">
-  Comic Sans
-</option>
-
-
-<option value="Bangers">
-  Bangers - Bold
-</option>
-
-
-<option value="Permanent Marker">
-  Permanent Marker
-</option>
-
-
-<option value="Pacifico">
-  Pacifico - Cursive
-</option>
-
-
-<option value="Dancing Script">
-  Dancing Script - Cursive
-</option>
-
-
-<option value="Lobster">
-  Lobster - Decorative
-</option>
-
-
-<option value="Creepster">
-  Creepster - Spooky
-</option>
-
-
-<option value="Nosifer">
-  Nosifer - Spooky
-</option>
-
-
-<option value="Press Start 2P">
-  Press Start 2P - Pixel
-</option>
-
-
-<option value="Cinzel">
-  Cinzel - Dramatic
-</option>
-
-
-</select>
-
-
-<label for="messageSize">
-
-Text Size:
-
-<span id="sizeValue">
-28
-</span>px
-
-</label>
-
-
-<input
-  type="range"
-  id="messageSize"
-  min="10"
-  max="100"
-  value="28"
->
-
-
-<label for="designImage">
-  Upload Your Design
-</label>
-
-
-<input
-  type="file"
-  id="designImage"
-  accept="image/*"
->
-
-
-<div class="smallText">
-
-Upload a logo, artwork, photo, or other image.
+<div>
+Total: $
+<strong id="totalPrice">0</strong>
+</div>
 
 </div>
 
 
-</div>
+<div class="selectionHint">
 
-
-<!-- LIVE DESIGN AREA -->
-
-
-<div class="card">
-
-
-<h2>
-  Your Live Design
-</h2>
-
-
-<p>
-
-This is the space you selected.
-
-Your changes appear here as you create your design.
-
-</p>
-
-
-<div id="preview">
-
-
-<div id="pixelPreview"></div>
-
-
-<img
-  id="previewImage"
-  alt="Your uploaded design"
->
-
-
-<div id="previewMessage"></div>
-
+Tap individual pixels, or drag across an area to select multiple pixels.
 
 </div>
 
 
+<div id="canvasWrapper">
+
+<div id="pixelCanvas"></div>
+
 </div>
 
 
-<div class="buttonRow">
-
+<div class="controls">
 
 <button
-  id="backButton"
-  type="button"
+id="claimButton"
+disabled
+type="button"
 >
-
-Go Back
-
+Continue With Selected Pixels
 </button>
-
 
 <button
-  id="saveButton"
-  type="button"
+id="clearButton"
+type="button"
 >
-
-Save My Design
-
+Clear Selection
 </button>
-
 
 </div>
 
+
+<div class="note">
+
+Select the exact area you want to design.
+Your finished design will appear in the same location on the giant canvas.
 
 </div>
 
 
 <script>
 
+const canvas =
+  document.getElementById("pixelCanvas");
 
-/* ---------------------------------
-   READ SELECTED PIXELS
----------------------------------- */
+const selectedCount =
+  document.getElementById("selectedCount");
+
+const totalPrice =
+  document.getElementById("totalPrice");
+
+const claimButton =
+  document.getElementById("claimButton");
+
+const clearButton =
+  document.getElementById("clearButton");
 
 
-const params = new URLSearchParams(
-  window.location.search
-);
+const GRID_WIDTH = 100;
 
-const pixelData = params.get("pixels");
+const GRID_HEIGHT = 100;
 
-let selectedPixels = [];
 
-if (pixelData) {
+const selectedPixels =
+  new Set();
 
-  try {
 
-    selectedPixels = JSON.parse(pixelData);
+const claimedPixels =
+  new Set();
 
-    console.log(
-      "PIXELS RECEIVED:",
-      selectedPixels
-    );
 
-  } catch (error) {
+let isDragging = false;
 
-    console.error(
-      "PIXEL ERROR:",
-      error
-    );
+let dragMode = "select";
 
-  }
+
+function pixelKey(x, y) {
+
+  return `${x},${y}`;
 
 }
 
 
-/* ---------------------------------
-   ELEMENTS
----------------------------------- */
+function updateSelection() {
+
+  const count =
+    selectedPixels.size;
+
+  selectedCount.textContent =
+    count;
+
+  totalPrice.textContent =
+    count;
+
+  claimButton.disabled =
+    count === 0;
+
+}
 
 
-const pixelCount =
-  document.getElementById(
-    "pixelCount"
-  );
+function selectPixel(x, y) {
 
+  const key =
+    pixelKey(x, y);
 
-const pixelPreview =
-  document.getElementById(
-    "pixelPreview"
-  );
-
-
-const designTitle =
-  document.getElementById(
-    "designTitle"
-  );
-
-
-const message =
-  document.getElementById(
-    "message"
-  );
-
-
-const backgroundColor =
-  document.getElementById(
-    "backgroundColor"
-  );
-
-
-const messageColor =
-  document.getElementById(
-    "messageColor"
-  );
-
-
-const fontFamily =
-  document.getElementById(
-    "fontFamily"
-  );
-
-
-const messageSize =
-  document.getElementById(
-    "messageSize"
-  );
-
-
-const sizeValue =
-  document.getElementById(
-    "sizeValue"
-  );
-
-
-const designImage =
-  document.getElementById(
-    "designImage"
-  );
-
-
-const previewImage =
-  document.getElementById(
-    "previewImage"
-  );
-
-
-const previewMessage =
-  document.getElementById(
-    "previewMessage"
-  );
-
-
-const saveButton =
-  document.getElementById(
-    "saveButton"
-  );
-
-
-const backButton =
-  document.getElementById(
-    "backButton"
-  );
-
-
-/* ---------------------------------
-   PIXEL COUNT
----------------------------------- */
-
-
-pixelCount.textContent =
-  selectedPixels.length;
-
-
-/* ---------------------------------
-   DRAW SELECTED PIXELS
----------------------------------- */
-
-
-function renderPixelPreview() {
-
-
-  pixelPreview.innerHTML = "";
-
-
-  if (
-    selectedPixels.length === 0
-  ) {
-
-    pixelPreview.innerHTML =
-      "<div style='color:white;padding:20px;'>No pixels selected.</div>";
-
+  if (claimedPixels.has(key)) {
     return;
+  }
+
+  const pixel =
+    document.querySelector(
+      `.pixel[data-key="${key}"]`
+    );
+
+  if (!pixel) {
+    return;
+  }
+
+
+  if (dragMode === "select") {
+
+    selectedPixels.add(key);
+
+    pixel.classList.add("selected");
+
+  } else {
+
+    selectedPixels.delete(key);
+
+    pixel.classList.remove("selected");
 
   }
 
 
-  const coords =
-    selectedPixels.map(
-      function(value) {
+  updateSelection();
 
-        const parts =
-          value
-            .split(",")
-            .map(Number);
-
-        return {
-
-          x: parts[0],
-
-          y: parts[1]
-
-        };
-
-      }
-    );
+}
 
 
-  const minX =
-    Math.min(
-      ...coords.map(
-        p => p.x
-      )
-    );
+function createCanvas() {
 
+  canvas.innerHTML = "";
 
-  const maxX =
-    Math.max(
-      ...coords.map(
-        p => p.x
-      )
-    );
-
-
-  const minY =
-    Math.min(
-      ...coords.map(
-        p => p.y
-      )
-    );
-
-
-  const maxY =
-    Math.max(
-      ...coords.map(
-        p => p.y
-      )
-    );
-
-
-  const width =
-    maxX - minX + 1;
-
-
-  const selectedSet =
-    new Set(
-      selectedPixels
-    );
-
-
-  pixelPreview.style.gridTemplateColumns =
-    `repeat(${width}, 1fr)`;
+  const fragment =
+    document.createDocumentFragment();
 
 
   for (
-    let y = minY;
-    y <= maxY;
+    let y = 0;
+    y < GRID_HEIGHT;
     y++
   ) {
 
-
     for (
-      let x = minX;
-      x <= maxX;
+      let x = 0;
+      x < GRID_WIDTH;
       x++
     ) {
 
-
-      const cell =
-        document.createElement(
-          "div"
-        );
-
-
-      cell.className =
-        "previewPixel";
-
+      const pixel =
+        document.createElement("div");
 
       const key =
-        `${x},${y}`;
+        pixelKey(x, y);
+
+
+      pixel.className =
+        "pixel";
+
+      pixel.dataset.x =
+        x;
+
+      pixel.dataset.y =
+        y;
+
+      pixel.dataset.key =
+        key;
 
 
       if (
-        selectedSet.has(key)
+        claimedPixels.has(key)
       ) {
 
-        cell.classList.add(
-          "selected"
-        );
-
-      } else {
-
-        cell.classList.add(
-          "empty"
+        pixel.classList.add(
+          "claimed"
         );
 
       }
 
 
-      pixelPreview.appendChild(
-        cell
+      pixel.addEventListener(
+        "pointerdown",
+        function(event) {
+
+          if (
+            claimedPixels.has(key)
+          ) {
+
+            return;
+
+          }
+
+
+          event.preventDefault();
+
+          isDragging = true;
+
+
+          dragMode =
+            selectedPixels.has(key)
+              ? "remove"
+              : "select";
+
+
+          selectPixel(x, y);
+
+        }
       );
+
+
+      pixel.addEventListener(
+        "pointerenter",
+        function() {
+
+          if (!isDragging) {
+            return;
+          }
+
+          selectPixel(x, y);
+
+        }
+      );
+
+
+      fragment.appendChild(pixel);
 
     }
 
   }
+
+
+  canvas.appendChild(fragment);
 
 }
 
 
-/* ---------------------------------
-   UPDATE PREVIEW
----------------------------------- */
-
-
-function updatePreview() {
-
-
-  pixelPreview.style.setProperty(
-    "--pixel-bg",
-    backgroundColor.value
-  );
-
-
-  previewMessage.textContent =
-    message.value;
-
-
-  previewMessage.style.color =
-    messageColor.value;
-
-
-  previewMessage.style.fontFamily =
-    `"${fontFamily.value}"`;
-
-
-  previewMessage.style.fontSize =
-    messageSize.value + "px";
-
-
-  sizeValue.textContent =
-    messageSize.value;
-
-}
-
-
-/* ---------------------------------
-   MESSAGE
----------------------------------- */
-
-
-message.addEventListener(
-  "input",
-  updatePreview
-);
-
-
-/* ---------------------------------
-   BACKGROUND COLOR
----------------------------------- */
-
-
-backgroundColor.addEventListener(
-  "input",
-  updatePreview
-);
-
-
-/* ---------------------------------
-   TEXT COLOR
----------------------------------- */
-
-
-messageColor.addEventListener(
-  "input",
-  updatePreview
-);
-
-
-/* ---------------------------------
-   FONT
----------------------------------- */
-
-
-fontFamily.addEventListener(
-  "change",
-  updatePreview
-);
-
-
-/* ---------------------------------
-   FONT SIZE
----------------------------------- */
-
-
-messageSize.addEventListener(
-  "input",
-  updatePreview
-);
-
-
-/* ---------------------------------
-   IMAGE
----------------------------------- */
-
-
-designImage.addEventListener(
-  "change",
+document.addEventListener(
+  "pointerup",
   function() {
 
-
-    const file =
-      designImage.files[0];
-
-
-    if (!file) {
-
-      previewImage.style.display =
-        "none";
-
-      previewImage.src = "";
-
-      return;
-
-    }
-
-
-    const reader =
-      new FileReader();
-
-
-    reader.onload =
-      function(event) {
-
-        previewImage.src =
-          event.target.result;
-
-        previewImage.style.display =
-          "block";
-
-      };
-
-
-    reader.readAsDataURL(
-      file
-    );
+    isDragging = false;
 
   }
 );
 
 
-/* ---------------------------------
-   SAVE DESIGN
----------------------------------- */
-
-
-saveButton.addEventListener(
+clearButton.addEventListener(
   "click",
   function() {
 
+    selectedPixels.clear();
 
-    if (
-      selectedPixels.length === 0
-    ) {
+    document
+      .querySelectorAll(".pixel.selected")
+      .forEach(function(pixel) {
 
-      alert(
-        "No pixels were selected."
-      );
+        pixel.classList.remove(
+          "selected"
+        );
 
-      return;
+      });
 
-    }
-
-
-    if (
-      !designTitle.value.trim()
-    ) {
-
-      alert(
-        "Please give your design a title."
-      );
-
-      designTitle.focus();
-
-      return;
-
-    }
-
-
-    alert(
-      "Your design is ready! The next step is connecting this button to payment and permanently saving the design."
-    );
+    updateSelection();
 
   }
 );
 
 
-/* ---------------------------------
-   GO BACK
----------------------------------- */
-
-
-backButton.addEventListener(
+claimButton.addEventListener(
   "click",
   function() {
 
-    window.history.back();
+    if (
+      selectedPixels.size === 0
+    ) {
+
+      return;
+
+    }
+
+
+    const pixels =
+      Array.from(selectedPixels);
+
+
+    const pixelData =
+      encodeURIComponent(
+        JSON.stringify(pixels)
+      );
+
+
+    window.location.href =
+      "design.html?pixels=" +
+      pixelData;
 
   }
 );
 
 
-/* ---------------------------------
-   START
----------------------------------- */
+createCanvas();
 
-
-renderPixelPreview();
-
-updatePreview();
-
+updateSelection();
 
 </script>
 
-
 </body>
-
 </html>
