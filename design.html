@@ -879,7 +879,6 @@ function loadSelectedPixels() {
     const encoded =
         params.get("pixels");
 
-
     if (!encoded) {
 
         console.warn(
@@ -889,39 +888,75 @@ function loadSelectedPixels() {
         selectedPixels = [];
 
         return;
-
     }
-
 
     try {
 
-        let decoded =
+        const decoded =
             decodeURIComponent(encoded);
-
-
-        /*
-            Sometimes the URL may contain
-            encoded JSON more than once.
-        */
-
-        try {
-
-            decoded =
-                decodeURIComponent(decoded);
-
-        } catch {}
-
 
         const parsed =
             JSON.parse(decoded);
 
+        /*
+         * INDEX.HTML SENDS PIXELS LIKE:
+         *
+         * ["0,0","1,0","2,0"]
+         *
+         * Convert them into:
+         *
+         * [{x:0,y:0},{x:1,y:0},{x:2,y:0}]
+         */
 
-        if (
-            Array.isArray(parsed)
-        ) {
+        if (Array.isArray(parsed)) {
 
             selectedPixels =
-                parsed;
+                parsed
+                    .map(function(pixel) {
+
+                        if (
+                            typeof pixel === "string"
+                        ) {
+
+                            const parts =
+                                pixel.split(",");
+
+                            return {
+                                x: Number(parts[0]),
+                                y: Number(parts[1])
+                            };
+
+                        }
+
+                        /*
+                         * Also allow object format
+                         * in case we change index.html later.
+                         */
+
+                        if (
+                            pixel &&
+                            typeof pixel === "object"
+                        ) {
+
+                            return {
+                                x: Number(pixel.x),
+                                y: Number(pixel.y)
+                            };
+
+                        }
+
+                        return null;
+
+                    })
+                    .filter(function(pixel) {
+
+                        return (
+                            pixel &&
+                            Number.isFinite(pixel.x) &&
+                            Number.isFinite(pixel.y)
+                        );
+
+                    });
 
         } else {
 
