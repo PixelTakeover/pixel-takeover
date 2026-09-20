@@ -19,36 +19,90 @@ body {
 
 header {
   text-align: center;
-  padding: 20px 15px;
+  padding: 18px 12px 10px;
 }
 
 h1 {
-  margin: 0 0 6px;
+  margin: 0 0 5px;
   font-size: 28px;
 }
 
 .subtitle {
-  color: #bbb;
   margin: 0;
+  color: #aaa;
 }
 
-.container {
-  max-width: 1000px;
+/* PREVIEW FIRST */
+.preview-section {
+  padding: 10px 12px 18px;
+}
+
+.preview-title {
+  text-align: center;
+  margin: 0 0 10px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.workspace-wrapper {
+  width: 100%;
+  overflow: auto;
+  background: #050505;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+#workspace {
+  position: relative;
   margin: auto;
-  padding: 15px;
+  overflow: hidden;
+  background: #222;
+}
+
+/* SELECTED PIXELS */
+.pixel {
+  position: absolute;
+  border: 1px solid rgba(255,255,255,.15);
+}
+
+/* DESIGN OBJECTS */
+.design-object {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: move;
+  user-select: none;
+  touch-action: none;
+  white-space: pre;
+}
+
+.design-object.active {
+  outline: 2px dashed white;
+  outline-offset: 4px;
+}
+
+/* CONTROLS */
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 0 12px 30px;
 }
 
 .controls {
   background: #1d1d1d;
   border-radius: 12px;
   padding: 18px;
-  margin-bottom: 20px;
+}
+
+.selected-count {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 18px;
+  font-size: 17px;
 }
 
 label {
   display: block;
-  margin-top: 14px;
-  margin-bottom: 6px;
+  margin: 14px 0 6px;
   font-weight: bold;
 }
 
@@ -64,13 +118,9 @@ textarea {
   resize: vertical;
 }
 
-select,
-input[type="range"] {
-  width: 100%;
-}
-
 select {
-  padding: 10px;
+  width: 100%;
+  padding: 11px;
   border-radius: 8px;
   background: #111;
   color: white;
@@ -91,23 +141,28 @@ input[type="color"] {
   gap: 12px;
 }
 
-#sizeValue {
-  min-width: 55px;
+.range-row input {
+  flex: 1;
+}
+
+#sizeValue,
+#imageSizeValue {
+  min-width: 65px;
   font-weight: bold;
 }
 
 .button-row {
   display: flex;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 9px;
   margin-top: 18px;
 }
 
 button {
   border: none;
   border-radius: 8px;
-  padding: 13px 18px;
-  font-size: 16px;
+  padding: 13px 15px;
+  font-size: 15px;
   font-weight: bold;
   cursor: pointer;
 }
@@ -122,11 +177,9 @@ button {
   color: white;
 }
 
-#saveDesign {
-  background: #7c4dff;
+#deleteSelected {
+  background: #b71c1c;
   color: white;
-  width: 100%;
-  margin-top: 15px;
 }
 
 #backButton {
@@ -134,45 +187,32 @@ button {
   color: white;
 }
 
-.workspace-wrapper {
-  overflow: auto;
-  background: #050505;
-  border-radius: 12px;
-  padding: 15px;
+#saveDesign {
+  width: 100%;
+  margin-top: 15px;
+  background: #7c4dff;
+  color: white;
 }
 
-#workspace {
-  position: relative;
-  margin: auto;
-  overflow: hidden;
-  background: #222;
+#imageControls {
+  display: none;
 }
 
-.pixel {
-  position: absolute;
-  border: 1px solid rgba(255,255,255,0.12);
-}
-
-.design-object {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  cursor: move;
-  user-select: none;
-  touch-action: none;
-  white-space: pre;
-}
-
-.design-object.active {
-  outline: 2px dashed #fff;
-  outline-offset: 4px;
+#imageInput {
+  display: none;
 }
 
 #objectList {
-  margin-top: 18px;
+  margin-top: 20px;
+}
+
+.object-heading {
+  font-weight: bold;
+  margin-bottom: 8px;
 }
 
 .object-item {
-  padding: 10px;
+  padding: 11px;
   margin-top: 7px;
   background: #292929;
   border-radius: 7px;
@@ -183,18 +223,10 @@ button {
   background: #555;
 }
 
-#imageInput {
-  display: none;
-}
-
-.preview-title {
-  margin: 0 0 10px;
-  color: #ccc;
-}
-
-.selected-count {
-  font-weight: bold;
-  margin-bottom: 12px;
+.help {
+  color: #aaa;
+  font-size: 13px;
+  margin-top: 7px;
 }
 </style>
 </head>
@@ -206,23 +238,54 @@ button {
   <p class="subtitle">Make your space yours.</p>
 </header>
 
+
+<!-- =========================
+     PREVIEW AT THE TOP
+========================= -->
+
+<section class="preview-section">
+
+  <p class="preview-title">
+    YOUR PIXEL PREVIEW
+  </p>
+
+  <div class="workspace-wrapper">
+    <div id="workspace"></div>
+  </div>
+
+</section>
+
+
 <div class="container">
 
   <div class="controls">
 
     <div class="selected-count">
-      Selected Pixels: <span id="pixelCount">0</span>
+      Selected Pixels:
+      <span id="pixelCount">0</span>
     </div>
 
-    <label for="textInput">Your Text</label>
+
+    <!-- LIVE TEXT -->
+
+    <label for="textInput">
+      Type Your Text
+    </label>
 
     <textarea
       id="textInput"
-      placeholder="Start typing..."
+      placeholder="Start typing and watch it appear in your pixels..."
       autofocus
     ></textarea>
 
-    <label for="fontFamily">Font</label>
+    <div class="help">
+      Your text appears immediately while you type.
+    </div>
+
+
+    <label for="fontFamily">
+      Font
+    </label>
 
     <select id="fontFamily">
       <option value="Arial">Arial</option>
@@ -241,12 +304,24 @@ button {
       <option value="monospace">Monospace</option>
     </select>
 
-    <label for="textColor">Text Color</label>
-    <input type="color" id="textColor" value="#ffffff">
 
-    <label for="textSize">Text Size</label>
+    <label for="textColor">
+      Text Color
+    </label>
+
+    <input
+      type="color"
+      id="textColor"
+      value="#ffffff"
+    >
+
+
+    <label for="textSize">
+      Text Size
+    </label>
 
     <div class="range-row">
+
       <input
         type="range"
         id="textSize"
@@ -254,78 +329,208 @@ button {
         max="120"
         value="40"
       >
-      <span id="sizeValue">40 px</span>
+
+      <span id="sizeValue">
+        40 px
+      </span>
+
     </div>
 
-    <label for="backgroundColor">Pixel Background Color</label>
-    <input type="color" id="backgroundColor" value="#222222">
+
+    <label for="backgroundColor">
+      Pixel Background Color
+    </label>
+
+    <input
+      type="color"
+      id="backgroundColor"
+      value="#222222"
+    >
+
+
+    <!-- IMAGE CONTROLS -->
+
+    <div id="imageControls">
+
+      <label for="imageSize">
+        Image Size
+      </label>
+
+      <div class="range-row">
+
+        <input
+          type="range"
+          id="imageSize"
+          min="20"
+          max="500"
+          value="150"
+        >
+
+        <span id="imageSizeValue">
+          150 px
+        </span>
+
+      </div>
+
+      <div class="help">
+        Select an image in the preview, then resize it here.
+      </div>
+
+    </div>
+
+
+    <!-- BUTTONS -->
 
     <div class="button-row">
-      <button id="addToPixels">ADD TO PIXELS</button>
 
-      <button id="addImage">ADD IMAGE</button>
+      <button id="addToPixels">
+        ADD TO PIXELS
+      </button>
 
-      <button id="backButton">GO BACK</button>
+      <button id="addImage">
+        ADD IMAGE
+      </button>
+
+      <button id="deleteSelected">
+        DELETE SELECTED
+      </button>
+
+      <button id="backButton">
+        GO BACK
+      </button>
+
     </div>
 
-    <input type="file" id="imageInput" accept="image/*">
+
+    <input
+      type="file"
+      id="imageInput"
+      accept="image/*"
+    >
+
+
+    <!-- ADDED ITEMS -->
 
     <div id="objectList"></div>
 
-    <button id="saveDesign">SAVE PIXEL DESIGN</button>
 
-  </div>
-
-  <div class="workspace-wrapper">
-
-    <p class="preview-title">
-      Your Pixel Preview
-    </p>
-
-    <div id="workspace"></div>
+    <button id="saveDesign">
+      SAVE PIXEL DESIGN
+    </button>
 
   </div>
 
 </div>
 
+
 <script>
 
-const params = new URLSearchParams(window.location.search);
-const pixelData = params.get("pixels");
+/* =========================
+   READ SELECTED PIXELS
+========================= */
+
+const params =
+  new URLSearchParams(window.location.search);
+
+const pixelData =
+  params.get("pixels");
 
 let selectedPixels = [];
 
 if (pixelData) {
+
   try {
-    selectedPixels = JSON.parse(decodeURIComponent(pixelData));
+
+    selectedPixels =
+      JSON.parse(
+        decodeURIComponent(pixelData)
+      );
+
   } catch (error) {
+
     try {
-      selectedPixels = JSON.parse(pixelData);
+
+      selectedPixels =
+        JSON.parse(pixelData);
+
     } catch (secondError) {
-      console.error("Could not read selected pixels:", secondError);
+
+      console.error(
+        "Could not read selected pixels:",
+        secondError
+      );
+
     }
+
   }
+
 }
 
-document.getElementById("pixelCount").textContent =
+
+document.getElementById("pixelCount")
+  .textContent =
   selectedPixels.length;
 
-const workspace = document.getElementById("workspace");
 
-const textInput = document.getElementById("textInput");
-const fontFamily = document.getElementById("fontFamily");
-const textColor = document.getElementById("textColor");
-const textSize = document.getElementById("textSize");
-const sizeValue = document.getElementById("sizeValue");
-const backgroundColor = document.getElementById("backgroundColor");
+/* =========================
+   ELEMENTS
+========================= */
 
-const addToPixels = document.getElementById("addToPixels");
-const addImage = document.getElementById("addImage");
-const imageInput = document.getElementById("imageInput");
-const saveDesign = document.getElementById("saveDesign");
-const backButton = document.getElementById("backButton");
+const workspace =
+  document.getElementById("workspace");
 
-const objectList = document.getElementById("objectList");
+const textInput =
+  document.getElementById("textInput");
+
+const fontFamily =
+  document.getElementById("fontFamily");
+
+const textColor =
+  document.getElementById("textColor");
+
+const textSize =
+  document.getElementById("textSize");
+
+const sizeValue =
+  document.getElementById("sizeValue");
+
+const backgroundColor =
+  document.getElementById("backgroundColor");
+
+const addToPixels =
+  document.getElementById("addToPixels");
+
+const addImage =
+  document.getElementById("addImage");
+
+const imageInput =
+  document.getElementById("imageInput");
+
+const deleteSelected =
+  document.getElementById("deleteSelected");
+
+const saveDesign =
+  document.getElementById("saveDesign");
+
+const backButton =
+  document.getElementById("backButton");
+
+const objectList =
+  document.getElementById("objectList");
+
+const imageControls =
+  document.getElementById("imageControls");
+
+const imageSize =
+  document.getElementById("imageSize");
+
+const imageSizeValue =
+  document.getElementById("imageSizeValue");
+
+
+/* =========================
+   SETTINGS
+========================= */
 
 const PIXEL_SIZE = 40;
 
@@ -340,59 +545,88 @@ let liveTextObject = null;
 let draggingObject = null;
 
 let dragOffsetX = 0;
+
 let dragOffsetY = 0;
 
 
-/* --------------------------------
-   FIND PIXEL SIZE
--------------------------------- */
+/* =========================
+   PIXEL BOUNDS
+========================= */
 
 function getPixelBounds() {
 
   if (!selectedPixels.length) {
+
     return {
       minX: 0,
       maxX: 0,
       minY: 0,
       maxY: 0
     };
+
   }
 
-  const coords = selectedPixels.map(key => {
 
-    const parts = key.split(",");
+  const coords =
+    selectedPixels.map(key => {
 
-    return {
-      x: Number(parts[0]),
-      y: Number(parts[1])
-    };
+      const parts =
+        key.split(",");
 
-  });
+      return {
+        x: Number(parts[0]),
+        y: Number(parts[1])
+      };
+
+    });
+
 
   return {
-    minX: Math.min(...coords.map(p => p.x)),
-    maxX: Math.max(...coords.map(p => p.x)),
-    minY: Math.min(...coords.map(p => p.y)),
-    maxY: Math.max(...coords.map(p => p.y))
+
+    minX:
+      Math.min(
+        ...coords.map(p => p.x)
+      ),
+
+    maxX:
+      Math.max(
+        ...coords.map(p => p.x)
+      ),
+
+    minY:
+      Math.min(
+        ...coords.map(p => p.y)
+      ),
+
+    maxY:
+      Math.max(
+        ...coords.map(p => p.y)
+      )
+
   };
+
 }
 
 
-/* --------------------------------
-   CREATE WORKSPACE
--------------------------------- */
+/* =========================
+   DRAW PIXELS
+========================= */
 
 function drawPixels() {
 
   workspace.innerHTML = "";
 
-  const bounds = getPixelBounds();
+  const bounds =
+    getPixelBounds();
 
   const columns =
-    bounds.maxX - bounds.minX + 1;
+    bounds.maxX -
+    bounds.minX + 1;
 
   const rows =
-    bounds.maxY - bounds.minY + 1;
+    bounds.maxY -
+    bounds.minY + 1;
+
 
   workspace.style.width =
     (columns * PIXEL_SIZE) + "px";
@@ -403,14 +637,22 @@ function drawPixels() {
 
   selectedPixels.forEach(key => {
 
-    const parts = key.split(",");
+    const parts =
+      key.split(",");
 
-    const x = Number(parts[0]);
-    const y = Number(parts[1]);
+    const x =
+      Number(parts[0]);
 
-    const pixel = document.createElement("div");
+    const y =
+      Number(parts[1]);
 
-    pixel.className = "pixel";
+
+    const pixel =
+      document.createElement("div");
+
+    pixel.className =
+      "pixel";
+
 
     pixel.style.width =
       PIXEL_SIZE + "px";
@@ -418,156 +660,208 @@ function drawPixels() {
     pixel.style.height =
       PIXEL_SIZE + "px";
 
+
     pixel.style.left =
-      ((x - bounds.minX) * PIXEL_SIZE) + "px";
+      ((x - bounds.minX) *
+        PIXEL_SIZE) + "px";
+
 
     pixel.style.top =
-      ((y - bounds.minY) * PIXEL_SIZE) + "px";
+      ((y - bounds.minY) *
+        PIXEL_SIZE) + "px";
+
 
     pixel.style.background =
       backgroundColor.value;
+
 
     workspace.appendChild(pixel);
 
   });
 
+
   renderObjects();
 
 }
 
 
-/* --------------------------------
-   LIVE TEXT
--------------------------------- */
+/* =========================
+   CREATE LIVE TEXT
+========================= */
 
-function createLiveTextIfNeeded() {
+function createLiveText() {
 
   if (liveTextObject) {
     return;
   }
 
+
   liveTextObject = {
 
-    id: nextObjectId++,
+    id:
+      nextObjectId++,
 
-    type: "text",
+    type:
+      "text",
 
-    text: "",
+    text:
+      "",
 
-    fontFamily: fontFamily.value,
+    fontFamily:
+      fontFamily.value,
 
-    color: textColor.value,
+    color:
+      textColor.value,
 
-    size: Number(textSize.value),
+    size:
+      Number(textSize.value),
 
-    x: 50,
+    x:
+      50,
 
-    y: 50,
+    y:
+      50,
 
-    live: true
+    live:
+      true
 
   };
 
-}
-
-
-/* --------------------------------
-   TEXT INPUT
--------------------------------- */
-
-textInput.addEventListener("input", function() {
-
-  createLiveTextIfNeeded();
-
-  liveTextObject.text =
-    textInput.value;
-
-  liveTextObject.fontFamily =
-    fontFamily.value;
-
-  liveTextObject.color =
-    textColor.value;
-
-  liveTextObject.size =
-    Number(textSize.value);
 
   selectedObjectId =
     liveTextObject.id;
 
-  renderObjects();
-
-});
+}
 
 
-/* --------------------------------
+/* =========================
+   LIVE TYPING
+========================= */
+
+textInput.addEventListener(
+  "input",
+  function() {
+
+    createLiveText();
+
+
+    liveTextObject.text =
+      textInput.value;
+
+
+    liveTextObject.fontFamily =
+      fontFamily.value;
+
+
+    liveTextObject.color =
+      textColor.value;
+
+
+    liveTextObject.size =
+      Number(textSize.value);
+
+
+    renderObjects();
+
+  }
+);
+
+
+/* =========================
    FONT
--------------------------------- */
+========================= */
 
-fontFamily.addEventListener("change", function() {
+fontFamily.addEventListener(
+  "change",
+  function() {
 
-  if (!liveTextObject) return;
-
-  liveTextObject.fontFamily =
-    fontFamily.value;
-
-  renderObjects();
-
-});
+    if (!liveTextObject) {
+      return;
+    }
 
 
-/* --------------------------------
-   COLOR
--------------------------------- */
-
-textColor.addEventListener("input", function() {
-
-  if (!liveTextObject) return;
-
-  liveTextObject.color =
-    textColor.value;
-
-  renderObjects();
-
-});
+    liveTextObject.fontFamily =
+      fontFamily.value;
 
 
-/* --------------------------------
-   SIZE
--------------------------------- */
+    renderObjects();
 
-textSize.addEventListener("input", function() {
-
-  sizeValue.textContent =
-    textSize.value + " px";
-
-  if (!liveTextObject) return;
-
-  liveTextObject.size =
-    Number(textSize.value);
-
-  renderObjects();
-
-});
+  }
+);
 
 
-/* --------------------------------
+/* =========================
+   TEXT COLOR
+========================= */
+
+textColor.addEventListener(
+  "input",
+  function() {
+
+    if (!liveTextObject) {
+      return;
+    }
+
+
+    liveTextObject.color =
+      textColor.value;
+
+
+    renderObjects();
+
+  }
+);
+
+
+/* =========================
+   TEXT SIZE
+========================= */
+
+textSize.addEventListener(
+  "input",
+  function() {
+
+    sizeValue.textContent =
+      textSize.value + " px";
+
+
+    if (!liveTextObject) {
+      return;
+    }
+
+
+    liveTextObject.size =
+      Number(textSize.value);
+
+
+    renderObjects();
+
+  }
+);
+
+
+/* =========================
    BACKGROUND COLOR
--------------------------------- */
+========================= */
 
-backgroundColor.addEventListener("input", function() {
+backgroundColor.addEventListener(
+  "input",
+  function() {
 
-  drawPixels();
+    drawPixels();
 
-});
+  }
+);
 
 
-/* --------------------------------
-   RENDER DESIGN OBJECTS
--------------------------------- */
+/* =========================
+   RENDER OBJECTS
+========================= */
 
 function renderObjects() {
 
-  document.querySelectorAll(".design-object")
+  document
+    .querySelectorAll(".design-object")
     .forEach(el => el.remove());
 
 
@@ -575,116 +869,174 @@ function renderObjects() {
     ...designObjects
   ];
 
-  if (liveTextObject &&
-      liveTextObject.text.length > 0) {
 
-    objects.push(liveTextObject);
+  if (
+    liveTextObject &&
+    liveTextObject.text.length > 0
+  ) {
+
+    objects.push(
+      liveTextObject
+    );
 
   }
 
 
-  objects.forEach(object => {
-
-    if (
-      object.type === "text" &&
-      !object.text
-    ) {
-      return;
-    }
+  objects.forEach(
+    function(object) {
 
 
-    if (object.type === "text") {
-
-      const element =
-        document.createElement("div");
-
-      element.className =
-        "design-object";
+      /* TEXT */
 
       if (
-        object.id === selectedObjectId
+        object.type === "text"
       ) {
-        element.classList.add("active");
+
+        if (!object.text) {
+          return;
+        }
+
+
+        const element =
+          document.createElement("div");
+
+
+        element.className =
+          "design-object";
+
+
+        if (
+          object.id === selectedObjectId
+        ) {
+
+          element.classList.add(
+            "active"
+          );
+
+        }
+
+
+        element.textContent =
+          object.text;
+
+
+        element.style.left =
+          object.x + "%";
+
+
+        element.style.top =
+          object.y + "%";
+
+
+        element.style.fontFamily =
+          object.fontFamily;
+
+
+        element.style.color =
+          object.color;
+
+
+        element.style.fontSize =
+          object.size + "px";
+
+
+        element.dataset.id =
+          object.id;
+
+
+        addDragEvents(
+          element,
+          object
+        );
+
+
+        workspace.appendChild(
+          element
+        );
+
       }
 
-      element.textContent =
-        object.text;
 
-      element.style.left =
-        object.x + "%";
-
-      element.style.top =
-        object.y + "%";
-
-      element.style.fontFamily =
-        object.fontFamily;
-
-      element.style.color =
-        object.color;
-
-      element.style.fontSize =
-        object.size + "px";
-
-      element.dataset.id =
-        object.id;
-
-      addDragEvents(element, object);
-
-      workspace.appendChild(element);
-
-    }
-
-
-    if (object.type === "image") {
-
-      const element =
-        document.createElement("img");
-
-      element.className =
-        "design-object";
-
-      element.src =
-        object.src;
-
-      element.style.left =
-        object.x + "%";
-
-      element.style.top =
-        object.y + "%";
-
-      element.style.width =
-        object.width + "px";
-
-      element.style.maxWidth =
-        "80%";
-
-      element.dataset.id =
-        object.id;
+      /* IMAGE */
 
       if (
-        object.id === selectedObjectId
+        object.type === "image"
       ) {
-        element.classList.add("active");
+
+        const element =
+          document.createElement("img");
+
+
+        element.className =
+          "design-object";
+
+
+        element.src =
+          object.src;
+
+
+        element.style.left =
+          object.x + "%";
+
+
+        element.style.top =
+          object.y + "%";
+
+
+        element.style.width =
+          object.width + "px";
+
+
+        element.style.height =
+          "auto";
+
+
+        element.dataset.id =
+          object.id;
+
+
+        if (
+          object.id === selectedObjectId
+        ) {
+
+          element.classList.add(
+            "active"
+          );
+
+        }
+
+
+        addDragEvents(
+          element,
+          object
+        );
+
+
+        workspace.appendChild(
+          element
+        );
+
       }
 
-      addDragEvents(element, object);
-
-      workspace.appendChild(element);
-
     }
+  );
 
-  });
 
   updateObjectList();
+
+  updateImageControls();
 
 }
 
 
-/* --------------------------------
-   DRAG OBJECTS
--------------------------------- */
+/* =========================
+   DRAGGING
+========================= */
 
-function addDragEvents(element, object) {
+function addDragEvents(
+  element,
+  object
+) {
 
   element.addEventListener(
     "pointerdown",
@@ -695,7 +1047,10 @@ function addDragEvents(element, object) {
       selectedObjectId =
         object.id;
 
-      if (object.type === "text") {
+
+      if (
+        object.type === "text"
+      ) {
 
         liveTextObject =
           object;
@@ -717,23 +1072,32 @@ function addDragEvents(element, object) {
 
       }
 
-      draggingObject =
-        object;
 
       const rect =
         workspace.getBoundingClientRect();
 
+
       dragOffsetX =
-        event.clientX - rect.left -
-        (object.x / 100 * rect.width);
+        event.clientX -
+        rect.left -
+        (
+          object.x / 100 *
+          rect.width
+        );
+
 
       dragOffsetY =
-        event.clientY - rect.top -
-        (object.y / 100 * rect.height);
+        event.clientY -
+        rect.top -
+        (
+          object.y / 100 *
+          rect.height
+        );
 
-      element.setPointerCapture(
-        event.pointerId
-      );
+
+      draggingObject =
+        object;
+
 
       renderObjects();
 
@@ -747,15 +1111,20 @@ document.addEventListener(
   "pointermove",
   function(event) {
 
-    if (!draggingObject) return;
+    if (!draggingObject) {
+      return;
+    }
+
 
     const rect =
       workspace.getBoundingClientRect();
+
 
     let x =
       event.clientX -
       rect.left -
       dragOffsetX;
+
 
     let y =
       event.clientY -
@@ -766,18 +1135,26 @@ document.addEventListener(
     x =
       Math.max(
         0,
-        Math.min(rect.width, x)
+        Math.min(
+          rect.width,
+          x
+        )
       );
+
 
     y =
       Math.max(
         0,
-        Math.min(rect.height, y)
+        Math.min(
+          rect.height,
+          y
+        )
       );
 
 
     draggingObject.x =
       (x / rect.width) * 100;
+
 
     draggingObject.y =
       (y / rect.height) * 100;
@@ -793,15 +1170,16 @@ document.addEventListener(
   "pointerup",
   function() {
 
-    draggingObject = null;
+    draggingObject =
+      null;
 
   }
 );
 
 
-/* --------------------------------
+/* =========================
    ADD TO PIXELS
--------------------------------- */
+========================= */
 
 addToPixels.addEventListener(
   "click",
@@ -823,30 +1201,39 @@ addToPixels.addEventListener(
     }
 
 
-    liveTextObject.live = false;
+    liveTextObject.live =
+      false;
+
 
     designObjects.push(
       liveTextObject
     );
 
 
-    liveTextObject = null;
+    liveTextObject =
+      null;
 
-    selectedObjectId = null;
 
-    textInput.value = "";
+    selectedObjectId =
+      null;
 
-    textInput.focus();
+
+    textInput.value =
+      "";
+
 
     renderObjects();
+
+
+    textInput.focus();
 
   }
 );
 
 
-/* --------------------------------
+/* =========================
    ADD IMAGE
--------------------------------- */
+========================= */
 
 addImage.addEventListener(
   "click",
@@ -865,7 +1252,9 @@ imageInput.addEventListener(
     const file =
       imageInput.files[0];
 
-    if (!file) return;
+    if (!file) {
+      return;
+    }
 
 
     const reader =
@@ -877,17 +1266,23 @@ imageInput.addEventListener(
 
         const imageObject = {
 
-          id: nextObjectId++,
+          id:
+            nextObjectId++,
 
-          type: "image",
+          type:
+            "image",
 
-          src: event.target.result,
+          src:
+            event.target.result,
 
-          x: 50,
+          x:
+            50,
 
-          y: 50,
+          y:
+            50,
 
-          width: 150
+          width:
+            150
 
         };
 
@@ -896,8 +1291,10 @@ imageInput.addEventListener(
           imageObject
         );
 
+
         selectedObjectId =
           imageObject.id;
+
 
         renderObjects();
 
@@ -910,32 +1307,199 @@ imageInput.addEventListener(
 );
 
 
-/* --------------------------------
+/* =========================
+   IMAGE RESIZE
+========================= */
+
+imageSize.addEventListener(
+  "input",
+  function() {
+
+    imageSizeValue.textContent =
+      imageSize.value + " px";
+
+
+    const object =
+      getSelectedObject();
+
+
+    if (
+      !object ||
+      object.type !== "image"
+    ) {
+      return;
+    }
+
+
+    object.width =
+      Number(imageSize.value);
+
+
+    renderObjects();
+
+  }
+);
+
+
+/* =========================
+   DELETE SELECTED
+========================= */
+
+deleteSelected.addEventListener(
+  "click",
+  function() {
+
+    if (
+      !selectedObjectId
+    ) {
+
+      alert(
+        "Select a text or image first."
+      );
+
+      return;
+
+    }
+
+
+    if (
+      liveTextObject &&
+      liveTextObject.id ===
+      selectedObjectId
+    ) {
+
+      liveTextObject =
+        null;
+
+      textInput.value =
+        "";
+
+      selectedObjectId =
+        null;
+
+      renderObjects();
+
+      textInput.focus();
+
+      return;
+
+    }
+
+
+    designObjects =
+      designObjects.filter(
+        object =>
+          object.id !==
+          selectedObjectId
+      );
+
+
+    selectedObjectId =
+      null;
+
+
+    renderObjects();
+
+  }
+);
+
+
+/* =========================
+   GET SELECTED OBJECT
+========================= */
+
+function getSelectedObject() {
+
+  if (!selectedObjectId) {
+    return null;
+  }
+
+
+  if (
+    liveTextObject &&
+    liveTextObject.id ===
+    selectedObjectId
+  ) {
+
+    return liveTextObject;
+
+  }
+
+
+  return designObjects.find(
+    object =>
+      object.id ===
+      selectedObjectId
+  ) || null;
+
+}
+
+
+/* =========================
+   IMAGE CONTROLS
+========================= */
+
+function updateImageControls() {
+
+  const object =
+    getSelectedObject();
+
+
+  if (
+    object &&
+    object.type === "image"
+  ) {
+
+    imageControls.style.display =
+      "block";
+
+
+    imageSize.value =
+      object.width;
+
+
+    imageSizeValue.textContent =
+      object.width + " px";
+
+  } else {
+
+    imageControls.style.display =
+      "none";
+
+  }
+
+}
+
+
+/* =========================
    OBJECT LIST
--------------------------------- */
+========================= */
 
 function updateObjectList() {
 
   objectList.innerHTML = "";
+
 
   if (!designObjects.length) {
     return;
   }
 
 
-  const title =
+  const heading =
     document.createElement("div");
 
-  title.textContent =
+
+  heading.className =
+    "object-heading";
+
+
+  heading.textContent =
     "Your Added Items";
 
-  title.style.marginTop =
-    "15px";
 
-  title.style.fontWeight =
-    "bold";
-
-  objectList.appendChild(title);
+  objectList.appendChild(
+    heading
+  );
 
 
   designObjects.forEach(
@@ -944,20 +1508,26 @@ function updateObjectList() {
       const item =
         document.createElement("div");
 
+
       item.className =
         "object-item";
 
 
       if (
-        object.id === selectedObjectId
+        object.id ===
+        selectedObjectId
       ) {
 
-        item.classList.add("active");
+        item.classList.add(
+          "active"
+        );
 
       }
 
 
-      if (object.type === "text") {
+      if (
+        object.type === "text"
+      ) {
 
         item.textContent =
           (index + 1) +
@@ -981,7 +1551,9 @@ function updateObjectList() {
             object.id;
 
 
-          if (object.type === "text") {
+          if (
+            object.type === "text"
+          ) {
 
             liveTextObject =
               object;
@@ -1010,7 +1582,9 @@ function updateObjectList() {
       );
 
 
-      objectList.appendChild(item);
+      objectList.appendChild(
+        item
+      );
 
     }
   );
@@ -1018,9 +1592,9 @@ function updateObjectList() {
 }
 
 
-/* --------------------------------
-   SAVE DESIGN
--------------------------------- */
+/* =========================
+   SAVE
+========================= */
 
 saveDesign.addEventListener(
   "click",
@@ -1031,18 +1605,11 @@ saveDesign.addEventListener(
       liveTextObject.text.trim()
     ) {
 
-      const saveCurrent =
-        confirm(
-          "You have text that has not been added to the pixels yet. Add it to the pixels first?"
-        );
+      alert(
+        "Please tap ADD TO PIXELS for your current text before saving."
+      );
 
-      if (saveCurrent) {
-
-        addToPixels.click();
-
-        return;
-
-      }
+      return;
 
     }
 
@@ -1075,9 +1642,9 @@ saveDesign.addEventListener(
 );
 
 
-/* --------------------------------
+/* =========================
    BACK
--------------------------------- */
+========================= */
 
 backButton.addEventListener(
   "click",
@@ -1090,9 +1657,9 @@ backButton.addEventListener(
 );
 
 
-/* --------------------------------
+/* =========================
    START
--------------------------------- */
+========================= */
 
 drawPixels();
 
