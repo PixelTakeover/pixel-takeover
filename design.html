@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Pixel Takeover - Design Your Pixels</title>
 
 <style>
+
 * {
   box-sizing: border-box;
 }
@@ -32,7 +34,10 @@ h1 {
   color: #aaa;
 }
 
-/* PREVIEW FIRST */
+/* =========================
+   PREVIEW
+========================= */
+
 .preview-section {
   padding: 10px 12px 18px;
 }
@@ -55,17 +60,40 @@ h1 {
 #workspace {
   position: relative;
   margin: auto;
-  overflow: hidden;
-  background: #222;
 }
 
-/* SELECTED PIXELS */
+/*
+  The pixel cells themselves.
+*/
 .pixel {
   position: absolute;
   border: 1px solid rgba(255,255,255,.15);
 }
 
-/* DESIGN OBJECTS */
+/*
+  This layer holds text and images.
+
+  The JavaScript creates a mask containing ONLY
+  the pixels the customer selected.
+*/
+#designLayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: 0 0;
+  -webkit-mask-size: 100% 100%;
+
+  mask-repeat: no-repeat;
+  mask-position: 0 0;
+  mask-size: 100% 100%;
+}
+
 .design-object {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -80,7 +108,15 @@ h1 {
   outline-offset: 4px;
 }
 
-/* CONTROLS */
+.design-image {
+  display: block;
+  height: auto;
+}
+
+/* =========================
+   CONTROLS
+========================= */
+
 .container {
   max-width: 900px;
   margin: auto;
@@ -228,19 +264,31 @@ button {
   font-size: 13px;
   margin-top: 7px;
 }
+
+.empty-message {
+  text-align: center;
+  color: #aaa;
+  padding: 30px 10px;
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
+
   <h1>Design Your Pixels</h1>
-  <p class="subtitle">Make your space yours.</p>
+
+  <p class="subtitle">
+    Make your space yours.
+  </p>
+
 </header>
 
 
 <!-- =========================
-     PREVIEW AT THE TOP
+     PREVIEW AT TOP
 ========================= -->
 
 <section class="preview-section">
@@ -250,7 +298,13 @@ button {
   </p>
 
   <div class="workspace-wrapper">
-    <div id="workspace"></div>
+
+    <div id="workspace">
+
+      <div id="designLayer"></div>
+
+    </div>
+
   </div>
 
 </section>
@@ -261,12 +315,16 @@ button {
   <div class="controls">
 
     <div class="selected-count">
+
       Selected Pixels:
       <span id="pixelCount">0</span>
+
     </div>
 
 
-    <!-- LIVE TEXT -->
+    <!-- =========================
+         TEXT
+    ========================= -->
 
     <label for="textInput">
       Type Your Text
@@ -283,27 +341,78 @@ button {
     </div>
 
 
+    <!-- =========================
+         FONT
+    ========================= -->
+
     <label for="fontFamily">
       Font
     </label>
 
     <select id="fontFamily">
-      <option value="Arial">Arial</option>
-      <option value="Arial Black">Arial Black - Bold</option>
-      <option value="Impact">Impact - Extra Bold</option>
-      <option value="Verdana">Verdana</option>
-      <option value="Trebuchet MS">Trebuchet MS</option>
-      <option value="Georgia">Georgia</option>
-      <option value="Times New Roman">Times New Roman</option>
-      <option value="Courier New">Courier New</option>
-      <option value="Comic Sans MS">Comic Sans</option>
-      <option value="Cursive">Cursive</option>
-      <option value="Fantasy">Fantasy</option>
-      <option value="serif">Classic Serif</option>
-      <option value="sans-serif">Modern Sans</option>
-      <option value="monospace">Monospace</option>
+
+      <option value="Arial">
+        Arial
+      </option>
+
+      <option value="Arial Black">
+        Arial Black - Bold
+      </option>
+
+      <option value="Impact">
+        Impact - Extra Bold
+      </option>
+
+      <option value="Verdana">
+        Verdana
+      </option>
+
+      <option value="Trebuchet MS">
+        Trebuchet MS
+      </option>
+
+      <option value="Georgia">
+        Georgia
+      </option>
+
+      <option value="Times New Roman">
+        Times New Roman
+      </option>
+
+      <option value="Courier New">
+        Courier New
+      </option>
+
+      <option value="Comic Sans MS">
+        Comic Sans
+      </option>
+
+      <option value="Cursive">
+        Cursive
+      </option>
+
+      <option value="Fantasy">
+        Fantasy
+      </option>
+
+      <option value="serif">
+        Classic Serif
+      </option>
+
+      <option value="sans-serif">
+        Modern Sans
+      </option>
+
+      <option value="monospace">
+        Monospace
+      </option>
+
     </select>
 
+
+    <!-- =========================
+         TEXT COLOR
+    ========================= -->
 
     <label for="textColor">
       Text Color
@@ -315,6 +424,10 @@ button {
       value="#ffffff"
     >
 
+
+    <!-- =========================
+         TEXT SIZE
+    ========================= -->
 
     <label for="textSize">
       Text Size
@@ -337,6 +450,10 @@ button {
     </div>
 
 
+    <!-- =========================
+         BACKGROUND
+    ========================= -->
+
     <label for="backgroundColor">
       Pixel Background Color
     </label>
@@ -348,7 +465,9 @@ button {
     >
 
 
-    <!-- IMAGE CONTROLS -->
+    <!-- =========================
+         IMAGE CONTROLS
+    ========================= -->
 
     <div id="imageControls">
 
@@ -379,7 +498,9 @@ button {
     </div>
 
 
-    <!-- BUTTONS -->
+    <!-- =========================
+         BUTTONS
+    ========================= -->
 
     <div class="button-row">
 
@@ -409,7 +530,9 @@ button {
     >
 
 
-    <!-- ADDED ITEMS -->
+    <!-- =========================
+         OBJECT LIST
+    ========================= -->
 
     <div id="objectList"></div>
 
@@ -425,9 +548,9 @@ button {
 
 <script>
 
-/* =========================
+/* =====================================================
    READ SELECTED PIXELS
-========================= */
+===================================================== */
 
 const params =
   new URLSearchParams(window.location.search);
@@ -436,6 +559,7 @@ const pixelData =
   params.get("pixels");
 
 let selectedPixels = [];
+
 
 if (pixelData) {
 
@@ -472,12 +596,15 @@ document.getElementById("pixelCount")
   selectedPixels.length;
 
 
-/* =========================
+/* =====================================================
    ELEMENTS
-========================= */
+===================================================== */
 
 const workspace =
   document.getElementById("workspace");
+
+const designLayer =
+  document.getElementById("designLayer");
 
 const textInput =
   document.getElementById("textInput");
@@ -528,9 +655,9 @@ const imageSizeValue =
   document.getElementById("imageSizeValue");
 
 
-/* =========================
+/* =====================================================
    SETTINGS
-========================= */
+===================================================== */
 
 const PIXEL_SIZE = 40;
 
@@ -542,6 +669,8 @@ let selectedObjectId = null;
 
 let liveTextObject = null;
 
+let editingObjectId = null;
+
 let draggingObject = null;
 
 let dragOffsetX = 0;
@@ -549,9 +678,9 @@ let dragOffsetX = 0;
 let dragOffsetY = 0;
 
 
-/* =========================
-   PIXEL BOUNDS
-========================= */
+/* =====================================================
+   GET PIXEL BOUNDS
+===================================================== */
 
 function getPixelBounds() {
 
@@ -574,8 +703,11 @@ function getPixelBounds() {
         key.split(",");
 
       return {
+
         x: Number(parts[0]),
+
         y: Number(parts[1])
+
       };
 
     });
@@ -608,32 +740,160 @@ function getPixelBounds() {
 }
 
 
-/* =========================
+/* =====================================================
+   BUILD PIXEL MASK
+===================================================== */
+
+function buildPixelMask(bounds, columns, rows) {
+
+  if (!selectedPixels.length) {
+
+    return "none";
+
+  }
+
+
+  /*
+    SVG mask:
+
+    White = visible
+    Black = hidden
+
+    Every selected pixel gets its own
+    white rectangle.
+  */
+
+  let svgRects = "";
+
+
+  selectedPixels.forEach(key => {
+
+    const parts =
+      key.split(",");
+
+    const x =
+      Number(parts[0]);
+
+    const y =
+      Number(parts[1]);
+
+
+    const maskX =
+      (x - bounds.minX) *
+      PIXEL_SIZE;
+
+    const maskY =
+      (y - bounds.minY) *
+      PIXEL_SIZE;
+
+
+    svgRects +=
+      `<rect x="${maskX}" y="${maskY}" width="${PIXEL_SIZE}" height="${PIXEL_SIZE}" fill="white"/>`;
+
+  });
+
+
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="${columns * PIXEL_SIZE}"
+         height="${rows * PIXEL_SIZE}"
+         viewBox="0 0 ${columns * PIXEL_SIZE} ${rows * PIXEL_SIZE}">
+      <rect width="100%" height="100%" fill="black"/>
+      ${svgRects}
+    </svg>
+  `;
+
+
+  const encoded =
+    encodeURIComponent(svg)
+      .replace(/'/g, "%27")
+      .replace(/"/g, "%22");
+
+
+  return `url("data:image/svg+xml,${encoded}")`;
+
+}
+
+
+/* =====================================================
    DRAW PIXELS
-========================= */
+===================================================== */
 
 function drawPixels() {
 
-  workspace.innerHTML = "";
+  workspace
+    .querySelectorAll(".pixel")
+    .forEach(el => el.remove());
+
 
   const bounds =
     getPixelBounds();
 
+
   const columns =
     bounds.maxX -
-    bounds.minX + 1;
+    bounds.minX +
+    1;
+
 
   const rows =
     bounds.maxY -
-    bounds.minY + 1;
+    bounds.minY +
+    1;
+
+
+  const width =
+    columns *
+    PIXEL_SIZE;
+
+
+  const height =
+    rows *
+    PIXEL_SIZE;
 
 
   workspace.style.width =
-    (columns * PIXEL_SIZE) + "px";
+    width + "px";
+
 
   workspace.style.height =
-    (rows * PIXEL_SIZE) + "px";
+    height + "px";
 
+
+  /*
+    Make design layer exactly the same
+    size as the pixel workspace.
+  */
+
+  designLayer.style.width =
+    width + "px";
+
+  designLayer.style.height =
+    height + "px";
+
+
+  /*
+    Apply the selected-pixel mask.
+  */
+
+  const mask =
+    buildPixelMask(
+      bounds,
+      columns,
+      rows
+    );
+
+
+  designLayer.style.webkitMaskImage =
+    mask;
+
+  designLayer.style.maskImage =
+    mask;
+
+
+  /*
+    Draw ONLY selected pixels.
+  */
 
   selectedPixels.forEach(key => {
 
@@ -650,6 +910,7 @@ function drawPixels() {
     const pixel =
       document.createElement("div");
 
+
     pixel.className =
       "pixel";
 
@@ -657,25 +918,33 @@ function drawPixels() {
     pixel.style.width =
       PIXEL_SIZE + "px";
 
+
     pixel.style.height =
       PIXEL_SIZE + "px";
 
 
     pixel.style.left =
-      ((x - bounds.minX) *
-        PIXEL_SIZE) + "px";
+      (
+        (x - bounds.minX) *
+        PIXEL_SIZE
+      ) + "px";
 
 
     pixel.style.top =
-      ((y - bounds.minY) *
-        PIXEL_SIZE) + "px";
+      (
+        (y - bounds.minY) *
+        PIXEL_SIZE
+      ) + "px";
 
 
     pixel.style.background =
       backgroundColor.value;
 
 
-    workspace.appendChild(pixel);
+    workspace.insertBefore(
+      pixel,
+      designLayer
+    );
 
   });
 
@@ -685,14 +954,16 @@ function drawPixels() {
 }
 
 
-/* =========================
+/* =====================================================
    CREATE LIVE TEXT
-========================= */
+===================================================== */
 
 function createLiveText() {
 
   if (liveTextObject) {
+
     return;
+
   }
 
 
@@ -731,16 +1002,66 @@ function createLiveText() {
   selectedObjectId =
     liveTextObject.id;
 
+
+  editingObjectId =
+    null;
+
 }
 
 
-/* =========================
-   LIVE TYPING
-========================= */
+/* =====================================================
+   LIVE TEXT INPUT
+===================================================== */
 
 textInput.addEventListener(
   "input",
   function() {
+
+    /*
+      If editing an existing object,
+      update that object.
+    */
+
+    if (editingObjectId !== null) {
+
+      const object =
+        designObjects.find(
+          item =>
+            item.id ===
+            editingObjectId
+        );
+
+
+      if (object) {
+
+        object.text =
+          textInput.value;
+
+        object.fontFamily =
+          fontFamily.value;
+
+        object.color =
+          textColor.value;
+
+        object.size =
+          Number(textSize.value);
+
+        selectedObjectId =
+          object.id;
+
+        renderObjects();
+
+      }
+
+      return;
+
+    }
+
+
+    /*
+      Otherwise create a new live
+      text object.
+    */
 
     createLiveText();
 
@@ -748,14 +1069,11 @@ textInput.addEventListener(
     liveTextObject.text =
       textInput.value;
 
-
     liveTextObject.fontFamily =
       fontFamily.value;
 
-
     liveTextObject.color =
       textColor.value;
-
 
     liveTextObject.size =
       Number(textSize.value);
@@ -767,16 +1085,42 @@ textInput.addEventListener(
 );
 
 
-/* =========================
+/* =====================================================
    FONT
-========================= */
+===================================================== */
 
 fontFamily.addEventListener(
   "change",
   function() {
 
-    if (!liveTextObject) {
+    if (editingObjectId !== null) {
+
+      const object =
+        designObjects.find(
+          item =>
+            item.id ===
+            editingObjectId
+        );
+
+
+      if (object) {
+
+        object.fontFamily =
+          fontFamily.value;
+
+        renderObjects();
+
+      }
+
       return;
+
+    }
+
+
+    if (!liveTextObject) {
+
+      return;
+
     }
 
 
@@ -790,16 +1134,42 @@ fontFamily.addEventListener(
 );
 
 
-/* =========================
+/* =====================================================
    TEXT COLOR
-========================= */
+===================================================== */
 
 textColor.addEventListener(
   "input",
   function() {
 
-    if (!liveTextObject) {
+    if (editingObjectId !== null) {
+
+      const object =
+        designObjects.find(
+          item =>
+            item.id ===
+            editingObjectId
+        );
+
+
+      if (object) {
+
+        object.color =
+          textColor.value;
+
+        renderObjects();
+
+      }
+
       return;
+
+    }
+
+
+    if (!liveTextObject) {
+
+      return;
+
     }
 
 
@@ -813,20 +1183,47 @@ textColor.addEventListener(
 );
 
 
-/* =========================
+/* =====================================================
    TEXT SIZE
-========================= */
+===================================================== */
 
 textSize.addEventListener(
   "input",
   function() {
 
     sizeValue.textContent =
-      textSize.value + " px";
+      textSize.value +
+      " px";
+
+
+    if (editingObjectId !== null) {
+
+      const object =
+        designObjects.find(
+          item =>
+            item.id ===
+            editingObjectId
+        );
+
+
+      if (object) {
+
+        object.size =
+          Number(textSize.value);
+
+        renderObjects();
+
+      }
+
+      return;
+
+    }
 
 
     if (!liveTextObject) {
+
       return;
+
     }
 
 
@@ -840,9 +1237,9 @@ textSize.addEventListener(
 );
 
 
-/* =========================
+/* =====================================================
    BACKGROUND COLOR
-========================= */
+===================================================== */
 
 backgroundColor.addEventListener(
   "input",
@@ -854,15 +1251,13 @@ backgroundColor.addEventListener(
 );
 
 
-/* =========================
+/* =====================================================
    RENDER OBJECTS
-========================= */
+===================================================== */
 
 function renderObjects() {
 
-  document
-    .querySelectorAll(".design-object")
-    .forEach(el => el.remove());
+  designLayer.innerHTML = "";
 
 
   const objects = [
@@ -886,14 +1281,18 @@ function renderObjects() {
     function(object) {
 
 
-      /* TEXT */
+      /* =========================
+         TEXT
+      ========================= */
 
       if (
         object.type === "text"
       ) {
 
         if (!object.text) {
+
           return;
+
         }
 
 
@@ -906,7 +1305,8 @@ function renderObjects() {
 
 
         if (
-          object.id === selectedObjectId
+          object.id ===
+          selectedObjectId
         ) {
 
           element.classList.add(
@@ -950,14 +1350,16 @@ function renderObjects() {
         );
 
 
-        workspace.appendChild(
+        designLayer.appendChild(
           element
         );
 
       }
 
 
-      /* IMAGE */
+      /* =========================
+         IMAGE
+      ========================= */
 
       if (
         object.type === "image"
@@ -968,7 +1370,7 @@ function renderObjects() {
 
 
         element.className =
-          "design-object";
+          "design-object design-image";
 
 
         element.src =
@@ -996,7 +1398,8 @@ function renderObjects() {
 
 
         if (
-          object.id === selectedObjectId
+          object.id ===
+          selectedObjectId
         ) {
 
           element.classList.add(
@@ -1012,7 +1415,7 @@ function renderObjects() {
         );
 
 
-        workspace.appendChild(
+        designLayer.appendChild(
           element
         );
 
@@ -1029,9 +1432,9 @@ function renderObjects() {
 }
 
 
-/* =========================
+/* =====================================================
    DRAGGING
-========================= */
+===================================================== */
 
 function addDragEvents(
   element,
@@ -1044,28 +1447,45 @@ function addDragEvents(
 
       event.preventDefault();
 
+      event.stopPropagation();
+
+
       selectedObjectId =
         object.id;
 
 
+      /*
+        If a finalized text is clicked,
+        load it for editing.
+      */
+
       if (
-        object.type === "text"
+        object.type === "text" &&
+        !object.live
       ) {
 
+        editingObjectId =
+          object.id;
+
         liveTextObject =
-          object;
+          null;
+
 
         textInput.value =
           object.text;
 
+
         fontFamily.value =
           object.fontFamily;
+
 
         textColor.value =
           object.color;
 
+
         textSize.value =
           object.size;
+
 
         sizeValue.textContent =
           object.size + " px";
@@ -1077,29 +1497,42 @@ function addDragEvents(
         workspace.getBoundingClientRect();
 
 
+      const objectX =
+        object.x /
+        100 *
+        rect.width;
+
+
+      const objectY =
+        object.y /
+        100 *
+        rect.height;
+
+
       dragOffsetX =
         event.clientX -
         rect.left -
-        (
-          object.x / 100 *
-          rect.width
-        );
+        objectX;
 
 
       dragOffsetY =
         event.clientY -
         rect.top -
-        (
-          object.y / 100 *
-          rect.height
-        );
+        objectY;
 
 
       draggingObject =
         object;
 
 
-      renderObjects();
+      /*
+        Do NOT completely rebuild the DOM here.
+        This keeps dragging smooth.
+      */
+
+      element.classList.add(
+        "active"
+      );
 
     }
   );
@@ -1107,12 +1540,18 @@ function addDragEvents(
 }
 
 
+/* =====================================================
+   DRAG MOVE
+===================================================== */
+
 document.addEventListener(
   "pointermove",
   function(event) {
 
     if (!draggingObject) {
+
       return;
+
     }
 
 
@@ -1153,18 +1592,41 @@ document.addEventListener(
 
 
     draggingObject.x =
-      (x / rect.width) * 100;
+      (x / rect.width) *
+      100;
 
 
     draggingObject.y =
-      (y / rect.height) * 100;
+      (y / rect.height) *
+      100;
 
 
-    renderObjects();
+    const element =
+      designLayer.querySelector(
+        `[data-id="${draggingObject.id}"]`
+      );
+
+
+    if (element) {
+
+      element.style.left =
+        draggingObject.x +
+        "%";
+
+
+      element.style.top =
+        draggingObject.y +
+        "%";
+
+    }
 
   }
 );
 
+
+/* =====================================================
+   DRAG END
+===================================================== */
 
 document.addEventListener(
   "pointerup",
@@ -1177,13 +1639,76 @@ document.addEventListener(
 );
 
 
-/* =========================
+/* =====================================================
    ADD TO PIXELS
-========================= */
+===================================================== */
 
 addToPixels.addEventListener(
   "click",
   function() {
+
+
+    /*
+      If editing an existing object,
+      simply finish the edit.
+
+      DO NOT create a duplicate.
+    */
+
+    if (
+      editingObjectId !== null
+    ) {
+
+      const object =
+        designObjects.find(
+          item =>
+            item.id ===
+            editingObjectId
+        );
+
+
+      if (object) {
+
+        object.text =
+          textInput.value.trim();
+
+        object.fontFamily =
+          fontFamily.value;
+
+        object.color =
+          textColor.value;
+
+        object.size =
+          Number(textSize.value);
+
+      }
+
+
+      editingObjectId =
+        null;
+
+      selectedObjectId =
+        null;
+
+      textInput.value =
+        "";
+
+      liveTextObject =
+        null;
+
+
+      renderObjects();
+
+      textInput.focus();
+
+      return;
+
+    }
+
+
+    /*
+      Finalize new live text.
+    */
 
     if (
       !liveTextObject ||
@@ -1201,6 +1726,10 @@ addToPixels.addEventListener(
     }
 
 
+    liveTextObject.text =
+      liveTextObject.text.trim();
+
+
     liveTextObject.live =
       false;
 
@@ -1209,6 +1738,12 @@ addToPixels.addEventListener(
       liveTextObject
     );
 
+
+    /*
+      Clear the live draft so the
+      customer can immediately type
+      another message.
+    */
 
     liveTextObject =
       null;
@@ -1231,9 +1766,9 @@ addToPixels.addEventListener(
 );
 
 
-/* =========================
+/* =====================================================
    ADD IMAGE
-========================= */
+===================================================== */
 
 addImage.addEventListener(
   "click",
@@ -1245,15 +1780,22 @@ addImage.addEventListener(
 );
 
 
+/* =====================================================
+   IMAGE FILE
+===================================================== */
+
 imageInput.addEventListener(
   "change",
-  function() {
+  function(event) {
 
     const file =
-      imageInput.files[0];
+      event.target.files[0];
+
 
     if (!file) {
+
       return;
+
     }
 
 
@@ -1262,7 +1804,7 @@ imageInput.addEventListener(
 
 
     reader.onload =
-      function(event) {
+      function(e) {
 
         const imageObject = {
 
@@ -1273,7 +1815,7 @@ imageInput.addEventListener(
             "image",
 
           src:
-            event.target.result,
+            e.target.result,
 
           x:
             50,
@@ -1296,6 +1838,19 @@ imageInput.addEventListener(
           imageObject.id;
 
 
+        editingObjectId =
+          null;
+
+
+        imageSize.value =
+          imageObject.width;
+
+
+        imageSizeValue.textContent =
+          imageObject.width +
+          " px";
+
+
         renderObjects();
 
       };
@@ -1303,31 +1858,42 @@ imageInput.addEventListener(
 
     reader.readAsDataURL(file);
 
+
+    /*
+      Allows the same image to be
+      selected again later.
+    */
+
+    event.target.value =
+      "";
+
   }
 );
 
 
-/* =========================
-   IMAGE RESIZE
-========================= */
+/* =====================================================
+   IMAGE SIZE
+===================================================== */
 
 imageSize.addEventListener(
   "input",
   function() {
 
-    imageSizeValue.textContent =
-      imageSize.value + " px";
-
-
     const object =
-      getSelectedObject();
+      designObjects.find(
+        item =>
+          item.id ===
+          selectedObjectId
+      );
 
 
     if (
       !object ||
       object.type !== "image"
     ) {
+
       return;
+
     }
 
 
@@ -1335,51 +1901,75 @@ imageSize.addEventListener(
       Number(imageSize.value);
 
 
-    renderObjects();
+    imageSizeValue.textContent =
+      object.width +
+      " px";
+
+
+    const element =
+      designLayer.querySelector(
+        `[data-id="${object.id}"]`
+      );
+
+
+    if (element) {
+
+      element.style.width =
+        object.width + "px";
+
+    }
 
   }
 );
 
 
-/* =========================
+/* =====================================================
    DELETE SELECTED
-========================= */
+===================================================== */
 
 deleteSelected.addEventListener(
   "click",
   function() {
 
+    /*
+      Delete live text.
+    */
+
     if (
-      !selectedObjectId
+      liveTextObject &&
+      selectedObjectId ===
+      liveTextObject.id
     ) {
 
-      alert(
-        "Select a text or image first."
-      );
+      liveTextObject =
+        null;
+
+      selectedObjectId =
+        null;
+
+      textInput.value =
+        "";
+
+      renderObjects();
+
+      textInput.focus();
 
       return;
 
     }
 
 
+    /*
+      Delete finalized object.
+    */
+
     if (
-      liveTextObject &&
-      liveTextObject.id ===
-      selectedObjectId
+      selectedObjectId === null
     ) {
 
-      liveTextObject =
-        null;
-
-      textInput.value =
-        "";
-
-      selectedObjectId =
-        null;
-
-      renderObjects();
-
-      textInput.focus();
+      alert(
+        "Select a text or image first."
+      );
 
       return;
 
@@ -1398,51 +1988,34 @@ deleteSelected.addEventListener(
       null;
 
 
+    editingObjectId =
+      null;
+
+
+    textInput.value =
+      "";
+
+
     renderObjects();
+
+    textInput.focus();
 
   }
 );
 
 
-/* =========================
-   GET SELECTED OBJECT
-========================= */
-
-function getSelectedObject() {
-
-  if (!selectedObjectId) {
-    return null;
-  }
-
-
-  if (
-    liveTextObject &&
-    liveTextObject.id ===
-    selectedObjectId
-  ) {
-
-    return liveTextObject;
-
-  }
-
-
-  return designObjects.find(
-    object =>
-      object.id ===
-      selectedObjectId
-  ) || null;
-
-}
-
-
-/* =========================
-   IMAGE CONTROLS
-========================= */
+/* =====================================================
+   UPDATE IMAGE CONTROLS
+===================================================== */
 
 function updateImageControls() {
 
   const object =
-    getSelectedObject();
+    designObjects.find(
+      item =>
+        item.id ===
+        selectedObjectId
+    );
 
 
   if (
@@ -1459,7 +2032,8 @@ function updateImageControls() {
 
 
     imageSizeValue.textContent =
-      object.width + " px";
+      object.width +
+      " px";
 
   } else {
 
@@ -1471,9 +2045,9 @@ function updateImageControls() {
 }
 
 
-/* =========================
+/* =====================================================
    OBJECT LIST
-========================= */
+===================================================== */
 
 function updateObjectList() {
 
@@ -1481,7 +2055,9 @@ function updateObjectList() {
 
 
   if (!designObjects.length) {
+
     return;
+
   }
 
 
@@ -1494,7 +2070,7 @@ function updateObjectList() {
 
 
   heading.textContent =
-    "Your Added Items";
+    "YOUR DESIGN ELEMENTS";
 
 
   objectList.appendChild(
@@ -1530,15 +2106,14 @@ function updateObjectList() {
       ) {
 
         item.textContent =
-          (index + 1) +
-          ". " +
+          "Text: " +
           object.text;
 
       } else {
 
         item.textContent =
-          (index + 1) +
-          ". Image";
+          "Image " +
+          (index + 1);
 
       }
 
@@ -1551,27 +2126,40 @@ function updateObjectList() {
             object.id;
 
 
+          /*
+            Load text for editing.
+          */
+
           if (
             object.type === "text"
           ) {
 
+            editingObjectId =
+              object.id;
+
             liveTextObject =
-              object;
+              null;
+
 
             textInput.value =
               object.text;
 
+
             fontFamily.value =
               object.fontFamily;
+
 
             textColor.value =
               object.color;
 
+
             textSize.value =
               object.size;
 
+
             sizeValue.textContent =
-              object.size + " px";
+              object.size +
+              " px";
 
           }
 
@@ -1592,13 +2180,18 @@ function updateObjectList() {
 }
 
 
-/* =========================
-   SAVE
-========================= */
+/* =====================================================
+   SAVE DESIGN
+===================================================== */
 
 saveDesign.addEventListener(
   "click",
   function() {
+
+    /*
+      Do not allow an unfinished
+      live text draft to be saved.
+    */
 
     if (
       liveTextObject &&
@@ -1606,7 +2199,20 @@ saveDesign.addEventListener(
     ) {
 
       alert(
-        "Please tap ADD TO PIXELS for your current text before saving."
+        "Click ADD TO PIXELS first to finish your text."
+      );
+
+      textInput.focus();
+
+      return;
+
+    }
+
+
+    if (!selectedPixels.length) {
+
+      alert(
+        "No pixels were selected."
       );
 
       return;
@@ -1628,6 +2234,15 @@ saveDesign.addEventListener(
     };
 
 
+    /*
+      This is currently only the
+      design-stage save.
+
+      Checkout/payment will be
+      connected after we finish
+      testing this editor.
+    */
+
     console.log(
       "PIXEL DESIGN:",
       design
@@ -1642,9 +2257,9 @@ saveDesign.addEventListener(
 );
 
 
-/* =========================
-   BACK
-========================= */
+/* =====================================================
+   GO BACK
+===================================================== */
 
 backButton.addEventListener(
   "click",
@@ -1657,13 +2272,17 @@ backButton.addEventListener(
 );
 
 
-/* =========================
-   START
-========================= */
+/* =====================================================
+   INITIAL DRAW
+===================================================== */
+
+sizeValue.textContent =
+  textSize.value +
+  " px";
+
 
 drawPixels();
 
-textInput.focus();
 
 </script>
 
