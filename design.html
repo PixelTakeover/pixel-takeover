@@ -50,14 +50,21 @@ header p {
 .preview-title {
   text-align: center;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+}
+
+.preview-note {
+  text-align: center;
+  color: #777;
+  font-size: 12px;
+  margin-bottom: 12px;
 }
 
 #previewWindow {
   position: relative;
   width: 100%;
-  max-width: 700px;
-  height: 430px;
+  max-width: 360px;
+  height: 360px;
   margin: auto;
   background: #151515;
   border: 2px solid #444;
@@ -119,8 +126,8 @@ header p {
 
 .object-handle {
   position: absolute;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   border: 2px solid #000;
   background: #fff;
@@ -130,7 +137,7 @@ header p {
   align-items: center;
   justify-content: center;
 
-  font-size: 20px;
+  font-size: 19px;
   font-weight: bold;
 
   pointer-events: auto;
@@ -145,8 +152,7 @@ header p {
 }
 
 .resize-handle {
-  cursor: nwse-resize;
-  font-size: 17px;
+  font-size: 16px;
 }
 
 .delete-handle {
@@ -154,6 +160,40 @@ header p {
   color: #fff;
   border-color: #fff;
   cursor: pointer;
+}
+
+/* Resize directions */
+
+.resize-n {
+  cursor: ns-resize;
+}
+
+.resize-s {
+  cursor: ns-resize;
+}
+
+.resize-e {
+  cursor: ew-resize;
+}
+
+.resize-w {
+  cursor: ew-resize;
+}
+
+.resize-ne {
+  cursor: nesw-resize;
+}
+
+.resize-sw {
+  cursor: nesw-resize;
+}
+
+.resize-nw {
+  cursor: nwse-resize;
+}
+
+.resize-se {
+  cursor: nwse-resize;
 }
 
 /* =========================
@@ -247,6 +287,32 @@ button {
   color: #fff;
 }
 
+/* =========================
+   BOLD BUTTON
+========================= */
+
+.bold-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.bold-button {
+  width: auto;
+  min-width: 90px;
+  margin: 0;
+  padding: 10px 18px;
+  background: #222;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+.bold-button.active {
+  background: #fff;
+  color: #000;
+}
+
 .small-note {
   color: #888;
   font-size: 13px;
@@ -289,6 +355,10 @@ button {
     YOUR PIXEL DESIGN
   </div>
 
+  <div class="preview-note">
+    This is a design preview. Your finished design will appear at the normal canvas pixel size.
+  </div>
+
   <div id="previewWindow">
 
     <div id="pixelCanvas"></div>
@@ -325,24 +395,28 @@ button {
     <select id="fontFamily">
 
       <option value="Arial">Arial</option>
-      <option value="Verdana">Verdana</option>
-      <option value="Georgia">Georgia</option>
-      <option value="Times New Roman">Times New Roman</option>
-      <option value="Courier New">Courier New</option>
-
-      <option value="Impact">Impact</option>
       <option value="Arial Black">Arial Black</option>
-      <option value="Trebuchet MS">Trebuchet MS</option>
+      <option value="Georgia">Georgia</option>
+      <option value="Impact">Impact</option>
       <option value="Comic Sans MS">Comic Sans</option>
-      <option value="Lucida Console">Lucida Console</option>
-
-      <option value="Palatino Linotype">Palatino</option>
-      <option value="Franklin Gothic Medium">Franklin Gothic</option>
-      <option value="Copperplate">Copperplate</option>
       <option value="Brush Script MT">Cursive</option>
-      <option value="Papyrus">Spooky</option>
 
     </select>
+
+
+    <div class="bold-row">
+
+      <span>Bold:</span>
+
+      <button
+        type="button"
+        class="bold-button"
+        id="boldButton"
+      >
+        BOLD
+      </button>
+
+    </div>
 
 
     <label for="textColor">
@@ -431,9 +505,9 @@ button {
     >
 
     <div class="small-note">
-      After adding an image, tap it in the preview.
-      Use the handles directly on the image to move,
-      resize, rotate, or delete it.
+      Select your image and use the handles directly on it.
+      Drag any edge or corner to resize it.
+      Use ↻ to rotate and × to delete.
     </div>
 
   </div>
@@ -452,7 +526,7 @@ button {
     <div class="small-note">
       Drag the item to move it.
       ↻ turns it.
-      ↘ makes it bigger or smaller.
+      The resize handles let you pull any edge or corner.
       × deletes it.
     </div>
 
@@ -557,6 +631,9 @@ const selectedObjectText =
 const objectList =
   document.getElementById("objectList");
 
+const boldButton =
+  document.getElementById("boldButton");
+
 
 /* =========================================================
    DESIGN STATE
@@ -569,6 +646,55 @@ let liveTextObject = null;
 let selectedObjectId = null;
 
 let editingObjectId = null;
+
+
+/* =========================================================
+   BOLD STATE
+========================================================= */
+
+let boldEnabled = false;
+
+
+boldButton.addEventListener(
+  "click",
+  function() {
+
+    boldEnabled =
+      !boldEnabled;
+
+    boldButton.classList.toggle(
+      "active",
+      boldEnabled
+    );
+
+
+    const object =
+      getSelectedTextObject();
+
+
+    if (object) {
+
+      object.bold =
+        boldEnabled;
+
+      renderObjects();
+
+      return;
+
+    }
+
+
+    if (liveTextObject) {
+
+      liveTextObject.bold =
+        boldEnabled;
+
+      renderObjects();
+
+    }
+
+  }
+);
 
 
 /* =========================================================
@@ -662,10 +788,28 @@ function drawPixels() {
     previewWindow.clientHeight;
 
 
-  const pixelSize =
+  /*
+    Keep the selected pixels
+    small enough to represent
+    the actual canvas instead
+    of filling the entire editor.
+  */
+
+  const maximumPixelSize =
+    28;
+
+
+  const fitPixelSize =
     Math.min(
       availableWidth / gridWidth,
       availableHeight / gridHeight
+    );
+
+
+  const pixelSize =
+    Math.min(
+      maximumPixelSize,
+      fitPixelSize
     );
 
 
@@ -702,11 +846,13 @@ function drawPixels() {
     pixel.style.position =
       "absolute";
 
+
     pixel.style.left =
       (
         offsetX +
         (x - minX) * pixelSize
       ) + "px";
+
 
     pixel.style.top =
       (
@@ -714,11 +860,13 @@ function drawPixels() {
         (y - minY) * pixelSize
       ) + "px";
 
+
     pixel.style.width =
       Math.max(
         1,
         pixelSize - 1
       ) + "px";
+
 
     pixel.style.height =
       Math.max(
@@ -726,8 +874,10 @@ function drawPixels() {
         pixelSize - 1
       ) + "px";
 
+
     pixel.style.background =
       backgroundColor.value;
+
 
     pixel.style.border =
       "1px solid rgba(0,0,0,.2)";
@@ -783,10 +933,6 @@ designText.addEventListener(
       designText.value;
 
 
-    /*
-      Editing an existing text
-    */
-
     if (editingObjectId) {
 
       const object =
@@ -814,6 +960,9 @@ designText.addEventListener(
         object.fontSize =
           Number(fontSize.value);
 
+        object.bold =
+          boldEnabled;
+
         renderObjects();
 
         return;
@@ -822,10 +971,6 @@ designText.addEventListener(
 
     }
 
-
-    /*
-      Create live text
-    */
 
     if (!liveTextObject) {
 
@@ -849,6 +994,9 @@ designText.addEventListener(
 
         fontSize:
           Number(fontSize.value),
+
+        bold:
+          boldEnabled,
 
         x:
           50,
@@ -874,6 +1022,9 @@ designText.addEventListener(
 
       liveTextObject.fontSize =
         Number(fontSize.value);
+
+      liveTextObject.bold =
+        boldEnabled;
 
     }
 
@@ -1063,10 +1214,6 @@ document.getElementById("addText")
     }
 
 
-    /*
-      Finish live text
-    */
-
     if (liveTextObject) {
 
       liveTextObject.text =
@@ -1080,6 +1227,9 @@ document.getElementById("addText")
 
       liveTextObject.fontSize =
         Number(fontSize.value);
+
+      liveTextObject.bold =
+        boldEnabled;
 
 
       designObjects.push(
@@ -1110,10 +1260,6 @@ document.getElementById("addText")
     }
 
 
-    /*
-      Save existing edit
-    */
-
     const object =
       getSelectedTextObject();
 
@@ -1131,6 +1277,9 @@ document.getElementById("addText")
 
       object.fontSize =
         Number(fontSize.value);
+
+      object.bold =
+        boldEnabled;
 
 
       editingObjectId =
@@ -1191,10 +1340,20 @@ imageUpload.addEventListener(
           type:
             "image",
 
+          /*
+            Keep the ORIGINAL
+            uploaded image.
+            We only resize the
+            display dimensions.
+          */
+
           src:
             e.target.result,
 
           width:
+            150,
+
+          height:
             150,
 
           x:
@@ -1209,16 +1368,46 @@ imageUpload.addEventListener(
         };
 
 
-        designObjects.push(
-          object
-        );
+        /*
+          Get the actual image
+          dimensions so we can
+          preserve the original
+          proportions when first
+          displaying it.
+        */
+
+        const temporaryImage =
+          new Image();
 
 
-        selectedObjectId =
-          object.id;
+        temporaryImage.onload =
+          function() {
+
+            const ratio =
+              temporaryImage.height /
+              temporaryImage.width;
 
 
-        renderObjects();
+            object.height =
+              object.width * ratio;
+
+
+            designObjects.push(
+              object
+            );
+
+
+            selectedObjectId =
+              object.id;
+
+
+            renderObjects();
+
+          };
+
+
+        temporaryImage.src =
+          object.src;
 
       };
 
@@ -1282,6 +1471,7 @@ function renderObjects() {
       element.style.left =
         object.x + "%";
 
+
       element.style.top =
         object.y + "%";
 
@@ -1310,6 +1500,11 @@ function renderObjects() {
         element.style.fontSize =
           object.fontSize + "px";
 
+        element.style.fontWeight =
+          object.bold
+            ? "700"
+            : "400";
+
         element.style.lineHeight =
           "1.1";
 
@@ -1324,6 +1519,9 @@ function renderObjects() {
 
         element.style.width =
           object.width + "px";
+
+        element.style.height =
+          object.height + "px";
 
 
         const img =
@@ -1340,10 +1538,6 @@ function renderObjects() {
 
       }
 
-
-      /*
-        Selecting and moving
-      */
 
       element.addEventListener(
         "pointerdown",
@@ -1376,11 +1570,6 @@ function renderObjects() {
     }
   );
 
-
-  /*
-    IMPORTANT:
-    Draw controls AFTER objects.
-  */
 
   drawSelectionControls();
 
@@ -1460,6 +1649,14 @@ function selectObject(id) {
     fontSizeValue.textContent =
       object.fontSize || 32;
 
+    boldEnabled =
+      !!object.bold;
+
+    boldButton.classList.toggle(
+      "active",
+      boldEnabled
+    );
+
     editingObjectId =
       object.id;
 
@@ -1495,10 +1692,6 @@ function selectObject(id) {
 
 function drawSelectionControls() {
 
-  /*
-    Remove old controls.
-  */
-
   document
     .querySelectorAll(
       ".selection-box, .object-handle"
@@ -1532,10 +1725,6 @@ function drawSelectionControls() {
     return;
 
 
-  /*
-    get the object's screen rectangle
-  */
-
   const rect =
     element.getBoundingClientRect();
 
@@ -1563,7 +1752,7 @@ function drawSelectionControls() {
 
 
   /*
-    Selection box
+    SELECTION BOX
   */
 
   const box =
@@ -1577,11 +1766,14 @@ function drawSelectionControls() {
   box.style.left =
     (left - 4) + "px";
 
+
   box.style.top =
     (top - 4) + "px";
 
+
   box.style.width =
     (width + 8) + "px";
+
 
   box.style.height =
     (height + 8) + "px";
@@ -1593,7 +1785,7 @@ function drawSelectionControls() {
 
 
   /*
-    ROTATE HANDLE
+    ROTATE
   */
 
   const rotate =
@@ -1612,14 +1804,14 @@ function drawSelectionControls() {
     (
       left +
       width / 2 -
-      18
+      17
     ) + "px";
 
 
   rotate.style.top =
     (
       top -
-      52
+      48
     ) + "px";
 
 
@@ -1646,7 +1838,7 @@ function drawSelectionControls() {
 
 
   /*
-    DELETE HANDLE
+    DELETE
   */
 
   const del =
@@ -1665,14 +1857,14 @@ function drawSelectionControls() {
     (
       left +
       width -
-      18
+      17
     ) + "px";
 
 
   del.style.top =
     (
       top -
-      52
+      48
     ) + "px";
 
 
@@ -1698,43 +1890,120 @@ function drawSelectionControls() {
 
 
   /*
-    RESIZE HANDLE
+    EIGHT RESIZE HANDLES
   */
 
-  const resize =
+  createResizeHandle(
+    "nw",
+    left - 17,
+    top - 17,
+    object
+  );
+
+  createResizeHandle(
+    "n",
+    left + width / 2 - 17,
+    top - 17,
+    object
+  );
+
+  createResizeHandle(
+    "ne",
+    left + width - 17,
+    top - 17,
+    object
+  );
+
+  createResizeHandle(
+    "w",
+    left - 17,
+    top + height / 2 - 17,
+    object
+  );
+
+  createResizeHandle(
+    "e",
+    left + width - 17,
+    top + height / 2 - 17,
+    object
+  );
+
+  createResizeHandle(
+    "sw",
+    left - 17,
+    top + height - 17,
+    object
+  );
+
+  createResizeHandle(
+    "s",
+    left + width / 2 - 17,
+    top + height - 17,
+    object
+  );
+
+  createResizeHandle(
+    "se",
+    left + width - 17,
+    top + height - 17,
+    object
+  );
+
+}
+
+
+/* =========================================================
+   CREATE RESIZE HANDLE
+========================================================= */
+
+function createResizeHandle(
+  position,
+  left,
+  top,
+  object
+) {
+
+  const handle =
     document.createElement("div");
 
 
-  resize.className =
-    "object-handle resize-handle";
+  handle.className =
+    "object-handle resize-handle resize-" +
+    position;
 
 
-  resize.textContent =
-    "↘";
+  /*
+    Show the resize symbol
+    on corner handles.
+  */
+
+  if (
+    position === "se" ||
+    position === "nw" ||
+    position === "ne" ||
+    position === "sw"
+  ) {
+
+    handle.textContent =
+      "↘";
+
+  }
 
 
-  resize.style.left =
-    (
-      left +
-      width -
-      18
-    ) + "px";
+  handle.style.left =
+    left + "px";
 
 
-  resize.style.top =
-    (
-      top +
-      height -
-      18
-    ) + "px";
+  handle.style.top =
+    top + "px";
 
 
   designLayer.appendChild(
-    resize
+    handle
   );
 
 
-  resize.addEventListener(
+  handle.addEventListener(
     "pointerdown",
     function(event) {
 
@@ -1742,10 +2011,22 @@ function drawSelectionControls() {
 
       event.stopPropagation();
 
+
+      const element =
+        designLayer.querySelector(
+          `[data-id="${object.id}"]`
+        );
+
+
+      if (!element)
+        return;
+
+
       startResize(
         event,
         object,
-        element
+        element,
+        position
       );
 
     }
@@ -1839,6 +2120,7 @@ function startMove(
     element.style.left =
       object.x + "%";
 
+
     element.style.top =
       object.y + "%";
 
@@ -1904,6 +2186,7 @@ function startRotate(
     rect.left +
     rect.width / 2;
 
+
   const centerY =
     rect.top +
     rect.height / 2;
@@ -1926,11 +2209,6 @@ function startRotate(
       180 /
       Math.PI;
 
-
-    /*
-      Put 0 degrees at the
-      normal upright position.
-    */
 
     degrees += 90;
 
@@ -2000,12 +2278,9 @@ function startRotate(
 function startResize(
   event,
   object,
-  element
+  element,
+  direction
 ) {
-
-  /*
-    Resize is for images.
-  */
 
   if (
     object.type !== "image"
@@ -2019,34 +2294,116 @@ function startResize(
   const startX =
     event.clientX;
 
+  const startY =
+    event.clientY;
+
 
   const startingWidth =
     object.width;
 
+  const startingHeight =
+    object.height;
+
 
   function resize(e) {
 
-    const distance =
+    const dx =
       e.clientX -
       startX;
 
+    const dy =
+      e.clientY -
+      startY;
+
 
     let newWidth =
-      startingWidth +
-      distance;
+      startingWidth;
+
+    let newHeight =
+      startingHeight;
 
 
     /*
-      Prevent it from becoming
-      too tiny or enormous.
+      RIGHT EDGE
+    */
+
+    if (
+      direction.includes("e")
+    ) {
+
+      newWidth =
+        startingWidth +
+        dx;
+
+    }
+
+
+    /*
+      LEFT EDGE
+    */
+
+    if (
+      direction.includes("w")
+    ) {
+
+      newWidth =
+        startingWidth -
+        dx;
+
+    }
+
+
+    /*
+      BOTTOM EDGE
+    */
+
+    if (
+      direction.includes("s")
+    ) {
+
+      newHeight =
+        startingHeight +
+        dy;
+
+    }
+
+
+    /*
+      TOP EDGE
+    */
+
+    if (
+      direction.includes("n")
+    ) {
+
+      newHeight =
+        startingHeight -
+        dy;
+
+    }
+
+
+    /*
+      Keep the image from
+      becoming too small.
     */
 
     newWidth =
       Math.max(
         30,
         Math.min(
-          600,
+          700,
           newWidth
+        )
+      );
+
+
+    newHeight =
+      Math.max(
+        30,
+        Math.min(
+          700,
+          newHeight
         )
       );
 
@@ -2055,8 +2412,16 @@ function startResize(
       newWidth;
 
 
+    object.height =
+      newHeight;
+
+
     element.style.width =
       newWidth + "px";
+
+
+    element.style.height =
+      newHeight + "px";
 
 
     drawSelectionControls();
