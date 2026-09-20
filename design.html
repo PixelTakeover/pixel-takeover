@@ -34,10 +34,6 @@ h1 {
   color: #aaa;
 }
 
-/* =========================
-   PREVIEW
-========================= */
-
 .preview-section {
   padding: 10px 12px 18px;
 }
@@ -62,27 +58,15 @@ h1 {
   margin: auto;
 }
 
-/*
-  The pixel cells themselves.
-*/
 .pixel {
   position: absolute;
   border: 1px solid rgba(255,255,255,.15);
 }
 
-/*
-  This layer holds text and images.
-
-  The JavaScript creates a mask containing ONLY
-  the pixels the customer selected.
-*/
 #designLayer {
   position: absolute;
   left: 0;
   top: 0;
-  width: 100%;
-  height: 100%;
-
   overflow: hidden;
 
   -webkit-mask-repeat: no-repeat;
@@ -96,7 +80,6 @@ h1 {
 
 .design-object {
   position: absolute;
-  transform: translate(-50%, -50%);
   cursor: move;
   user-select: none;
   touch-action: none;
@@ -112,10 +95,6 @@ h1 {
   display: block;
   height: auto;
 }
-
-/* =========================
-   CONTROLS
-========================= */
 
 .container {
   max-width: 900px;
@@ -182,9 +161,15 @@ input[type="color"] {
 }
 
 #sizeValue,
-#imageSizeValue {
+#imageSizeValue,
+#rotationValue {
   min-width: 65px;
   font-weight: bold;
+}
+
+#rotationControls,
+#imageControls {
+  display: none;
 }
 
 .button-row {
@@ -230,10 +215,6 @@ button {
   color: white;
 }
 
-#imageControls {
-  display: none;
-}
-
 #imageInput {
   display: none;
 }
@@ -265,12 +246,6 @@ button {
   margin-top: 7px;
 }
 
-.empty-message {
-  text-align: center;
-  color: #aaa;
-  padding: 30px 10px;
-}
-
 </style>
 </head>
 
@@ -278,270 +253,216 @@ button {
 
 <header>
 
-  <h1>Design Your Pixels</h1>
+<h1>Design Your Pixels</h1>
 
-  <p class="subtitle">
-    Make your space yours.
-  </p>
+<p class="subtitle">
+Make your space yours.
+</p>
 
 </header>
 
 
-<!-- =========================
-     PREVIEW AT TOP
-========================= -->
-
 <section class="preview-section">
 
-  <p class="preview-title">
-    YOUR PIXEL PREVIEW
-  </p>
+<p class="preview-title">
+YOUR PIXEL PREVIEW
+</p>
 
-  <div class="workspace-wrapper">
+<div class="workspace-wrapper">
 
-    <div id="workspace">
+<div id="workspace">
 
-      <div id="designLayer"></div>
+<div id="designLayer"></div>
 
-    </div>
+</div>
 
-  </div>
+</div>
 
 </section>
 
 
 <div class="container">
 
-  <div class="controls">
+<div class="controls">
 
-    <div class="selected-count">
+<div class="selected-count">
 
-      Selected Pixels:
-      <span id="pixelCount">0</span>
+Selected Pixels:
+<span id="pixelCount">0</span>
 
-    </div>
+</div>
 
 
-    <!-- =========================
-         TEXT
-    ========================= -->
+<label for="textInput">
+Type Your Text
+</label>
 
-    <label for="textInput">
-      Type Your Text
-    </label>
+<textarea
+id="textInput"
+placeholder="Start typing and watch it appear in your pixels..."
+autofocus></textarea>
 
-    <textarea
-      id="textInput"
-      placeholder="Start typing and watch it appear in your pixels..."
-      autofocus
-    ></textarea>
+<div class="help">
+Your text appears immediately while you type.
+</div>
 
-    <div class="help">
-      Your text appears immediately while you type.
-    </div>
 
+<label for="fontFamily">
+Font
+</label>
 
-    <!-- =========================
-         FONT
-    ========================= -->
+<select id="fontFamily">
 
-    <label for="fontFamily">
-      Font
-    </label>
+<option value="Arial">Arial</option>
+<option value="Arial Black">Arial Black - Bold</option>
+<option value="Impact">Impact - Extra Bold</option>
+<option value="Verdana">Verdana</option>
+<option value="Trebuchet MS">Trebuchet MS</option>
+<option value="Georgia">Georgia</option>
+<option value="Times New Roman">Times New Roman</option>
+<option value="Courier New">Courier New</option>
+<option value="Comic Sans MS">Comic Sans</option>
+<option value="Cursive">Cursive</option>
+<option value="Fantasy">Fantasy</option>
+<option value="serif">Classic Serif</option>
+<option value="sans-serif">Modern Sans</option>
+<option value="monospace">Monospace</option>
 
-    <select id="fontFamily">
+</select>
 
-      <option value="Arial">
-        Arial
-      </option>
 
-      <option value="Arial Black">
-        Arial Black - Bold
-      </option>
+<label for="textColor">
+Text Color
+</label>
 
-      <option value="Impact">
-        Impact - Extra Bold
-      </option>
+<input
+type="color"
+id="textColor"
+value="#ffffff">
 
-      <option value="Verdana">
-        Verdana
-      </option>
 
-      <option value="Trebuchet MS">
-        Trebuchet MS
-      </option>
+<label for="textSize">
+Text Size
+</label>
 
-      <option value="Georgia">
-        Georgia
-      </option>
+<div class="range-row">
 
-      <option value="Times New Roman">
-        Times New Roman
-      </option>
+<input
+type="range"
+id="textSize"
+min="8"
+max="120"
+value="40">
 
-      <option value="Courier New">
-        Courier New
-      </option>
+<span id="sizeValue">
+40 px
+</span>
 
-      <option value="Comic Sans MS">
-        Comic Sans
-      </option>
+</div>
 
-      <option value="Cursive">
-        Cursive
-      </option>
 
-      <option value="Fantasy">
-        Fantasy
-      </option>
+<!-- ROTATION -->
 
-      <option value="serif">
-        Classic Serif
-      </option>
+<div id="rotationControls">
 
-      <option value="sans-serif">
-        Modern Sans
-      </option>
+<label for="rotation">
+Rotation
+</label>
 
-      <option value="monospace">
-        Monospace
-      </option>
+<div class="range-row">
 
-    </select>
+<input
+type="range"
+id="rotation"
+min="0"
+max="360"
+step="1"
+value="0">
 
+<span id="rotationValue">
+0°
+</span>
 
-    <!-- =========================
-         TEXT COLOR
-    ========================= -->
+</div>
 
-    <label for="textColor">
-      Text Color
-    </label>
+<div class="help">
+Rotate the selected text or image.
+</div>
 
-    <input
-      type="color"
-      id="textColor"
-      value="#ffffff"
-    >
+</div>
 
 
-    <!-- =========================
-         TEXT SIZE
-    ========================= -->
+<label for="backgroundColor">
+Pixel Background Color
+</label>
 
-    <label for="textSize">
-      Text Size
-    </label>
+<input
+type="color"
+id="backgroundColor"
+value="#222222">
 
-    <div class="range-row">
 
-      <input
-        type="range"
-        id="textSize"
-        min="8"
-        max="120"
-        value="40"
-      >
+<!-- IMAGE SIZE -->
 
-      <span id="sizeValue">
-        40 px
-      </span>
+<div id="imageControls">
 
-    </div>
+<label for="imageSize">
+Image Size
+</label>
 
+<div class="range-row">
 
-    <!-- =========================
-         BACKGROUND
-    ========================= -->
+<input
+type="range"
+id="imageSize"
+min="20"
+max="500"
+value="150">
 
-    <label for="backgroundColor">
-      Pixel Background Color
-    </label>
+<span id="imageSizeValue">
+150 px
+</span>
 
-    <input
-      type="color"
-      id="backgroundColor"
-      value="#222222"
-    >
+</div>
 
+</div>
 
-    <!-- =========================
-         IMAGE CONTROLS
-    ========================= -->
 
-    <div id="imageControls">
+<div class="button-row">
 
-      <label for="imageSize">
-        Image Size
-      </label>
+<button id="addToPixels">
+ADD TO PIXELS
+</button>
 
-      <div class="range-row">
+<button id="addImage">
+ADD IMAGE
+</button>
 
-        <input
-          type="range"
-          id="imageSize"
-          min="20"
-          max="500"
-          value="150"
-        >
+<button id="deleteSelected">
+DELETE SELECTED
+</button>
 
-        <span id="imageSizeValue">
-          150 px
-        </span>
+<button id="backButton">
+GO BACK
+</button>
 
-      </div>
+</div>
 
-      <div class="help">
-        Select an image in the preview, then resize it here.
-      </div>
 
-    </div>
+<input
+type="file"
+id="imageInput"
+accept="image/*">
 
 
-    <!-- =========================
-         BUTTONS
-    ========================= -->
+<div id="objectList"></div>
 
-    <div class="button-row">
 
-      <button id="addToPixels">
-        ADD TO PIXELS
-      </button>
+<button id="saveDesign">
+SAVE PIXEL DESIGN
+</button>
 
-      <button id="addImage">
-        ADD IMAGE
-      </button>
-
-      <button id="deleteSelected">
-        DELETE SELECTED
-      </button>
-
-      <button id="backButton">
-        GO BACK
-      </button>
-
-    </div>
-
-
-    <input
-      type="file"
-      id="imageInput"
-      accept="image/*"
-    >
-
-
-    <!-- =========================
-         OBJECT LIST
-    ========================= -->
-
-    <div id="objectList"></div>
-
-
-    <button id="saveDesign">
-      SAVE PIXEL DESIGN
-    </button>
-
-  </div>
+</div>
 
 </div>
 
@@ -549,114 +470,106 @@ button {
 <script>
 
 /* =====================================================
-   READ SELECTED PIXELS
+READ SELECTED PIXELS
 ===================================================== */
 
 const params =
-  new URLSearchParams(window.location.search);
+new URLSearchParams(window.location.search);
 
 const pixelData =
-  params.get("pixels");
+params.get("pixels");
 
 let selectedPixels = [];
 
-
 if (pixelData) {
 
-  try {
+try {
 
-    selectedPixels =
-      JSON.parse(
-        decodeURIComponent(pixelData)
-      );
+selectedPixels =
+JSON.parse(
+decodeURIComponent(pixelData)
+);
 
-  } catch (error) {
+} catch (error) {
 
-    try {
+try {
 
-      selectedPixels =
-        JSON.parse(pixelData);
+selectedPixels =
+JSON.parse(pixelData);
 
-    } catch (secondError) {
+} catch (secondError) {
 
-      console.error(
-        "Could not read selected pixels:",
-        secondError
-      );
-
-    }
-
-  }
+console.error(
+"Could not read selected pixels:",
+secondError
+);
 
 }
 
+}
+
+}
 
 document.getElementById("pixelCount")
-  .textContent =
-  selectedPixels.length;
+.textContent =
+selectedPixels.length;
 
 
 /* =====================================================
-   ELEMENTS
+ELEMENTS
 ===================================================== */
 
 const workspace =
-  document.getElementById("workspace");
+document.getElementById("workspace");
 
 const designLayer =
-  document.getElementById("designLayer");
+document.getElementById("designLayer");
 
 const textInput =
-  document.getElementById("textInput");
+document.getElementById("textInput");
 
 const fontFamily =
-  document.getElementById("fontFamily");
+document.getElementById("fontFamily");
 
 const textColor =
-  document.getElementById("textColor");
+document.getElementById("textColor");
 
 const textSize =
-  document.getElementById("textSize");
+document.getElementById("textSize");
 
 const sizeValue =
-  document.getElementById("sizeValue");
+document.getElementById("sizeValue");
+
+const rotation =
+document.getElementById("rotation");
+
+const rotationValue =
+document.getElementById("rotationValue");
 
 const backgroundColor =
-  document.getElementById("backgroundColor");
-
-const addToPixels =
-  document.getElementById("addToPixels");
-
-const addImage =
-  document.getElementById("addImage");
+document.getElementById("backgroundColor");
 
 const imageInput =
-  document.getElementById("imageInput");
-
-const deleteSelected =
-  document.getElementById("deleteSelected");
-
-const saveDesign =
-  document.getElementById("saveDesign");
-
-const backButton =
-  document.getElementById("backButton");
-
-const objectList =
-  document.getElementById("objectList");
-
-const imageControls =
-  document.getElementById("imageControls");
+document.getElementById("imageInput");
 
 const imageSize =
-  document.getElementById("imageSize");
+document.getElementById("imageSize");
 
 const imageSizeValue =
-  document.getElementById("imageSizeValue");
+document.getElementById("imageSizeValue");
+
+const rotationControls =
+document.getElementById("rotationControls");
+
+const imageControls =
+document.getElementById("imageControls");
+
+const objectList =
+document.getElementById("objectList");
 
 
 /* =====================================================
-   SETTINGS
+SETTINGS
 ===================================================== */
 
 const PIXEL_SIZE = 40;
@@ -679,1610 +592,1526 @@ let dragOffsetY = 0;
 
 
 /* =====================================================
-   GET PIXEL BOUNDS
+PIXEL BOUNDS
 ===================================================== */
 
 function getPixelBounds() {
 
-  if (!selectedPixels.length) {
+if (!selectedPixels.length) {
 
-    return {
-      minX: 0,
-      maxX: 0,
-      minY: 0,
-      maxY: 0
-    };
+return {
+minX: 0,
+maxX: 0,
+minY: 0,
+maxY: 0
+};
 
-  }
+}
 
+const coords =
+selectedPixels.map(key => {
 
-  const coords =
-    selectedPixels.map(key => {
+const parts =
+key.split(",");
 
-      const parts =
-        key.split(",");
+return {
+x: Number(parts[0]),
+y: Number(parts[1])
+};
 
-      return {
-
-        x: Number(parts[0]),
-
-        y: Number(parts[1])
-
-      };
-
-    });
+});
 
 
-  return {
+return {
 
-    minX:
-      Math.min(
-        ...coords.map(p => p.x)
-      ),
+minX:
+Math.min(
+...coords.map(p => p.x)
+),
 
-    maxX:
-      Math.max(
-        ...coords.map(p => p.x)
-      ),
+maxX:
+Math.max(
+...coords.map(p => p.x)
+),
 
-    minY:
-      Math.min(
-        ...coords.map(p => p.y)
-      ),
+minY:
+Math.min(
+...coords.map(p => p.y)
+),
 
-    maxY:
-      Math.max(
-        ...coords.map(p => p.y)
-      )
+maxY:
+Math.max(
+...coords.map(p => p.y)
+)
 
-  };
+};
 
 }
 
 
 /* =====================================================
-   BUILD PIXEL MASK
+PIXEL MASK
 ===================================================== */
 
-function buildPixelMask(bounds, columns, rows) {
+function buildPixelMask(
+bounds,
+columns,
+rows
+) {
 
-  if (!selectedPixels.length) {
+let svgRects = "";
 
-    return "none";
+selectedPixels.forEach(key => {
 
-  }
+const parts =
+key.split(",");
 
+const x =
+Number(parts[0]);
 
-  /*
-    SVG mask:
+const y =
+Number(parts[1]);
 
-    White = visible
-    Black = hidden
+const maskX =
+(x - bounds.minX) *
+PIXEL_SIZE;
 
-    Every selected pixel gets its own
-    white rectangle.
-  */
+const maskY =
+(y - bounds.minY) *
+PIXEL_SIZE;
 
-  let svgRects = "";
+svgRects +=
+`<rect x="${maskX}" y="${maskY}" width="${PIXEL_SIZE}" height="${PIXEL_SIZE}" fill="white"/>`;
 
-
-  selectedPixels.forEach(key => {
-
-    const parts =
-      key.split(",");
-
-    const x =
-      Number(parts[0]);
-
-    const y =
-      Number(parts[1]);
-
-
-    const maskX =
-      (x - bounds.minX) *
-      PIXEL_SIZE;
-
-    const maskY =
-      (y - bounds.minY) *
-      PIXEL_SIZE;
+});
 
 
-    svgRects +=
-      `<rect x="${maskX}" y="${maskY}" width="${PIXEL_SIZE}" height="${PIXEL_SIZE}" fill="white"/>`;
+const svg = `
+<svg xmlns="http://www.w3.org/2000/svg"
+width="${columns * PIXEL_SIZE}"
+height="${rows * PIXEL_SIZE}"
+viewBox="0 0 ${columns * PIXEL_SIZE} ${rows * PIXEL_SIZE}">
 
-  });
+<rect width="100%" height="100%" fill="black"/>
 
+${svgRects}
 
-  const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg"
-         width="${columns * PIXEL_SIZE}"
-         height="${rows * PIXEL_SIZE}"
-         viewBox="0 0 ${columns * PIXEL_SIZE} ${rows * PIXEL_SIZE}">
-      <rect width="100%" height="100%" fill="black"/>
-      ${svgRects}
-    </svg>
-  `;
+</svg>
+`;
 
-
-  const encoded =
-    encodeURIComponent(svg)
-      .replace(/'/g, "%27")
-      .replace(/"/g, "%22");
-
-
-  return `url("data:image/svg+xml,${encoded}")`;
+return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 
 }
 
 
 /* =====================================================
-   DRAW PIXELS
+DRAW PIXELS
 ===================================================== */
 
 function drawPixels() {
 
-  workspace
-    .querySelectorAll(".pixel")
-    .forEach(el => el.remove());
+workspace
+.querySelectorAll(".pixel")
+.forEach(el => el.remove());
 
 
-  const bounds =
-    getPixelBounds();
+const bounds =
+getPixelBounds();
+
+const columns =
+bounds.maxX -
+bounds.minX +
+1;
+
+const rows =
+bounds.maxY -
+bounds.minY +
+1;
+
+const width =
+columns *
+PIXEL_SIZE;
+
+const height =
+rows *
+PIXEL_SIZE;
 
 
-  const columns =
-    bounds.maxX -
-    bounds.minX +
-    1;
+workspace.style.width =
+width + "px";
+
+workspace.style.height =
+height + "px";
+
+designLayer.style.width =
+width + "px";
+
+designLayer.style.height =
+height + "px";
 
 
-  const rows =
-    bounds.maxY -
-    bounds.minY +
-    1;
+const mask =
+buildPixelMask(
+bounds,
+columns,
+rows
+);
+
+designLayer.style.webkitMaskImage =
+mask;
+
+designLayer.style.maskImage =
+mask;
 
 
-  const width =
-    columns *
-    PIXEL_SIZE;
+selectedPixels.forEach(key => {
+
+const parts =
+key.split(",");
+
+const x =
+Number(parts[0]);
+
+const y =
+Number(parts[1]);
+
+const pixel =
+document.createElement("div");
+
+pixel.className =
+"pixel";
+
+pixel.style.width =
+PIXEL_SIZE + "px";
+
+pixel.style.height =
+PIXEL_SIZE + "px";
+
+pixel.style.left =
+(
+(x - bounds.minX) *
+PIXEL_SIZE
+) + "px";
+
+pixel.style.top =
+(
+(y - bounds.minY) *
+PIXEL_SIZE
+) + "px";
+
+pixel.style.backgroundColor =
+backgroundColor.value;
+
+workspace.insertBefore(
+pixel,
+designLayer
+);
+
+});
 
 
-  const height =
-    rows *
-    PIXEL_SIZE;
-
-
-  workspace.style.width =
-    width + "px";
-
-
-  workspace.style.height =
-    height + "px";
-
-
-  /*
-    Make design layer exactly the same
-    size as the pixel workspace.
-  */
-
-  designLayer.style.width =
-    width + "px";
-
-  designLayer.style.height =
-    height + "px";
-
-
-  /*
-    Apply the selected-pixel mask.
-  */
-
-  const mask =
-    buildPixelMask(
-      bounds,
-      columns,
-      rows
-    );
-
-
-  designLayer.style.webkitMaskImage =
-    mask;
-
-  designLayer.style.maskImage =
-    mask;
-
-
-  /*
-    Draw ONLY selected pixels.
-  */
-
-  selectedPixels.forEach(key => {
-
-    const parts =
-      key.split(",");
-
-    const x =
-      Number(parts[0]);
-
-    const y =
-      Number(parts[1]);
-
-
-    const pixel =
-      document.createElement("div");
-
-
-    pixel.className =
-      "pixel";
-
-
-    pixel.style.width =
-      PIXEL_SIZE + "px";
-
-
-    pixel.style.height =
-      PIXEL_SIZE + "px";
-
-
-    pixel.style.left =
-      (
-        (x - bounds.minX) *
-        PIXEL_SIZE
-      ) + "px";
-
-
-    pixel.style.top =
-      (
-        (y - bounds.minY) *
-        PIXEL_SIZE
-      ) + "px";
-
-
-    pixel.style.background =
-      backgroundColor.value;
-
-
-    workspace.insertBefore(
-      pixel,
-      designLayer
-    );
-
-  });
-
-
-  renderObjects();
+renderObjects();
 
 }
 
 
 /* =====================================================
-   CREATE LIVE TEXT
+CREATE LIVE TEXT
 ===================================================== */
 
 function createLiveText() {
 
-  if (liveTextObject) {
-
-    return;
-
-  }
+if (liveTextObject) {
+return;
+}
 
 
-  liveTextObject = {
+liveTextObject = {
 
-    id:
-      nextObjectId++,
+id:
+nextObjectId++,
 
-    type:
-      "text",
+type:
+"text",
 
-    text:
-      "",
+text:
+"",
 
-    fontFamily:
-      fontFamily.value,
+fontFamily:
+fontFamily.value,
 
-    color:
-      textColor.value,
+color:
+textColor.value,
 
-    size:
-      Number(textSize.value),
+size:
+Number(textSize.value),
 
-    x:
-      50,
+rotation:
+0,
 
-    y:
-      50,
+x:
+50,
 
-    live:
-      true
+y:
+50,
 
-  };
+live:
+true
+
+};
 
 
-  selectedObjectId =
-    liveTextObject.id;
+selectedObjectId =
+liveTextObject.id;
 
-
-  editingObjectId =
-    null;
+editingObjectId =
+null;
 
 }
 
 
 /* =====================================================
-   LIVE TEXT INPUT
+TEXT INPUT
 ===================================================== */
 
 textInput.addEventListener(
-  "input",
-  function() {
+"input",
+function() {
 
-    /*
-      If editing an existing object,
-      update that object.
-    */
+if (editingObjectId !== null) {
 
-    if (editingObjectId !== null) {
-
-      const object =
-        designObjects.find(
-          item =>
-            item.id ===
-            editingObjectId
-        );
-
-
-      if (object) {
-
-        object.text =
-          textInput.value;
-
-        object.fontFamily =
-          fontFamily.value;
-
-        object.color =
-          textColor.value;
-
-        object.size =
-          Number(textSize.value);
-
-        selectedObjectId =
-          object.id;
-
-        renderObjects();
-
-      }
-
-      return;
-
-    }
-
-
-    /*
-      Otherwise create a new live
-      text object.
-    */
-
-    createLiveText();
-
-
-    liveTextObject.text =
-      textInput.value;
-
-    liveTextObject.fontFamily =
-      fontFamily.value;
-
-    liveTextObject.color =
-      textColor.value;
-
-    liveTextObject.size =
-      Number(textSize.value);
-
-
-    renderObjects();
-
-  }
+const object =
+designObjects.find(
+item =>
+item.id ===
+editingObjectId
 );
+
+if (object) {
+
+object.text =
+textInput.value;
+
+object.fontFamily =
+fontFamily.value;
+
+object.color =
+textColor.value;
+
+object.size =
+Number(textSize.value);
+
+}
+
+renderObjects();
+
+return;
+
+}
+
+
+createLiveText();
+
+
+liveTextObject.text =
+textInput.value;
+
+liveTextObject.fontFamily =
+fontFamily.value;
+
+liveTextObject.color =
+textColor.value;
+
+liveTextObject.size =
+Number(textSize.value);
+
+
+renderObjects();
+
+});
 
 
 /* =====================================================
-   FONT
+FONT
 ===================================================== */
 
 fontFamily.addEventListener(
-  "change",
-  function() {
+"change",
+function() {
 
-    if (editingObjectId !== null) {
+const object =
+getSelectedTextObject();
 
-      const object =
-        designObjects.find(
-          item =>
-            item.id ===
-            editingObjectId
-        );
+if (object) {
 
+object.fontFamily =
+fontFamily.value;
 
-      if (object) {
+renderObjects();
 
-        object.fontFamily =
-          fontFamily.value;
+}
 
-        renderObjects();
-
-      }
-
-      return;
-
-    }
-
-
-    if (!liveTextObject) {
-
-      return;
-
-    }
-
-
-    liveTextObject.fontFamily =
-      fontFamily.value;
-
-
-    renderObjects();
-
-  }
-);
+});
 
 
 /* =====================================================
-   TEXT COLOR
+TEXT COLOR
 ===================================================== */
 
 textColor.addEventListener(
-  "input",
-  function() {
+"input",
+function() {
 
-    if (editingObjectId !== null) {
+const object =
+getSelectedTextObject();
 
-      const object =
-        designObjects.find(
-          item =>
-            item.id ===
-            editingObjectId
-        );
+if (object) {
 
+object.color =
+textColor.value;
 
-      if (object) {
+renderObjects();
 
-        object.color =
-          textColor.value;
+}
 
-        renderObjects();
-
-      }
-
-      return;
-
-    }
-
-
-    if (!liveTextObject) {
-
-      return;
-
-    }
-
-
-    liveTextObject.color =
-      textColor.value;
-
-
-    renderObjects();
-
-  }
-);
+});
 
 
 /* =====================================================
-   TEXT SIZE
+TEXT SIZE
 ===================================================== */
 
 textSize.addEventListener(
-  "input",
-  function() {
+"input",
+function() {
 
-    sizeValue.textContent =
-      textSize.value +
-      " px";
-
-
-    if (editingObjectId !== null) {
-
-      const object =
-        designObjects.find(
-          item =>
-            item.id ===
-            editingObjectId
-        );
+sizeValue.textContent =
+textSize.value +
+" px";
 
 
-      if (object) {
+const object =
+getSelectedTextObject();
 
-        object.size =
-          Number(textSize.value);
+if (object) {
 
-        renderObjects();
+object.size =
+Number(textSize.value);
 
-      }
+renderObjects();
 
-      return;
+}
 
-    }
-
-
-    if (!liveTextObject) {
-
-      return;
-
-    }
-
-
-    liveTextObject.size =
-      Number(textSize.value);
-
-
-    renderObjects();
-
-  }
-);
+});
 
 
 /* =====================================================
-   BACKGROUND COLOR
+GET SELECTED TEXT
+===================================================== */
+
+function getSelectedTextObject() {
+
+if (
+editingObjectId !== null
+) {
+
+return designObjects.find(
+item =>
+item.id ===
+editingObjectId
+) || null;
+
+}
+
+
+if (
+liveTextObject &&
+selectedObjectId ===
+liveTextObject.id
+) {
+
+return liveTextObject;
+
+}
+
+
+return designObjects.find(
+item =>
+item.id ===
+selectedObjectId
+) || null;
+
+}
+
+
+/* =====================================================
+ROTATION
+===================================================== */
+
+rotation.addEventListener(
+"input",
+function() {
+
+const angle =
+Number(rotation.value);
+
+rotationValue.textContent =
+angle + "°";
+
+
+let object = null;
+
+
+/*
+Find the exact selected object.
+*/
+
+if (
+liveTextObject &&
+selectedObjectId ===
+liveTextObject.id
+) {
+
+object =
+liveTextObject;
+
+} else {
+
+object =
+designObjects.find(
+item =>
+item.id ===
+selectedObjectId
+);
+
+}
+
+
+if (!object) {
+
+return;
+
+}
+
+
+/*
+Save the rotation.
+*/
+
+object.rotation =
+angle;
+
+
+/*
+Immediately rotate the visible object.
+*/
+
+const element =
+designLayer.querySelector(
+`[data-id="${object.id}"]`
+);
+
+
+if (element) {
+
+element.style.transform =
+`translate(-50%, -50%) rotate(${angle}deg)`;
+
+}
+
+});
+
+
+/* =====================================================
+BACKGROUND
 ===================================================== */
 
 backgroundColor.addEventListener(
-  "input",
-  function() {
+"input",
+function() {
 
-    drawPixels();
+drawPixels();
 
-  }
-);
+});
 
 
 /* =====================================================
-   RENDER OBJECTS
+RENDER OBJECTS
 ===================================================== */
 
 function renderObjects() {
 
-  designLayer.innerHTML = "";
+designLayer.innerHTML = "";
 
 
-  const objects = [
-    ...designObjects
-  ];
+const objects = [
+...designObjects
+];
 
 
-  if (
-    liveTextObject &&
-    liveTextObject.text.length > 0
-  ) {
+if (
+liveTextObject &&
+liveTextObject.text.length
+) {
 
-    objects.push(
-      liveTextObject
-    );
+objects.push(
+liveTextObject
+);
 
-  }
+}
 
 
-  objects.forEach(
-    function(object) {
+objects.forEach(
+function(object) {
 
+if (
+object.type ===
+"text"
+) {
 
-      /* =========================
-         TEXT
-      ========================= */
+const element =
+document.createElement("div");
 
-      if (
-        object.type === "text"
-      ) {
+element.className =
+"design-object";
 
-        if (!object.text) {
+if (
+object.id ===
+selectedObjectId
+) {
 
-          return;
+element.classList.add(
+"active"
+);
 
-        }
+}
 
+element.textContent =
+object.text;
 
-        const element =
-          document.createElement("div");
+element.style.left =
+object.x + "%";
 
+element.style.top =
+object.y + "%";
 
-        element.className =
-          "design-object";
+element.style.fontFamily =
+object.fontFamily;
 
+element.style.color =
+object.color;
 
-        if (
-          object.id ===
-          selectedObjectId
-        ) {
+element.style.fontSize =
+object.size + "px";
 
-          element.classList.add(
-            "active"
-          );
+element.style.transform =
+`translate(-50%, -50%) rotate(${object.rotation || 0}deg)`;
 
-        }
+element.dataset.id =
+object.id;
 
+addDragEvents(
+element,
+object
+);
 
-        element.textContent =
-          object.text;
+designLayer.appendChild(
+element
+);
 
+}
 
-        element.style.left =
-          object.x + "%";
 
+if (
+object.type ===
+"image"
+) {
 
-        element.style.top =
-          object.y + "%";
+const element =
+document.createElement("img");
 
+element.className =
+"design-object design-image";
 
-        element.style.fontFamily =
-          object.fontFamily;
+element.src =
+object.src;
 
+element.style.left =
+object.x + "%";
 
-        element.style.color =
-          object.color;
+element.style.top =
+object.y + "%";
 
+element.style.width =
+object.width + "px";
 
-        element.style.fontSize =
-          object.size + "px";
+element.style.height =
+"auto";
 
+element.style.transform =
+`translate(-50%, -50%) rotate(${object.rotation || 0}deg)`;
 
-        element.dataset.id =
-          object.id;
+element.dataset.id =
+object.id;
 
+if (
+object.id ===
+selectedObjectId
+) {
 
-        addDragEvents(
-          element,
-          object
-        );
+element.classList.add(
+"active"
+);
 
+}
 
-        designLayer.appendChild(
-          element
-        );
+addDragEvents(
+element,
+object
+);
 
-      }
+designLayer.appendChild(
+element
+);
 
+}
 
-      /* =========================
-         IMAGE
-      ========================= */
+});
 
-      if (
-        object.type === "image"
-      ) {
+updateObjectList();
 
-        const element =
-          document.createElement("img");
+updateImageControls();
 
-
-        element.className =
-          "design-object design-image";
-
-
-        element.src =
-          object.src;
-
-
-        element.style.left =
-          object.x + "%";
-
-
-        element.style.top =
-          object.y + "%";
-
-
-        element.style.width =
-          object.width + "px";
-
-
-        element.style.height =
-          "auto";
-
-
-        element.dataset.id =
-          object.id;
-
-
-        if (
-          object.id ===
-          selectedObjectId
-        ) {
-
-          element.classList.add(
-            "active"
-          );
-
-        }
-
-
-        addDragEvents(
-          element,
-          object
-        );
-
-
-        designLayer.appendChild(
-          element
-        );
-
-      }
-
-    }
-  );
-
-
-  updateObjectList();
-
-  updateImageControls();
+updateRotationControls();
 
 }
 
 
 /* =====================================================
-   DRAGGING
+DRAG
 ===================================================== */
 
 function addDragEvents(
-  element,
-  object
+element,
+object
 ) {
 
-  element.addEventListener(
-    "pointerdown",
-    function(event) {
+element.addEventListener(
+"pointerdown",
+function(event) {
 
-      event.preventDefault();
+event.preventDefault();
 
-      event.stopPropagation();
-
-
-      selectedObjectId =
-        object.id;
+event.stopPropagation();
 
 
-      /*
-        If a finalized text is clicked,
-        load it for editing.
-      */
-
-      if (
-        object.type === "text" &&
-        !object.live
-      ) {
-
-        editingObjectId =
-          object.id;
-
-        liveTextObject =
-          null;
+selectedObjectId =
+object.id;
 
 
-        textInput.value =
-          object.text;
+if (
+object.type ===
+"text" &&
+!object.live
+) {
+
+editingObjectId =
+object.id;
+
+liveTextObject =
+null;
+
+textInput.value =
+object.text;
+
+fontFamily.value =
+object.fontFamily;
+
+textColor.value =
+object.color;
+
+textSize.value =
+object.size;
+
+sizeValue.textContent =
+object.size + " px";
+
+}
 
 
-        fontFamily.value =
-          object.fontFamily;
+rotation.value =
+object.rotation || 0;
+
+rotationValue.textContent =
+(object.rotation || 0) + "°";
 
 
-        textColor.value =
-          object.color;
+if (
+object.type ===
+"image"
+) {
+
+imageSize.value =
+object.width;
+
+imageSizeValue.textContent =
+object.width + " px";
+
+}
 
 
-        textSize.value =
-          object.size;
+const rect =
+workspace.getBoundingClientRect();
+
+const objectX =
+object.x /
+100 *
+rect.width;
+
+const objectY =
+object.y /
+100 *
+rect.height;
+
+dragOffsetX =
+event.clientX -
+rect.left -
+objectX;
+
+dragOffsetY =
+event.clientY -
+rect.top -
+objectY;
+
+draggingObject =
+object;
 
 
-        sizeValue.textContent =
-          object.size + " px";
+updateRotationControls();
 
-      }
+updateImageControls();
 
-
-      const rect =
-        workspace.getBoundingClientRect();
-
-
-      const objectX =
-        object.x /
-        100 *
-        rect.width;
-
-
-      const objectY =
-        object.y /
-        100 *
-        rect.height;
-
-
-      dragOffsetX =
-        event.clientX -
-        rect.left -
-        objectX;
-
-
-      dragOffsetY =
-        event.clientY -
-        rect.top -
-        objectY;
-
-
-      draggingObject =
-        object;
-
-
-      /*
-        Do NOT completely rebuild the DOM here.
-        This keeps dragging smooth.
-      */
-
-      element.classList.add(
-        "active"
-      );
-
-    }
-  );
+});
 
 }
 
 
 /* =====================================================
-   DRAG MOVE
+DRAG MOVE
 ===================================================== */
 
 document.addEventListener(
-  "pointermove",
-  function(event) {
+"pointermove",
+function(event) {
 
-    if (!draggingObject) {
-
-      return;
-
-    }
+if (!draggingObject) {
+return;
+}
 
 
-    const rect =
-      workspace.getBoundingClientRect();
+const rect =
+workspace.getBoundingClientRect();
+
+let x =
+event.clientX -
+rect.left -
+dragOffsetX;
+
+let y =
+event.clientY -
+rect.top -
+dragOffsetY;
 
 
-    let x =
-      event.clientX -
-      rect.left -
-      dragOffsetX;
+x =
+Math.max(
+0,
+Math.min(
+rect.width,
+x
+)
+);
 
-
-    let y =
-      event.clientY -
-      rect.top -
-      dragOffsetY;
-
-
-    x =
-      Math.max(
-        0,
-        Math.min(
-          rect.width,
-          x
-        )
-      );
-
-
-    y =
-      Math.max(
-        0,
-        Math.min(
-          rect.height,
-          y
-        )
-      );
-
-
-    draggingObject.x =
-      (x / rect.width) *
-      100;
-
-
-    draggingObject.y =
-      (y / rect.height) *
-      100;
-
-
-    const element =
-      designLayer.querySelector(
-        `[data-id="${draggingObject.id}"]`
-      );
-
-
-    if (element) {
-
-      element.style.left =
-        draggingObject.x +
-        "%";
-
-
-      element.style.top =
-        draggingObject.y +
-        "%";
-
-    }
-
-  }
+y =
+Math.max(
+0,
+Math.min(
+rect.height,
+y
+)
 );
 
 
-/* =====================================================
-   DRAG END
-===================================================== */
+draggingObject.x =
+(x / rect.width) *
+100;
+
+draggingObject.y =
+(y / rect.height) *
+100;
+
+
+const element =
+designLayer.querySelector(
+`[data-id="${draggingObject.id}"]`
+);
+
+
+if (element) {
+
+element.style.left =
+draggingObject.x + "%";
+
+element.style.top =
+draggingObject.y + "%";
+
+}
+
+});
+
 
 document.addEventListener(
-  "pointerup",
-  function() {
+"pointerup",
+function() {
 
-    draggingObject =
-      null;
+draggingObject =
+null;
 
-  }
-);
-
-
-/* =====================================================
-   ADD TO PIXELS
-===================================================== */
-
-addToPixels.addEventListener(
-  "click",
-  function() {
-
-
-    /*
-      If editing an existing object,
-      simply finish the edit.
-
-      DO NOT create a duplicate.
-    */
-
-    if (
-      editingObjectId !== null
-    ) {
-
-      const object =
-        designObjects.find(
-          item =>
-            item.id ===
-            editingObjectId
-        );
-
-
-      if (object) {
-
-        object.text =
-          textInput.value.trim();
-
-        object.fontFamily =
-          fontFamily.value;
-
-        object.color =
-          textColor.value;
-
-        object.size =
-          Number(textSize.value);
-
-      }
-
-
-      editingObjectId =
-        null;
-
-      selectedObjectId =
-        null;
-
-      textInput.value =
-        "";
-
-      liveTextObject =
-        null;
-
-
-      renderObjects();
-
-      textInput.focus();
-
-      return;
-
-    }
-
-
-    /*
-      Finalize new live text.
-    */
-
-    if (
-      !liveTextObject ||
-      !liveTextObject.text.trim()
-    ) {
-
-      alert(
-        "Type something first."
-      );
-
-      textInput.focus();
-
-      return;
-
-    }
-
-
-    liveTextObject.text =
-      liveTextObject.text.trim();
-
-
-    liveTextObject.live =
-      false;
-
-
-    designObjects.push(
-      liveTextObject
-    );
-
-
-    /*
-      Clear the live draft so the
-      customer can immediately type
-      another message.
-    */
-
-    liveTextObject =
-      null;
-
-
-    selectedObjectId =
-      null;
-
-
-    textInput.value =
-      "";
-
-
-    renderObjects();
-
-
-    textInput.focus();
-
-  }
-);
+});
 
 
 /* =====================================================
-   ADD IMAGE
+ADD TO PIXELS
 ===================================================== */
 
-addImage.addEventListener(
-  "click",
-  function() {
+document.getElementById(
+"addToPixels"
+).addEventListener(
+"click",
+function() {
 
-    imageInput.click();
+if (
+editingObjectId !== null
+) {
 
-  }
+const object =
+designObjects.find(
+item =>
+item.id ===
+editingObjectId
 );
+
+if (object) {
+
+object.text =
+textInput.value.trim();
+
+object.fontFamily =
+fontFamily.value;
+
+object.color =
+textColor.value;
+
+object.size =
+Number(textSize.value);
+
+object.rotation =
+Number(rotation.value);
+
+}
+
+editingObjectId =
+null;
+
+selectedObjectId =
+null;
+
+textInput.value =
+"";
+
+rotation.value =
+0;
+
+rotationValue.textContent =
+"0°";
+
+renderObjects();
+
+textInput.focus();
+
+return;
+
+}
+
+
+if (
+!liveTextObject ||
+!liveTextObject.text.trim()
+) {
+
+alert(
+"Type something first."
+);
+
+textInput.focus();
+
+return;
+
+}
+
+
+liveTextObject.text =
+liveTextObject.text.trim();
+
+liveTextObject.live =
+false;
+
+liveTextObject.rotation =
+Number(rotation.value);
+
+designObjects.push(
+liveTextObject
+);
+
+liveTextObject =
+null;
+
+selectedObjectId =
+null;
+
+textInput.value =
+"";
+
+rotation.value =
+0;
+
+rotationValue.textContent =
+"0°";
+
+renderObjects();
+
+textInput.focus();
+
+});
 
 
 /* =====================================================
-   IMAGE FILE
+ADD IMAGE
 ===================================================== */
+
+document.getElementById(
+"addImage"
+).addEventListener(
+"click",
+function() {
+
+imageInput.click();
+
+});
+
 
 imageInput.addEventListener(
-  "change",
-  function(event) {
+"change",
+function(event) {
 
-    const file =
-      event.target.files[0];
+const file =
+event.target.files[0];
 
-
-    if (!file) {
-
-      return;
-
-    }
+if (!file) {
+return;
+}
 
 
-    const reader =
-      new FileReader();
+const reader =
+new FileReader();
 
 
-    reader.onload =
-      function(e) {
+reader.onload =
+function(e) {
 
-        const imageObject = {
+const imageObject = {
 
-          id:
-            nextObjectId++,
+id:
+nextObjectId++,
 
-          type:
-            "image",
+type:
+"image",
 
-          src:
-            e.target.result,
+src:
+e.target.result,
 
-          x:
-            50,
+x:
+50,
 
-          y:
-            50,
+y:
+50,
 
-          width:
-            150
+width:
+150,
 
-        };
+rotation:
+0
 
-
-        designObjects.push(
-          imageObject
-        );
+};
 
 
-        selectedObjectId =
-          imageObject.id;
-
-
-        editingObjectId =
-          null;
-
-
-        imageSize.value =
-          imageObject.width;
-
-
-        imageSizeValue.textContent =
-          imageObject.width +
-          " px";
-
-
-        renderObjects();
-
-      };
-
-
-    reader.readAsDataURL(file);
-
-
-    /*
-      Allows the same image to be
-      selected again later.
-    */
-
-    event.target.value =
-      "";
-
-  }
+designObjects.push(
+imageObject
 );
+
+selectedObjectId =
+imageObject.id;
+
+editingObjectId =
+null;
+
+imageSize.value =
+150;
+
+imageSizeValue.textContent =
+"150 px";
+
+rotation.value =
+0;
+
+rotationValue.textContent =
+"0°";
+
+renderObjects();
+
+};
+
+
+reader.readAsDataURL(file);
+
+event.target.value =
+"";
+
+});
 
 
 /* =====================================================
-   IMAGE SIZE
+IMAGE SIZE
 ===================================================== */
 
 imageSize.addEventListener(
-  "input",
-  function() {
+"input",
+function() {
 
-    const object =
-      designObjects.find(
-        item =>
-          item.id ===
-          selectedObjectId
-      );
-
-
-    if (
-      !object ||
-      object.type !== "image"
-    ) {
-
-      return;
-
-    }
-
-
-    object.width =
-      Number(imageSize.value);
-
-
-    imageSizeValue.textContent =
-      object.width +
-      " px";
-
-
-    const element =
-      designLayer.querySelector(
-        `[data-id="${object.id}"]`
-      );
-
-
-    if (element) {
-
-      element.style.width =
-        object.width + "px";
-
-    }
-
-  }
+const object =
+designObjects.find(
+item =>
+item.id ===
+selectedObjectId
 );
+
+if (
+!object ||
+object.type !==
+"image"
+) {
+
+return;
+
+}
+
+
+object.width =
+Number(imageSize.value);
+
+imageSizeValue.textContent =
+object.width + " px";
+
+
+const element =
+designLayer.querySelector(
+`[data-id="${object.id}"]`
+);
+
+if (element) {
+
+element.style.width =
+object.width + "px";
+
+}
+
+});
 
 
 /* =====================================================
-   DELETE SELECTED
+DELETE
 ===================================================== */
 
-deleteSelected.addEventListener(
-  "click",
-  function() {
+document.getElementById(
+"deleteSelected"
+).addEventListener(
+"click",
+function() {
 
-    /*
-      Delete live text.
-    */
+if (
+liveTextObject &&
+selectedObjectId ===
+liveTextObject.id
+) {
 
-    if (
-      liveTextObject &&
-      selectedObjectId ===
-      liveTextObject.id
-    ) {
+liveTextObject =
+null;
 
-      liveTextObject =
-        null;
+selectedObjectId =
+null;
 
-      selectedObjectId =
-        null;
+textInput.value =
+"";
 
-      textInput.value =
-        "";
+renderObjects();
 
-      renderObjects();
+return;
 
-      textInput.focus();
-
-      return;
-
-    }
+}
 
 
-    /*
-      Delete finalized object.
-    */
+if (
+selectedObjectId ===
+null
+) {
 
-    if (
-      selectedObjectId === null
-    ) {
+alert(
+"Select a text or image first."
+);
 
-      alert(
-        "Select a text or image first."
-      );
+return;
 
-      return;
-
-    }
+}
 
 
-    designObjects =
-      designObjects.filter(
-        object =>
-          object.id !==
-          selectedObjectId
-      );
-
-
-    selectedObjectId =
-      null;
-
-
-    editingObjectId =
-      null;
-
-
-    textInput.value =
-      "";
-
-
-    renderObjects();
-
-    textInput.focus();
-
-  }
+designObjects =
+designObjects.filter(
+object =>
+object.id !==
+selectedObjectId
 );
 
 
+selectedObjectId =
+null;
+
+editingObjectId =
+null;
+
+textInput.value =
+"";
+
+renderObjects();
+
+});
+
+
 /* =====================================================
-   UPDATE IMAGE CONTROLS
+ROTATION CONTROLS
+===================================================== */
+
+function updateRotationControls() {
+
+let object = null;
+
+
+if (
+liveTextObject &&
+selectedObjectId ===
+liveTextObject.id
+) {
+
+object =
+liveTextObject;
+
+} else {
+
+object =
+designObjects.find(
+item =>
+item.id ===
+selectedObjectId
+);
+
+}
+
+
+if (object) {
+
+rotationControls.style.display =
+"block";
+
+rotation.value =
+object.rotation || 0;
+
+rotationValue.textContent =
+(object.rotation || 0) +
+"°";
+
+} else {
+
+rotationControls.style.display =
+"none";
+
+}
+
+}
+
+
+/* =====================================================
+IMAGE CONTROLS
 ===================================================== */
 
 function updateImageControls() {
 
-  const object =
-    designObjects.find(
-      item =>
-        item.id ===
-        selectedObjectId
-    );
+const object =
+designObjects.find(
+item =>
+item.id ===
+selectedObjectId
+);
 
 
-  if (
-    object &&
-    object.type === "image"
-  ) {
+if (
+object &&
+object.type ===
+"image"
+) {
 
-    imageControls.style.display =
-      "block";
+imageControls.style.display =
+"block";
 
+imageSize.value =
+object.width;
 
-    imageSize.value =
-      object.width;
+imageSizeValue.textContent =
+object.width + " px";
 
+} else {
 
-    imageSizeValue.textContent =
-      object.width +
-      " px";
+imageControls.style.display =
+"none";
 
-  } else {
-
-    imageControls.style.display =
-      "none";
-
-  }
+}
 
 }
 
 
 /* =====================================================
-   OBJECT LIST
+OBJECT LIST
 ===================================================== */
 
 function updateObjectList() {
 
-  objectList.innerHTML = "";
+objectList.innerHTML = "";
 
 
-  if (!designObjects.length) {
-
-    return;
-
-  }
+if (!designObjects.length) {
+return;
+}
 
 
-  const heading =
-    document.createElement("div");
+const heading =
+document.createElement("div");
+
+heading.className =
+"object-heading";
+
+heading.textContent =
+"YOUR DESIGN ELEMENTS";
+
+objectList.appendChild(
+heading
+);
 
 
-  heading.className =
-    "object-heading";
+designObjects.forEach(
+function(object, index) {
+
+const item =
+document.createElement("div");
+
+item.className =
+"object-item";
 
 
-  heading.textContent =
-    "YOUR DESIGN ELEMENTS";
+if (
+object.id ===
+selectedObjectId
+) {
+
+item.classList.add(
+"active"
+);
+
+}
 
 
-  objectList.appendChild(
-    heading
-  );
+if (
+object.type ===
+"text"
+) {
+
+item.textContent =
+"Text: " +
+object.text;
+
+} else {
+
+item.textContent =
+"Image " +
+(index + 1);
+
+}
 
 
-  designObjects.forEach(
-    function(object, index) {
+item.addEventListener(
+"click",
+function() {
 
-      const item =
-        document.createElement("div");
-
-
-      item.className =
-        "object-item";
+selectedObjectId =
+object.id;
 
 
-      if (
-        object.id ===
-        selectedObjectId
-      ) {
+if (
+object.type ===
+"text"
+) {
 
-        item.classList.add(
-          "active"
-        );
+editingObjectId =
+object.id;
 
-      }
+liveTextObject =
+null;
 
+textInput.value =
+object.text;
 
-      if (
-        object.type === "text"
-      ) {
+fontFamily.value =
+object.fontFamily;
 
-        item.textContent =
-          "Text: " +
-          object.text;
+textColor.value =
+object.color;
 
-      } else {
+textSize.value =
+object.size;
 
-        item.textContent =
-          "Image " +
-          (index + 1);
+sizeValue.textContent =
+object.size + " px";
 
-      }
-
-
-      item.addEventListener(
-        "click",
-        function() {
-
-          selectedObjectId =
-            object.id;
+}
 
 
-          /*
-            Load text for editing.
-          */
+rotation.value =
+object.rotation || 0;
 
-          if (
-            object.type === "text"
-          ) {
-
-            editingObjectId =
-              object.id;
-
-            liveTextObject =
-              null;
+rotationValue.textContent =
+(object.rotation || 0) +
+"°";
 
 
-            textInput.value =
-              object.text;
+renderObjects();
 
+});
 
-            fontFamily.value =
-              object.fontFamily;
+objectList.appendChild(
+item
+);
 
-
-            textColor.value =
-              object.color;
-
-
-            textSize.value =
-              object.size;
-
-
-            sizeValue.textContent =
-              object.size +
-              " px";
-
-          }
-
-
-          renderObjects();
-
-        }
-      );
-
-
-      objectList.appendChild(
-        item
-      );
-
-    }
-  );
+});
 
 }
 
 
 /* =====================================================
-   SAVE DESIGN
+SAVE
 ===================================================== */
 
-saveDesign.addEventListener(
-  "click",
-  function() {
+document.getElementById(
+"saveDesign"
+).addEventListener(
+"click",
+function() {
 
-    /*
-      Do not allow an unfinished
-      live text draft to be saved.
-    */
+if (
+liveTextObject &&
+liveTextObject.text.trim()
+) {
 
-    if (
-      liveTextObject &&
-      liveTextObject.text.trim()
-    ) {
+alert(
+"Click ADD TO PIXELS first to finish your text."
+);
 
-      alert(
-        "Click ADD TO PIXELS first to finish your text."
-      );
+return;
 
-      textInput.focus();
-
-      return;
-
-    }
+}
 
 
-    if (!selectedPixels.length) {
+if (!selectedPixels.length) {
 
-      alert(
-        "No pixels were selected."
-      );
+alert(
+"No pixels were selected."
+);
 
-      return;
+return;
 
-    }
-
-
-    const design = {
-
-      selectedPixels:
-        selectedPixels,
-
-      backgroundColor:
-        backgroundColor.value,
-
-      objects:
-        designObjects
-
-    };
+}
 
 
-    /*
-      This is currently only the
-      design-stage save.
+const design = {
 
-      Checkout/payment will be
-      connected after we finish
-      testing this editor.
-    */
+selectedPixels:
+selectedPixels,
 
-    console.log(
-      "PIXEL DESIGN:",
-      design
-    );
+backgroundColor:
+backgroundColor.value,
+
+objects:
+designObjects
+
+};
 
 
-    alert(
-      "Your pixel design is ready for checkout. Checkout will be connected next."
-    );
-
-  }
+console.log(
+"PIXEL DESIGN:",
+design
 );
 
 
-/* =====================================================
-   GO BACK
-===================================================== */
-
-backButton.addEventListener(
-  "click",
-  function() {
-
-    window.location.href =
-      "./index.html";
-
-  }
+alert(
+"Your pixel design is ready for checkout. Checkout will be connected next."
 );
 
+});
+
 
 /* =====================================================
-   INITIAL DRAW
+BACK
+===================================================== */
+
+document.getElementById(
+"backButton"
+).addEventListener(
+"click",
+function() {
+
+window.location.href =
+"./index.html";
+
+});
+
+
+/* =====================================================
+INITIAL
 ===================================================== */
 
 sizeValue.textContent =
-  textSize.value +
-  " px";
+textSize.value + " px";
 
+rotationValue.textContent =
+"0°";
 
 drawPixels();
-
 
 </script>
 
