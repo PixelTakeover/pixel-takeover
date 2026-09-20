@@ -121,7 +121,7 @@ header p {
 }
 
 /* =========================
-   CONTROL HANDLES
+   VISIBLE CONTROLS
 ========================= */
 
 .object-handle {
@@ -141,7 +141,7 @@ header p {
   font-weight: bold;
 
   pointer-events: auto;
-  z-index: 200;
+  z-index: 300;
 
   touch-action: none;
   user-select: none;
@@ -151,10 +151,6 @@ header p {
   cursor: grab;
 }
 
-.resize-handle {
-  font-size: 16px;
-}
-
 .delete-handle {
   background: #000;
   color: #fff;
@@ -162,39 +158,75 @@ header p {
   cursor: pointer;
 }
 
-/* Resize directions */
+/* =========================
+   INVISIBLE RESIZE AREAS
+========================= */
 
-.resize-n {
+.resize-zone {
+  position: absolute;
+  z-index: 250;
+  pointer-events: auto;
+  touch-action: none;
+
+  /*
+    Invisible until the user
+    moves over the edge.
+  */
+  background: transparent;
+}
+
+/*
+   EDGE ZONES
+*/
+
+.resize-zone.n {
   cursor: ns-resize;
 }
 
-.resize-s {
+.resize-zone.s {
   cursor: ns-resize;
 }
 
-.resize-e {
+.resize-zone.e {
   cursor: ew-resize;
 }
 
-.resize-w {
+.resize-zone.w {
   cursor: ew-resize;
 }
 
-.resize-ne {
-  cursor: nesw-resize;
-}
+/*
+   CORNER ZONES
+*/
 
-.resize-sw {
-  cursor: nesw-resize;
-}
-
-.resize-nw {
+.resize-zone.nw {
   cursor: nwse-resize;
 }
 
-.resize-se {
+.resize-zone.ne {
+  cursor: nesw-resize;
+}
+
+.resize-zone.sw {
+  cursor: nesw-resize;
+}
+
+.resize-zone.se {
   cursor: nwse-resize;
 }
+
+
+/*
+   On desktop, briefly show
+   a small indicator when the
+   pointer is actually over
+   the resize area.
+*/
+
+.resize-zone:hover {
+  background: rgba(255,255,255,0.18);
+}
+
 
 /* =========================
    CONTROLS
@@ -288,7 +320,7 @@ button {
 }
 
 /* =========================
-   BOLD BUTTON
+   BOLD
 ========================= */
 
 .bold-row {
@@ -505,9 +537,8 @@ button {
     >
 
     <div class="small-note">
-      Select your image and use the handles directly on it.
-      Drag any edge or corner to resize it.
-      Use ↻ to rotate and × to delete.
+      Select your image and use the invisible edge controls to resize it.
+      ↻ rotates it and × deletes it.
     </div>
 
   </div>
@@ -525,8 +556,8 @@ button {
 
     <div class="small-note">
       Drag the item to move it.
+      Move to an edge to resize it.
       ↻ turns it.
-      The resize handles let you pull any edge or corner.
       × deletes it.
     </div>
 
@@ -647,13 +678,12 @@ let selectedObjectId = null;
 
 let editingObjectId = null;
 
-
-/* =========================================================
-   BOLD STATE
-========================================================= */
-
 let boldEnabled = false;
 
+
+/* =========================================================
+   BOLD BUTTON
+========================================================= */
 
 boldButton.addEventListener(
   "click",
@@ -705,6 +735,7 @@ function drawPixels() {
 
   pixelCanvas.innerHTML = "";
 
+
   if (!selectedPixels.length) {
 
     const message =
@@ -736,6 +767,7 @@ function drawPixels() {
     );
 
     return;
+
   }
 
 
@@ -787,13 +819,6 @@ function drawPixels() {
   const availableHeight =
     previewWindow.clientHeight;
 
-
-  /*
-    Keep the selected pixels
-    small enough to represent
-    the actual canvas instead
-    of filling the entire editor.
-  */
 
   const maximumPixelSize =
     28;
@@ -896,7 +921,7 @@ function drawPixels() {
 
 
 /* =========================================================
-   BACKGROUND COLOR
+   BACKGROUND
 ========================================================= */
 
 backgroundColor.addEventListener(
@@ -1321,7 +1346,8 @@ imageUpload.addEventListener(
       event.target.files[0];
 
 
-    if (!file) return;
+    if (!file)
+      return;
 
 
     const reader =
@@ -1339,13 +1365,6 @@ imageUpload.addEventListener(
 
           type:
             "image",
-
-          /*
-            Keep the ORIGINAL
-            uploaded image.
-            We only resize the
-            display dimensions.
-          */
 
           src:
             e.target.result,
@@ -1367,14 +1386,6 @@ imageUpload.addEventListener(
 
         };
 
-
-        /*
-          Get the actual image
-          dimensions so we can
-          preserve the original
-          proportions when first
-          displaying it.
-        */
 
         const temporaryImage =
           new Image();
@@ -1482,8 +1493,6 @@ function renderObjects() {
       );
 
 
-      /* TEXT */
-
       if (
         object.type === "text"
       ) {
@@ -1510,8 +1519,6 @@ function renderObjects() {
 
       }
 
-
-      /* IMAGE */
 
       if (
         object.type === "image"
@@ -1571,6 +1578,11 @@ function renderObjects() {
   );
 
 
+  /*
+    Controls are created after
+    the object is in the layer.
+  */
+
   drawSelectionControls();
 
   renderObjectList();
@@ -1627,7 +1639,8 @@ function selectObject(id) {
   }
 
 
-  if (!object) return;
+  if (!object)
+    return;
 
 
   if (
@@ -1687,14 +1700,14 @@ function selectObject(id) {
 
 
 /* =========================================================
-   SELECTION CONTROLS
+   DRAW SELECTION CONTROLS
 ========================================================= */
 
 function drawSelectionControls() {
 
   document
     .querySelectorAll(
-      ".selection-box, .object-handle"
+      ".selection-box, .object-handle, .resize-zone"
     )
     .forEach(
       el => el.remove()
@@ -1785,7 +1798,7 @@ function drawSelectionControls() {
 
 
   /*
-    ROTATE
+    ROTATE HANDLE
   */
 
   const rotate =
@@ -1838,7 +1851,7 @@ function drawSelectionControls() {
 
 
   /*
-    DELETE
+    DELETE HANDLE
   */
 
   const del =
@@ -1890,62 +1903,89 @@ function drawSelectionControls() {
 
 
   /*
-    EIGHT RESIZE HANDLES
+    RESIZE ZONES
   */
 
-  createResizeHandle(
-    "nw",
-    left - 17,
-    top - 17,
-    object
-  );
-
-  createResizeHandle(
+  createResizeZone(
     "n",
-    left + width / 2 - 17,
-    top - 17,
+    left,
+    top - 12,
+    width,
+    24,
     object
   );
 
-  createResizeHandle(
-    "ne",
-    left + width - 17,
-    top - 17,
-    object
-  );
 
-  createResizeHandle(
-    "w",
-    left - 17,
-    top + height / 2 - 17,
-    object
-  );
-
-  createResizeHandle(
-    "e",
-    left + width - 17,
-    top + height / 2 - 17,
-    object
-  );
-
-  createResizeHandle(
-    "sw",
-    left - 17,
-    top + height - 17,
-    object
-  );
-
-  createResizeHandle(
+  createResizeZone(
     "s",
-    left + width / 2 - 17,
-    top + height - 17,
+    left,
+    top + height - 12,
+    width,
+    24,
     object
   );
 
-  createResizeHandle(
+
+  createResizeZone(
+    "w",
+    left - 12,
+    top,
+    24,
+    height,
+    object
+  );
+
+
+  createResizeZone(
+    "e",
+    left + width - 12,
+    top,
+    24,
+    height,
+    object
+  );
+
+
+  /*
+    CORNERS
+  */
+
+  createResizeZone(
+    "nw",
+    left - 16,
+    top - 16,
+    32,
+    32,
+    object
+  );
+
+
+  createResizeZone(
+    "ne",
+    left + width - 16,
+    top - 16,
+    32,
+    32,
+    object
+  );
+
+
+  createResizeZone(
+    "sw",
+    left - 16,
+    top + height - 16,
+    32,
+    32,
+    object
+  );
+
+
+  createResizeZone(
     "se",
-    left + width - 17,
-    top + height - 17,
+    left + width - 16,
+    top + height - 16,
+    32,
+    32,
     object
   );
 
@@ -1953,57 +1993,56 @@ function drawSelectionControls() {
 
 
 /* =========================================================
-   CREATE RESIZE HANDLE
+   CREATE RESIZE ZONE
 ========================================================= */
 
-function createResizeHandle(
-  position,
+function createResizeZone(
+  direction,
   left,
   top,
+  width,
+  height,
   object
 ) {
 
-  const handle =
+  /*
+    Resize zones are invisible.
+    The user only sees the
+    resize cursor/indicator when
+    actually touching the edge.
+  */
+
+  const zone =
     document.createElement("div");
 
 
-  handle.className =
-    "object-handle resize-handle resize-" +
-    position;
+  zone.className =
+    "resize-zone " +
+    direction;
 
 
-  /*
-    Show the resize symbol
-    on corner handles.
-  */
-
-  if (
-    position === "se" ||
-    position === "nw" ||
-    position === "ne" ||
-    position === "sw"
-  ) {
-
-    handle.textContent =
-      "↘";
-
-  }
-
-
-  handle.style.left =
+  zone.style.left =
     left + "px";
 
 
-  handle.style.top =
+  zone.style.top =
     top + "px";
 
 
+  zone.style.width =
+    width + "px";
+
+
+  zone.style.height =
+    height + "px";
+
+
   designLayer.appendChild(
-    handle
+    zone
   );
 
 
-  handle.addEventListener(
+  zone.addEventListener(
     "pointerdown",
     function(event) {
 
@@ -2026,7 +2065,7 @@ function createResizeHandle(
         event,
         object,
         element,
-        position
+        direction
       );
 
     }
@@ -2125,7 +2164,13 @@ function startMove(
       object.y + "%";
 
 
-    drawSelectionControls();
+    /*
+      Do NOT redraw the
+      selection controls while
+      the finger/mouse is moving.
+      This keeps the active
+      control stable.
+    */
 
   }
 
@@ -2141,6 +2186,8 @@ function startMove(
       "pointerup",
       stop
     );
+
+    drawSelectionControls();
 
   }
 
@@ -2236,9 +2283,6 @@ function startRotate(
       object
     );
 
-
-    drawSelectionControls();
-
   }
 
 
@@ -2253,6 +2297,8 @@ function startRotate(
       "pointerup",
       stop
     );
+
+    drawSelectionControls();
 
   }
 
@@ -2305,6 +2351,20 @@ function startResize(
     object.height;
 
 
+  /*
+    Current center position.
+  */
+
+  const startCenterX =
+    element.getBoundingClientRect().left +
+    element.getBoundingClientRect().width / 2;
+
+
+  const startCenterY =
+    element.getBoundingClientRect().top +
+    element.getBoundingClientRect().height / 2;
+
+
   function resize(e) {
 
     const dx =
@@ -2324,7 +2384,7 @@ function startResize(
 
 
     /*
-      RIGHT EDGE
+      RIGHT
     */
 
     if (
@@ -2339,7 +2399,7 @@ function startResize(
 
 
     /*
-      LEFT EDGE
+      LEFT
     */
 
     if (
@@ -2354,7 +2414,7 @@ function startResize(
 
 
     /*
-      BOTTOM EDGE
+      BOTTOM
     */
 
     if (
@@ -2369,7 +2429,7 @@ function startResize(
 
 
     /*
-      TOP EDGE
+      TOP
     */
 
     if (
@@ -2382,11 +2442,6 @@ function startResize(
 
     }
 
-
-    /*
-      Keep the image from
-      becoming too small.
-    */
 
     newWidth =
       Math.max(
@@ -2408,6 +2463,93 @@ function startResize(
       );
 
 
+    /*
+      Calculate how much
+      the center needs to move
+      so the grabbed edge stays
+      under the pointer.
+    */
+
+    let centerShiftX =
+      0;
+
+    let centerShiftY =
+      0;
+
+
+    if (
+      direction.includes("e")
+    ) {
+
+      centerShiftX =
+        (
+          newWidth -
+          startingWidth
+        ) / 2;
+
+    }
+
+
+    if (
+      direction.includes("w")
+    ) {
+
+      centerShiftX =
+        -(
+          newWidth -
+          startingWidth
+        ) / 2;
+
+    }
+
+
+    if (
+      direction.includes("s")
+    ) {
+
+      centerShiftY =
+        (
+          newHeight -
+          startingHeight
+        ) / 2;
+
+    }
+
+
+    if (
+      direction.includes("n")
+    ) {
+
+      centerShiftY =
+        -(
+          newHeight -
+          startingHeight
+        ) / 2;
+
+    }
+
+
+    /*
+      Convert the center movement
+      into percentages.
+    */
+
+    object.x =
+      object.x +
+      (
+        centerShiftX /
+        previewWindow.clientWidth
+      ) * 100;
+
+
+    object.y =
+      object.y +
+      (
+        centerShiftY /
+        previewWindow.clientHeight
+      ) * 100;
+
+
     object.width =
       newWidth;
 
@@ -2424,7 +2566,12 @@ function startResize(
       newHeight + "px";
 
 
-    drawSelectionControls();
+    element.style.left =
+      object.x + "%";
+
+
+    element.style.top =
+      object.y + "%";
 
   }
 
@@ -2440,6 +2587,8 @@ function startResize(
       "pointerup",
       stop
     );
+
+    drawSelectionControls();
 
   }
 
