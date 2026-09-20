@@ -63,8 +63,8 @@ header p {
 #previewWindow {
   position: relative;
   width: 100%;
-  max-width: 360px;
-  height: 360px;
+  max-width: 500px;
+  height: 500px;
   margin: auto;
   background: #151515;
   border: 2px solid #444;
@@ -72,18 +72,23 @@ header p {
   touch-action: none;
 }
 
+/*
+  The actual selected pixels.
+*/
 #pixelCanvas {
   position: absolute;
   inset: 0;
   z-index: 1;
 }
 
+/*
+  Objects sit above the pixels.
+*/
 #designLayer {
   position: absolute;
   inset: 0;
   z-index: 10;
   overflow: hidden;
-  pointer-events: none;
 }
 
 /* =========================
@@ -93,20 +98,30 @@ header p {
 .design-object {
   position: absolute;
   transform-origin: center center;
-  pointer-events: auto;
+
   user-select: none;
+  -webkit-user-select: none;
+
   touch-action: none;
   cursor: move;
+
   white-space: pre;
 }
 
 .design-object img {
   display: block;
+
   width: 100%;
   height: 100%;
+
+  /*
+    NEVER crop the uploaded image.
+  */
   object-fit: contain;
+
   pointer-events: none;
   user-select: none;
+  -webkit-user-drag: none;
 }
 
 /* =========================
@@ -115,21 +130,28 @@ header p {
 
 .selection-box {
   position: absolute;
+
   border: 2px dashed #fff;
+
   pointer-events: none;
+
   z-index: 100;
 }
 
 /* =========================
-   VISIBLE CONTROLS
+   ROTATE + DELETE
 ========================= */
 
 .object-handle {
   position: absolute;
+
   width: 34px;
   height: 34px;
+
   border-radius: 50%;
+
   border: 2px solid #000;
+
   background: #fff;
   color: #000;
 
@@ -140,11 +162,14 @@ header p {
   font-size: 19px;
   font-weight: bold;
 
+  z-index: 400;
+
   pointer-events: auto;
-  z-index: 300;
 
   touch-action: none;
   user-select: none;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,.5);
 }
 
 .rotate-handle {
@@ -155,78 +180,75 @@ header p {
   background: #000;
   color: #fff;
   border-color: #fff;
+
   cursor: pointer;
 }
 
 /* =========================
-   INVISIBLE RESIZE AREAS
+   INVISIBLE RESIZE ZONES
 ========================= */
 
 .resize-zone {
   position: absolute;
-  z-index: 250;
+
+  z-index: 300;
+
+  background: transparent;
+
   pointer-events: auto;
+
   touch-action: none;
 
   /*
-    Invisible until the user
-    moves over the edge.
+    No visible arrows or handles.
   */
-  background: transparent;
+  opacity: 0;
 }
 
 /*
-   EDGE ZONES
+  EDGE CURSORS
 */
 
-.resize-zone.n {
-  cursor: ns-resize;
-}
-
+.resize-zone.n,
 .resize-zone.s {
   cursor: ns-resize;
 }
 
-.resize-zone.e {
-  cursor: ew-resize;
-}
-
+.resize-zone.e,
 .resize-zone.w {
   cursor: ew-resize;
 }
 
 /*
-   CORNER ZONES
+  CORNERS
 */
 
-.resize-zone.nw {
-  cursor: nwse-resize;
-}
-
-.resize-zone.ne {
-  cursor: nesw-resize;
-}
-
-.resize-zone.sw {
-  cursor: nesw-resize;
-}
-
+.resize-zone.nw,
 .resize-zone.se {
   cursor: nwse-resize;
 }
 
+.resize-zone.ne,
+.resize-zone.sw {
+  cursor: nesw-resize;
+}
 
 /*
-   On desktop, briefly show
-   a small indicator when the
-   pointer is actually over
-   the resize area.
+  Desktop:
+  tiny visual feedback only when
+  the pointer is actually over
+  the resize area.
 */
 
 .resize-zone:hover {
-  background: rgba(255,255,255,0.18);
+  opacity: 1;
+  background: rgba(255,255,255,.12);
 }
 
+/*
+  On touch devices there is no hover,
+  so the zones remain invisible.
+*/
 
 /* =========================
    CONTROLS
@@ -235,51 +257,71 @@ header p {
 .controls {
   width: 100%;
   max-width: 700px;
+
   margin: auto;
+
   padding: 15px;
 }
 
 .control-box {
   background: #151515;
+
   border: 1px solid #333;
+
   border-radius: 12px;
+
   padding: 15px;
+
   margin-bottom: 14px;
 }
 
 .control-box h2 {
   margin-top: 0;
+
   font-size: 18px;
 }
 
 label {
   display: block;
+
   margin-top: 12px;
   margin-bottom: 6px;
+
   color: #ccc;
 }
 
 textarea,
 select {
   width: 100%;
+
   padding: 12px;
+
   background: #222;
+
   color: #fff;
+
   border: 1px solid #444;
+
   border-radius: 8px;
+
   font-size: 16px;
 }
 
 textarea {
   min-height: 90px;
+
   resize: vertical;
 }
 
 input[type="color"] {
   width: 100%;
+
   height: 48px;
+
   background: #222;
+
   border: 1px solid #444;
+
   border-radius: 8px;
 }
 
@@ -289,33 +331,44 @@ input[type="range"] {
 
 .range-row {
   display: flex;
+
   align-items: center;
+
   gap: 10px;
 }
 
 .range-row span {
   min-width: 50px;
+
   text-align: right;
 }
 
 button {
   width: 100%;
+
   padding: 14px;
+
   margin-top: 10px;
+
   border: 0;
+
   border-radius: 9px;
+
   font-size: 16px;
+
   font-weight: bold;
 }
 
 .add-button,
 .save-button {
   background: #fff;
+
   color: #000;
 }
 
 .image-button {
   background: #333;
+
   color: #fff;
 }
 
@@ -325,30 +378,43 @@ button {
 
 .bold-row {
   display: flex;
+
   align-items: center;
+
   gap: 10px;
+
   margin-top: 12px;
 }
 
 .bold-button {
   width: auto;
+
   min-width: 90px;
+
   margin: 0;
+
   padding: 10px 18px;
+
   background: #222;
+
   color: #fff;
+
   border: 1px solid #555;
 }
 
 .bold-button.active {
   background: #fff;
+
   color: #000;
 }
 
 .small-note {
   color: #888;
+
   font-size: 13px;
+
   line-height: 1.4;
+
   margin-top: 8px;
 }
 
@@ -358,14 +424,39 @@ button {
 
 .object-item {
   background: #222;
+
   border: 1px solid #444;
+
   padding: 10px;
+
   border-radius: 7px;
+
   margin-top: 7px;
+
+  cursor: pointer;
 }
 
 .object-item.selected {
   border-color: #fff;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  #previewWindow {
+    max-width: 100%;
+
+    height: min(92vw, 500px);
+  }
+
+  .object-handle {
+    width: 38px;
+    height: 38px;
+  }
+
 }
 </style>
 </head>
@@ -376,6 +467,11 @@ button {
   <h1>Design Your Pixels</h1>
   <p>Make your space yours.</p>
 </header>
+
+
+<!-- ======================================================
+     PREVIEW
+====================================================== -->
 
 <div class="preview-section">
 
@@ -388,7 +484,7 @@ button {
   </div>
 
   <div class="preview-note">
-    This is a design preview. Your finished design will appear at the normal canvas pixel size.
+    Design your selected area below. Your image will stay proportional and will not be cropped.
   </div>
 
   <div id="previewWindow">
@@ -402,7 +498,12 @@ button {
 </div>
 
 
+<!-- ======================================================
+     CONTROLS
+====================================================== -->
+
 <div class="controls">
+
 
   <!-- TEXT -->
 
@@ -426,12 +527,29 @@ button {
 
     <select id="fontFamily">
 
-      <option value="Arial">Arial</option>
-      <option value="Arial Black">Arial Black</option>
-      <option value="Georgia">Georgia</option>
-      <option value="Impact">Impact</option>
-      <option value="Comic Sans MS">Comic Sans</option>
-      <option value="Brush Script MT">Cursive</option>
+      <option value="Arial">
+        Arial
+      </option>
+
+      <option value="Georgia">
+        Georgia
+      </option>
+
+      <option value="Impact">
+        Impact
+      </option>
+
+      <option value="Trebuchet MS">
+        Trebuchet MS
+      </option>
+
+      <option value="Courier New">
+        Courier New
+      </option>
+
+      <option value="Brush Script MT">
+        Brush Script MT
+      </option>
 
     </select>
 
@@ -486,13 +604,13 @@ button {
     <button
       class="add-button"
       id="addText"
+      type="button"
     >
       ADD TO PIXELS
     </button>
 
     <div class="small-note">
-      Your text appears immediately while you type.
-      Tap text in the preview to move or rotate it.
+      Type to preview your text. Drag it to move it. Use the edges or corners to resize it. Use ↻ to rotate it.
     </div>
 
   </div>
@@ -504,7 +622,7 @@ button {
 
     <h2>Pixel Background</h2>
 
-    <label>
+    <label for="backgroundColor">
       Background Color
     </label>
 
@@ -526,6 +644,7 @@ button {
     <button
       class="image-button"
       id="chooseImage"
+      type="button"
     >
       ADD IMAGE / LOGO
     </button>
@@ -537,8 +656,7 @@ button {
     >
 
     <div class="small-note">
-      Select your image and use the invisible edge controls to resize it.
-      ↻ rotates it and × deletes it.
+      Upload an image or logo. Drag it to move it. Grab an edge to resize one direction, or a corner to resize both directions. The image keeps its proportions.
     </div>
 
   </div>
@@ -556,8 +674,8 @@ button {
 
     <div class="small-note">
       Drag the item to move it.
-      Move to an edge to resize it.
-      ↻ turns it.
+      Grab an edge or corner to resize it.
+      ↻ rotates it.
       × deletes it.
     </div>
 
@@ -580,6 +698,7 @@ button {
   <button
     class="save-button"
     id="saveDesign"
+    type="button"
   >
     SAVE PIXEL DESIGN
   </button>
@@ -598,6 +717,7 @@ const params =
 
 let selectedPixels = [];
 
+
 try {
 
   const raw =
@@ -605,10 +725,16 @@ try {
 
   if (raw) {
 
+    /*
+      Handles both normal URL encoding
+      and already-decoded JSON.
+    */
+
+    const decoded =
+      decodeURIComponent(raw);
+
     selectedPixels =
-      JSON.parse(
-        decodeURIComponent(raw)
-      );
+      JSON.parse(decoded);
 
   }
 
@@ -627,43 +753,69 @@ try {
 ========================================================= */
 
 const previewWindow =
-  document.getElementById("previewWindow");
+  document.getElementById(
+    "previewWindow"
+  );
 
 const pixelCanvas =
-  document.getElementById("pixelCanvas");
+  document.getElementById(
+    "pixelCanvas"
+  );
 
 const designLayer =
-  document.getElementById("designLayer");
+  document.getElementById(
+    "designLayer"
+  );
 
 const designText =
-  document.getElementById("designText");
+  document.getElementById(
+    "designText"
+  );
 
 const fontFamily =
-  document.getElementById("fontFamily");
+  document.getElementById(
+    "fontFamily"
+  );
 
 const textColor =
-  document.getElementById("textColor");
+  document.getElementById(
+    "textColor"
+  );
 
 const fontSize =
-  document.getElementById("fontSize");
+  document.getElementById(
+    "fontSize"
+  );
 
 const fontSizeValue =
-  document.getElementById("fontSizeValue");
+  document.getElementById(
+    "fontSizeValue"
+  );
 
 const backgroundColor =
-  document.getElementById("backgroundColor");
+  document.getElementById(
+    "backgroundColor"
+  );
 
 const imageUpload =
-  document.getElementById("imageUpload");
+  document.getElementById(
+    "imageUpload"
+  );
 
 const selectedObjectText =
-  document.getElementById("selectedObjectText");
+  document.getElementById(
+    "selectedObjectText"
+  );
 
 const objectList =
-  document.getElementById("objectList");
+  document.getElementById(
+    "objectList"
+  );
 
 const boldButton =
-  document.getElementById("boldButton");
+  document.getElementById(
+    "boldButton"
+  );
 
 
 /* =========================================================
@@ -682,53 +834,7 @@ let boldEnabled = false;
 
 
 /* =========================================================
-   BOLD BUTTON
-========================================================= */
-
-boldButton.addEventListener(
-  "click",
-  function() {
-
-    boldEnabled =
-      !boldEnabled;
-
-    boldButton.classList.toggle(
-      "active",
-      boldEnabled
-    );
-
-
-    const object =
-      getSelectedTextObject();
-
-
-    if (object) {
-
-      object.bold =
-        boldEnabled;
-
-      renderObjects();
-
-      return;
-
-    }
-
-
-    if (liveTextObject) {
-
-      liveTextObject.bold =
-        boldEnabled;
-
-      renderObjects();
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   DRAW PIXELS
+   PIXEL PREVIEW
 ========================================================= */
 
 function drawPixels() {
@@ -766,43 +872,58 @@ function drawPixels() {
       message
     );
 
+    renderObjects();
+
     return;
 
   }
 
 
   const coords =
-    selectedPixels.map(key => {
+    selectedPixels.map(
+      key => {
 
-      const parts =
-        key.split(",");
+        const parts =
+          key.split(",");
 
-      return {
-        x: Number(parts[0]),
-        y: Number(parts[1])
-      };
+        return {
 
-    });
+          x: Number(parts[0]),
+
+          y: Number(parts[1])
+
+        };
+
+      }
+    );
 
 
   const minX =
     Math.min(
-      ...coords.map(p => p.x)
+      ...coords.map(
+        p => p.x
+      )
     );
 
   const maxX =
     Math.max(
-      ...coords.map(p => p.x)
+      ...coords.map(
+        p => p.x
+      )
     );
 
   const minY =
     Math.min(
-      ...coords.map(p => p.y)
+      ...coords.map(
+        p => p.y
+      )
     );
 
   const maxY =
     Math.max(
-      ...coords.map(p => p.y)
+      ...coords.map(
+        p => p.y
+      )
     );
 
 
@@ -820,9 +941,15 @@ function drawPixels() {
     previewWindow.clientHeight;
 
 
-  const maximumPixelSize =
-    28;
+  /*
+    Keep small selections from becoming
+    an enormous poster.
 
+    As the selected area grows,
+    the pixels naturally become smaller.
+  */
+
+  const maximumPixelSize = 42;
 
   const fitPixelSize =
     Math.min(
@@ -846,73 +973,85 @@ function drawPixels() {
 
 
   const offsetX =
-    (availableWidth - totalWidth) / 2;
+    (
+      availableWidth -
+      totalWidth
+    ) / 2;
 
   const offsetY =
-    (availableHeight - totalHeight) / 2;
+    (
+      availableHeight -
+      totalHeight
+    ) / 2;
 
 
-  selectedPixels.forEach(key => {
+  selectedPixels.forEach(
+    key => {
 
-    const parts =
-      key.split(",");
+      const parts =
+        key.split(",");
 
-    const x =
-      Number(parts[0]);
+      const x =
+        Number(parts[0]);
 
-    const y =
-      Number(parts[1]);
-
-
-    const pixel =
-      document.createElement("div");
+      const y =
+        Number(parts[1]);
 
 
-    pixel.style.position =
-      "absolute";
+      const pixel =
+        document.createElement(
+          "div"
+        );
 
 
-    pixel.style.left =
-      (
-        offsetX +
-        (x - minX) * pixelSize
-      ) + "px";
+      pixel.style.position =
+        "absolute";
 
 
-    pixel.style.top =
-      (
-        offsetY +
-        (y - minY) * pixelSize
-      ) + "px";
+      pixel.style.left =
+        (
+          offsetX +
+          (x - minX) *
+          pixelSize
+        ) + "px";
 
 
-    pixel.style.width =
-      Math.max(
-        1,
-        pixelSize - 1
-      ) + "px";
+      pixel.style.top =
+        (
+          offsetY +
+          (y - minY) *
+          pixelSize
+        ) + "px";
 
 
-    pixel.style.height =
-      Math.max(
-        1,
-        pixelSize - 1
-      ) + "px";
+      pixel.style.width =
+        Math.max(
+          1,
+          pixelSize - 1
+        ) + "px";
 
 
-    pixel.style.background =
-      backgroundColor.value;
+      pixel.style.height =
+        Math.max(
+          1,
+          pixelSize - 1
+        ) + "px";
 
 
-    pixel.style.border =
-      "1px solid rgba(0,0,0,.2)";
+      pixel.style.background =
+        backgroundColor.value;
 
 
-    pixelCanvas.appendChild(
-      pixel
-    );
+      pixel.style.border =
+        "1px solid rgba(0,0,0,.2)";
 
-  });
+
+      pixelCanvas.appendChild(
+        pixel
+      );
+
+    }
+  );
 
 
   renderObjects();
@@ -921,7 +1060,7 @@ function drawPixels() {
 
 
 /* =========================================================
-   BACKGROUND
+   BACKGROUND COLOR
 ========================================================= */
 
 backgroundColor.addEventListener(
@@ -931,6 +1070,7 @@ backgroundColor.addEventListener(
     const pixels =
       pixelCanvas.children;
 
+
     for (
       let i = 0;
       i < pixels.length;
@@ -939,6 +1079,53 @@ backgroundColor.addEventListener(
 
       pixels[i].style.background =
         backgroundColor.value;
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   BOLD
+========================================================= */
+
+boldButton.addEventListener(
+  "click",
+  function() {
+
+    boldEnabled =
+      !boldEnabled;
+
+
+    boldButton.classList.toggle(
+      "active",
+      boldEnabled
+    );
+
+
+    const object =
+      getSelectedTextObject();
+
+
+    if (object) {
+
+      object.bold =
+        boldEnabled;
+
+      renderObjects();
+
+      return;
+
+    }
+
+
+    if (liveTextObject) {
+
+      liveTextObject.bold =
+        boldEnabled;
+
+      renderObjects();
 
     }
 
@@ -957,6 +1144,11 @@ designText.addEventListener(
     const value =
       designText.value;
 
+
+    /*
+      If an existing text object is
+      selected, edit that object.
+    */
 
     if (editingObjectId) {
 
@@ -988,6 +1180,7 @@ designText.addEventListener(
         object.bold =
           boldEnabled;
 
+
         renderObjects();
 
         return;
@@ -996,6 +1189,11 @@ designText.addEventListener(
 
     }
 
+
+    /*
+      Otherwise create/update
+      the live preview text.
+    */
 
     if (!liveTextObject) {
 
@@ -1052,6 +1250,14 @@ designText.addEventListener(
         boldEnabled;
 
     }
+
+
+    selectedObjectId =
+      liveTextObject.id;
+
+
+    selectedObjectText.textContent =
+      "Text preview";
 
 
     renderObjects();
@@ -1176,7 +1382,7 @@ fontSize.addEventListener(
 
 
 /* =========================================================
-   GET SELECTED TEXT
+   GET SELECTED TEXT OBJECT
 ========================================================= */
 
 function getSelectedTextObject() {
@@ -1219,119 +1425,135 @@ function getSelectedTextObject() {
    ADD TEXT
 ========================================================= */
 
-document.getElementById("addText")
-.addEventListener(
-  "click",
-  function() {
+document
+  .getElementById("addText")
+  .addEventListener(
+    "click",
+    function() {
 
-    const value =
-      designText.value.trim();
+      const value =
+        designText.value.trim();
 
 
-    if (!value) {
+      if (!value) {
 
-      alert(
-        "Type something first."
-      );
+        alert(
+          "Type something first."
+        );
 
-      return;
+        return;
+
+      }
+
+
+      /*
+        If live text exists,
+        turn it into a permanent object.
+      */
+
+      if (liveTextObject) {
+
+        liveTextObject.text =
+          value;
+
+        liveTextObject.fontFamily =
+          fontFamily.value;
+
+        liveTextObject.color =
+          textColor.value;
+
+        liveTextObject.fontSize =
+          Number(fontSize.value);
+
+        liveTextObject.bold =
+          boldEnabled;
+
+
+        designObjects.push(
+          liveTextObject
+        );
+
+
+        selectedObjectId =
+          liveTextObject.id;
+
+
+        editingObjectId =
+          liveTextObject.id;
+
+
+        liveTextObject =
+          null;
+
+
+        designText.value =
+          "";
+
+
+        selectedObjectText.textContent =
+          "Text selected";
+
+
+        renderObjects();
+
+        return;
+
+      }
+
+
+      /*
+        If an existing text object is
+        selected, update it.
+      */
+
+      const object =
+        getSelectedTextObject();
+
+
+      if (object) {
+
+        object.text =
+          value;
+
+        object.fontFamily =
+          fontFamily.value;
+
+        object.color =
+          textColor.value;
+
+        object.fontSize =
+          Number(fontSize.value);
+
+        object.bold =
+          boldEnabled;
+
+
+        editingObjectId =
+          object.id;
+
+
+        renderObjects();
+
+      }
 
     }
-
-
-    if (liveTextObject) {
-
-      liveTextObject.text =
-        value;
-
-      liveTextObject.fontFamily =
-        fontFamily.value;
-
-      liveTextObject.color =
-        textColor.value;
-
-      liveTextObject.fontSize =
-        Number(fontSize.value);
-
-      liveTextObject.bold =
-        boldEnabled;
-
-
-      designObjects.push(
-        liveTextObject
-      );
-
-
-      selectedObjectId =
-        liveTextObject.id;
-
-
-      liveTextObject =
-        null;
-
-
-      editingObjectId =
-        null;
-
-
-      designText.value =
-        "";
-
-
-      renderObjects();
-
-      return;
-
-    }
-
-
-    const object =
-      getSelectedTextObject();
-
-
-    if (object) {
-
-      object.text =
-        value;
-
-      object.fontFamily =
-        fontFamily.value;
-
-      object.color =
-        textColor.value;
-
-      object.fontSize =
-        Number(fontSize.value);
-
-      object.bold =
-        boldEnabled;
-
-
-      editingObjectId =
-        object.id;
-
-
-      renderObjects();
-
-    }
-
-  }
-);
+  );
 
 
 /* =========================================================
    IMAGE BUTTON
 ========================================================= */
 
-document.getElementById("chooseImage")
-.addEventListener(
-  "click",
-  function() {
+document
+  .getElementById("chooseImage")
+  .addEventListener(
+    "click",
+    function() {
 
-    imageUpload.click();
+      imageUpload.click();
 
-  }
-);
+    }
+  );
 
 
 /* =========================================================
@@ -1370,10 +1592,10 @@ imageUpload.addEventListener(
             e.target.result,
 
           width:
-            150,
+            180,
 
           height:
-            150,
+            180,
 
           x:
             50,
@@ -1394,13 +1616,19 @@ imageUpload.addEventListener(
         temporaryImage.onload =
           function() {
 
+            /*
+              Preserve the original
+              aspect ratio.
+            */
+
             const ratio =
               temporaryImage.height /
               temporaryImage.width;
 
 
             object.height =
-              object.width * ratio;
+              object.width *
+              ratio;
 
 
             designObjects.push(
@@ -1410,6 +1638,14 @@ imageUpload.addEventListener(
 
             selectedObjectId =
               object.id;
+
+
+            editingObjectId =
+              null;
+
+
+            selectedObjectText.textContent =
+              "Image selected";
 
 
             renderObjects();
@@ -1424,6 +1660,14 @@ imageUpload.addEventListener(
 
 
     reader.readAsDataURL(file);
+
+
+    /*
+      Allow the same image to be
+      selected again later.
+    */
+
+    imageUpload.value = "";
 
   }
 );
@@ -1441,6 +1685,10 @@ function renderObjects() {
   const objects =
     [...designObjects];
 
+
+  /*
+    Live text appears while typing.
+  */
 
   if (
     liveTextObject &&
@@ -1468,7 +1716,9 @@ function renderObjects() {
 
 
       const element =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
 
       element.className =
@@ -1479,9 +1729,13 @@ function renderObjects() {
         object.id;
 
 
+      /*
+        x/y represent the center
+        of the object.
+      */
+
       element.style.left =
         object.x + "%";
-
 
       element.style.top =
         object.y + "%";
@@ -1493,6 +1747,10 @@ function renderObjects() {
       );
 
 
+      /*
+        TEXT
+      */
+
       if (
         object.type === "text"
       ) {
@@ -1500,25 +1758,34 @@ function renderObjects() {
         element.textContent =
           object.text;
 
+
         element.style.fontFamily =
           object.fontFamily;
+
 
         element.style.color =
           object.color;
 
+
         element.style.fontSize =
           object.fontSize + "px";
+
 
         element.style.fontWeight =
           object.bold
             ? "700"
             : "400";
 
+
         element.style.lineHeight =
           "1.1";
 
       }
 
+
+      /*
+        IMAGE
+      */
 
       if (
         object.type === "image"
@@ -1527,12 +1794,15 @@ function renderObjects() {
         element.style.width =
           object.width + "px";
 
+
         element.style.height =
           object.height + "px";
 
 
         const img =
-          document.createElement("img");
+          document.createElement(
+            "img"
+          );
 
 
         img.src =
@@ -1546,9 +1816,19 @@ function renderObjects() {
       }
 
 
+      /*
+        Clicking/dragging the object
+        moves it.
+      */
+
       element.addEventListener(
         "pointerdown",
         function(event) {
+
+          /*
+            Don't allow the selection
+            controls to trigger movement.
+          */
 
           event.preventDefault();
 
@@ -1578,11 +1858,6 @@ function renderObjects() {
   );
 
 
-  /*
-    Controls are created after
-    the object is in the layer.
-  */
-
   drawSelectionControls();
 
   renderObjectList();
@@ -1608,6 +1883,30 @@ function applyTransform(
 
 
 /* =========================================================
+   GET OBJECT
+========================================================= */
+
+function getObjectById(id) {
+
+  if (
+    liveTextObject &&
+    liveTextObject.id === id
+  ) {
+
+    return liveTextObject;
+
+  }
+
+
+  return designObjects.find(
+    object =>
+      object.id === id
+  );
+
+}
+
+
+/* =========================================================
    SELECT OBJECT
 ========================================================= */
 
@@ -1617,26 +1916,8 @@ function selectObject(id) {
     id;
 
 
-  let object = null;
-
-
-  if (
-    liveTextObject &&
-    liveTextObject.id === id
-  ) {
-
-    object =
-      liveTextObject;
-
-  } else {
-
-    object =
-      designObjects.find(
-        item =>
-          item.id === id
-      );
-
-  }
+  const object =
+    getObjectById(id);
 
 
   if (!object)
@@ -1650,28 +1931,36 @@ function selectObject(id) {
     designText.value =
       object.text || "";
 
+
     fontFamily.value =
       object.fontFamily || "Arial";
+
 
     textColor.value =
       object.color || "#ffffff";
 
+
     fontSize.value =
       object.fontSize || 32;
+
 
     fontSizeValue.textContent =
       object.fontSize || 32;
 
+
     boldEnabled =
       !!object.bold;
+
 
     boldButton.classList.toggle(
       "active",
       boldEnabled
     );
 
+
     editingObjectId =
       object.id;
+
 
     selectedObjectText.textContent =
       "Text selected";
@@ -1686,21 +1975,20 @@ function selectObject(id) {
     editingObjectId =
       null;
 
+
     selectedObjectText.textContent =
       "Image selected";
 
   }
 
 
-  drawSelectionControls();
-
-  renderObjectList();
+  renderObjects();
 
 }
 
 
 /* =========================================================
-   DRAW SELECTION CONTROLS
+   SELECTION CONTROLS
 ========================================================= */
 
 function drawSelectionControls() {
@@ -1738,6 +2026,12 @@ function drawSelectionControls() {
     return;
 
 
+  /*
+    getBoundingClientRect gives us
+    the real visible dimensions,
+    including rotated objects.
+  */
+
   const rect =
     element.getBoundingClientRect();
 
@@ -1769,7 +2063,9 @@ function drawSelectionControls() {
   */
 
   const box =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
 
   box.className =
@@ -1798,11 +2094,13 @@ function drawSelectionControls() {
 
 
   /*
-    ROTATE HANDLE
+    ROTATE
   */
 
   const rotate =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
 
   rotate.className =
@@ -1841,6 +2139,7 @@ function drawSelectionControls() {
 
       event.stopPropagation();
 
+
       startRotate(
         event,
         object
@@ -1851,11 +2150,13 @@ function drawSelectionControls() {
 
 
   /*
-    DELETE HANDLE
+    DELETE
   */
 
   const del =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
 
   del.className =
@@ -1894,6 +2195,7 @@ function drawSelectionControls() {
 
       event.stopPropagation();
 
+
       deleteObject(
         object.id
       );
@@ -1903,15 +2205,18 @@ function drawSelectionControls() {
 
 
   /*
-    RESIZE ZONES
+    EDGE RESIZE AREAS
   */
+
+  const edgeSize = 18;
+
 
   createResizeZone(
     "n",
     left,
-    top - 12,
+    top - edgeSize / 2,
     width,
-    24,
+    edgeSize,
     object
   );
 
@@ -1919,18 +2224,18 @@ function drawSelectionControls() {
   createResizeZone(
     "s",
     left,
-    top + height - 12,
+    top + height - edgeSize / 2,
     width,
-    24,
+    edgeSize,
     object
   );
 
 
   createResizeZone(
     "w",
-    left - 12,
+    left - edgeSize / 2,
     top,
-    24,
+    edgeSize,
     height,
     object
   );
@@ -1938,54 +2243,57 @@ function drawSelectionControls() {
 
   createResizeZone(
     "e",
-    left + width - 12,
+    left + width - edgeSize / 2,
     top,
-    24,
+    edgeSize,
     height,
     object
   );
 
 
   /*
-    CORNERS
+    CORNER RESIZE AREAS
   */
+
+  const cornerSize = 28;
+
 
   createResizeZone(
     "nw",
-    left - 16,
-    top - 16,
-    32,
-    32,
+    left - cornerSize / 2,
+    top - cornerSize / 2,
+    cornerSize,
+    cornerSize,
     object
   );
 
 
   createResizeZone(
     "ne",
-    left + width - 16,
-    top - 16,
-    32,
-    32,
+    left + width - cornerSize / 2,
+    top - cornerSize / 2,
+    cornerSize,
+    cornerSize,
     object
   );
 
 
   createResizeZone(
     "sw",
-    left - 16,
-    top + height - 16,
-    32,
-    32,
+    left - cornerSize / 2,
+    top + height - cornerSize / 2,
+    cornerSize,
+    cornerSize,
     object
   );
 
 
   createResizeZone(
     "se",
-    left + width - 16,
-    top + height - 16,
-    32,
-    32,
+    left + width - cornerSize / 2,
+    top + height - cornerSize / 2,
+    cornerSize,
+    cornerSize,
     object
   );
 
@@ -1993,7 +2301,7 @@ function drawSelectionControls() {
 
 
 /* =========================================================
-   CREATE RESIZE ZONE
+   RESIZE ZONE
 ========================================================= */
 
 function createResizeZone(
@@ -2005,15 +2313,10 @@ function createResizeZone(
   object
 ) {
 
-  /*
-    Resize zones are invisible.
-    The user only sees the
-    resize cursor/indicator when
-    actually touching the edge.
-  */
-
   const zone =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
 
   zone.className =
@@ -2051,48 +2354,13 @@ function createResizeZone(
       event.stopPropagation();
 
 
-      const element =
-        designLayer.querySelector(
-          `[data-id="${object.id}"]`
-        );
-
-
-      if (!element)
-        return;
-
-
       startResize(
         event,
         object,
-        element,
         direction
       );
 
     }
-  );
-
-}
-
-
-/* =========================================================
-   GET OBJECT
-========================================================= */
-
-function getObjectById(id) {
-
-  if (
-    liveTextObject &&
-    liveTextObject.id === id
-  ) {
-
-    return liveTextObject;
-
-  }
-
-
-  return designObjects.find(
-    object =>
-      object.id === id
   );
 
 }
@@ -2163,15 +2431,6 @@ function startMove(
     element.style.top =
       object.y + "%";
 
-
-    /*
-      Do NOT redraw the
-      selection controls while
-      the finger/mouse is moving.
-      This keeps the active
-      control stable.
-    */
-
   }
 
 
@@ -2200,7 +2459,8 @@ function startMove(
 
   window.addEventListener(
     "pointerup",
-    stop
+    stop,
+    { once: true }
   );
 
 }
@@ -2239,9 +2499,25 @@ function startRotate(
     rect.height / 2;
 
 
+  const startingRotation =
+    Number(
+      object.rotation || 0
+    );
+
+
+  const startingAngle =
+    Math.atan2(
+      event.clientY -
+        centerY,
+
+      event.clientX -
+        centerX
+    );
+
+
   function rotate(e) {
 
-    const radians =
+    const currentAngle =
       Math.atan2(
         e.clientY -
           centerY,
@@ -2251,31 +2527,18 @@ function startRotate(
       );
 
 
-    let degrees =
-      radians *
+    const difference =
+      (
+        currentAngle -
+        startingAngle
+      ) *
       180 /
       Math.PI;
 
 
-    degrees += 90;
-
-
-    if (degrees < 0) {
-
-      degrees += 360;
-
-    }
-
-
-    if (degrees >= 360) {
-
-      degrees -= 360;
-
-    }
-
-
     object.rotation =
-      Math.round(degrees);
+      startingRotation +
+      difference;
 
 
     applyTransform(
@@ -2311,7 +2574,8 @@ function startRotate(
 
   window.addEventListener(
     "pointerup",
-    stop
+    stop,
+    { once: true }
   );
 
 }
@@ -2324,157 +2588,347 @@ function startRotate(
 function startResize(
   event,
   object,
-  element,
   direction
 ) {
 
-  if (
-    object.type !== "image"
-  ) {
+  /*
+    Both text and images can resize.
+  */
 
+  const element =
+    designLayer.querySelector(
+      `[data-id="${object.id}"]`
+    );
+
+
+  if (!element)
     return;
-
-  }
-
-
-  const startX =
-    event.clientX;
-
-  const startY =
-    event.clientY;
-
-
-  const startingWidth =
-    object.width;
-
-  const startingHeight =
-    object.height;
 
 
   /*
-    Current center position.
+    For text we use its actual
+    rendered dimensions.
+
+    For images we use stored
+    width/height.
   */
 
+  const startRect =
+    element.getBoundingClientRect();
+
+
+  const startWidth =
+    object.type === "image"
+      ? object.width
+      : startRect.width;
+
+
+  const startHeight =
+    object.type === "image"
+      ? object.height
+      : startRect.height;
+
+
+  /*
+    Keep proportions.
+
+    Images always keep their
+    original ratio.
+
+    Text also scales proportionally
+    so the object behaves like
+    a normal design element.
+  */
+
+  const aspectRatio =
+    startWidth /
+    startHeight;
+
+
   const startCenterX =
-    element.getBoundingClientRect().left +
-    element.getBoundingClientRect().width / 2;
+    startRect.left +
+    startRect.width / 2;
 
 
   const startCenterY =
-    element.getBoundingClientRect().top +
-    element.getBoundingClientRect().height / 2;
+    startRect.top +
+    startRect.height / 2;
+
+
+  const startPointerX =
+    event.clientX;
+
+
+  const startPointerY =
+    event.clientY;
+
+
+  /*
+    Minimum size.
+  */
+
+  const minSize = 25;
 
 
   function resize(e) {
 
     const dx =
       e.clientX -
-      startX;
+      startPointerX;
 
     const dy =
       e.clientY -
-      startY;
-
-
-    let newWidth =
-      startingWidth;
-
-    let newHeight =
-      startingHeight;
+      startPointerY;
 
 
     /*
-      RIGHT
+      Determine which dimension
+      the user is primarily changing.
+    */
+
+    let requestedWidth =
+      startWidth;
+
+    let requestedHeight =
+      startHeight;
+
+
+    /*
+      EAST
+      RIGHT EDGE
     */
 
     if (
       direction.includes("e")
     ) {
 
-      newWidth =
-        startingWidth +
-        dx;
+      requestedWidth =
+        startWidth + dx;
 
     }
 
 
     /*
-      LEFT
+      WEST
+      LEFT EDGE
     */
 
     if (
       direction.includes("w")
     ) {
 
-      newWidth =
-        startingWidth -
-        dx;
+      requestedWidth =
+        startWidth - dx;
 
     }
 
 
     /*
-      BOTTOM
+      SOUTH
+      BOTTOM EDGE
     */
 
     if (
       direction.includes("s")
     ) {
 
-      newHeight =
-        startingHeight +
-        dy;
+      requestedHeight =
+        startHeight + dy;
 
     }
 
 
     /*
-      TOP
+      NORTH
+      TOP EDGE
     */
 
     if (
       direction.includes("n")
     ) {
 
-      newHeight =
-        startingHeight -
-        dy;
+      requestedHeight =
+        startHeight - dy;
 
     }
 
 
-    newWidth =
-      Math.max(
-        30,
-        Math.min(
-          700,
-          newWidth
-        )
-      );
+    /*
+      For corners, use the largest
+      meaningful movement so the
+      object scales naturally.
+    */
+
+    if (
+      direction.length === 2
+    ) {
+
+      const widthChange =
+        Math.abs(
+          requestedWidth -
+          startWidth
+        );
+
+      const heightChange =
+        Math.abs(
+          requestedHeight -
+          startHeight
+        );
 
 
-    newHeight =
-      Math.max(
-        30,
-        Math.min(
-          700,
-          newHeight
-        )
-      );
+      if (
+        widthChange >
+        heightChange
+      ) {
+
+        requestedHeight =
+          requestedWidth /
+          aspectRatio;
+
+      } else {
+
+        requestedWidth =
+          requestedHeight *
+          aspectRatio;
+
+      }
+
+    }
 
 
     /*
-      Calculate how much
-      the center needs to move
-      so the grabbed edge stays
-      under the pointer.
+      For horizontal edges,
+      changing width also changes
+      height proportionally.
     */
 
-    let centerShiftX =
-      0;
+    if (
+      direction === "e" ||
+      direction === "w"
+    ) {
 
-    let centerShiftY =
-      0;
+      requestedHeight =
+        requestedWidth /
+        aspectRatio;
+
+    }
+
+
+    /*
+      For vertical edges,
+      changing height also changes
+      width proportionally.
+    */
+
+    if (
+      direction === "n" ||
+      direction === "s"
+    ) {
+
+      requestedWidth =
+        requestedHeight *
+        aspectRatio;
+
+    }
+
+
+    /*
+      Prevent negative/small sizes.
+    */
+
+    if (
+      requestedWidth <
+      minSize
+    ) {
+
+      requestedWidth =
+        minSize;
+
+      requestedHeight =
+        requestedWidth /
+        aspectRatio;
+
+    }
+
+
+    if (
+      requestedHeight <
+      minSize
+    ) {
+
+      requestedHeight =
+        minSize;
+
+      requestedWidth =
+        requestedHeight *
+        aspectRatio;
+
+    }
+
+
+    /*
+      Maximum practical preview size.
+    */
+
+    const maxWidth =
+      previewWindow.clientWidth *
+      1.8;
+
+    const maxHeight =
+      previewWindow.clientHeight *
+      1.8;
+
+
+    if (
+      requestedWidth >
+      maxWidth
+    ) {
+
+      requestedWidth =
+        maxWidth;
+
+      requestedHeight =
+        requestedWidth /
+        aspectRatio;
+
+    }
+
+
+    if (
+      requestedHeight >
+      maxHeight
+    ) {
+
+      requestedHeight =
+        maxHeight;
+
+      requestedWidth =
+        requestedHeight *
+        aspectRatio;
+
+    }
+
+
+    /*
+      Figure out how much the center
+      needs to move.
+
+      This is the important part:
+      the opposite edge stays in place.
+    */
+
+    let centerShiftX = 0;
+    let centerShiftY = 0;
+
+
+    const widthDifference =
+      requestedWidth -
+      startWidth;
+
+
+    const heightDifference =
+      requestedHeight -
+      startHeight;
 
 
     if (
@@ -2482,10 +2936,7 @@ function startResize(
     ) {
 
       centerShiftX =
-        (
-          newWidth -
-          startingWidth
-        ) / 2;
+        widthDifference / 2;
 
     }
 
@@ -2495,10 +2946,7 @@ function startResize(
     ) {
 
       centerShiftX =
-        -(
-          newWidth -
-          startingWidth
-        ) / 2;
+        -widthDifference / 2;
 
     }
 
@@ -2508,10 +2956,7 @@ function startResize(
     ) {
 
       centerShiftY =
-        (
-          newHeight -
-          startingHeight
-        ) / 2;
+        heightDifference / 2;
 
     }
 
@@ -2521,23 +2966,45 @@ function startResize(
     ) {
 
       centerShiftY =
-        -(
-          newHeight -
-          startingHeight
-        ) / 2;
+        -heightDifference / 2;
 
     }
 
 
     /*
-      Convert the center movement
-      into percentages.
+      Update center.
+
+      For rotated objects we use the
+      object's local axes approximately
+      based on its rotation.
     */
+
+    const rotation =
+      Number(
+        object.rotation || 0
+      ) *
+      Math.PI /
+      180;
+
+
+    const rotatedShiftX =
+      centerShiftX *
+      Math.cos(rotation) -
+      centerShiftY *
+      Math.sin(rotation);
+
+
+    const rotatedShiftY =
+      centerShiftX *
+      Math.sin(rotation) +
+      centerShiftY *
+      Math.cos(rotation);
+
 
     object.x =
       object.x +
       (
-        centerShiftX /
+        rotatedShiftX /
         previewWindow.clientWidth
       ) * 100;
 
@@ -2545,26 +3012,49 @@ function startResize(
     object.y =
       object.y +
       (
-        centerShiftY /
+        rotatedShiftY /
         previewWindow.clientHeight
       ) * 100;
 
 
-    object.width =
-      newWidth;
+    /*
+      Save the dimensions.
+    */
+
+    if (
+      object.type === "image"
+    ) {
+
+      object.width =
+        requestedWidth;
+
+      object.height =
+        requestedHeight;
+
+    }
 
 
-    object.height =
-      newHeight;
+    /*
+      Text uses a scale value instead
+      of changing the actual font-size
+      while resizing.
+    */
+
+    if (
+      object.type === "text"
+    ) {
+
+      object.scale =
+        requestedWidth /
+        startWidth;
+
+    }
 
 
-    element.style.width =
-      newWidth + "px";
-
-
-    element.style.height =
-      newHeight + "px";
-
+    /*
+      Update the element immediately
+      without rebuilding all controls.
+    */
 
     element.style.left =
       object.x + "%";
@@ -2572,6 +3062,41 @@ function startResize(
 
     element.style.top =
       object.y + "%";
+
+
+    if (
+      object.type === "image"
+    ) {
+
+      element.style.width =
+        requestedWidth + "px";
+
+      element.style.height =
+        requestedHeight + "px";
+
+    }
+
+
+    if (
+      object.type === "text"
+    ) {
+
+      element.style.width =
+        startWidth + "px";
+
+      element.style.transform =
+        "translate(-50%, -50%) " +
+        "scale(" +
+        (
+          object.scale || 1
+        ) +
+        ") rotate(" +
+        Number(
+          object.rotation || 0
+        ) +
+        "deg)";
+
+    }
 
   }
 
@@ -2588,7 +3113,13 @@ function startResize(
       stop
     );
 
-    drawSelectionControls();
+
+    /*
+      Re-render everything after
+      the resize is finished.
+    */
+
+    renderObjects();
 
   }
 
@@ -2601,7 +3132,8 @@ function startResize(
 
   window.addEventListener(
     "pointerup",
-    stop
+    stop,
+    { once: true }
   );
 
 }
@@ -2661,7 +3193,8 @@ function deleteObject(id) {
 
 function renderObjectList() {
 
-  objectList.innerHTML = "";
+  objectList.innerHTML =
+    "";
 
 
   const objects =
@@ -2694,7 +3227,9 @@ function renderObjectList() {
     (object, index) => {
 
       const item =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
 
       item.className =
@@ -2756,27 +3291,82 @@ function renderObjectList() {
    SAVE
 ========================================================= */
 
-document.getElementById("saveDesign")
-.addEventListener(
-  "click",
-  function() {
+document
+  .getElementById("saveDesign")
+  .addEventListener(
+    "click",
+    function() {
 
-    console.log(
-      "PIXEL DESIGN:",
-      designObjects
-    );
+      /*
+        Only permanent objects are
+        saved. Live text that has not
+        been added is not saved.
+      */
+
+      console.log(
+        "PIXEL DESIGN:",
+        {
+
+          pixels:
+            selectedPixels,
+
+          backgroundColor:
+            backgroundColor.value,
+
+          objects:
+            designObjects
+
+        }
+      );
 
 
-    alert(
-      "Your Pixel Design is ready for checkout!"
-    );
+      alert(
+        "Your Pixel Design is ready for checkout!"
+      );
+
+    }
+  );
+
+
+/* =========================================================
+   CLICK EMPTY SPACE TO DESELECT
+========================================================= */
+
+previewWindow.addEventListener(
+  "pointerdown",
+  function(event) {
+
+    /*
+      Only deselect if the actual
+      canvas/background was touched.
+    */
+
+    if (
+      event.target ===
+        previewWindow ||
+      event.target ===
+        pixelCanvas
+    ) {
+
+      selectedObjectId =
+        null;
+
+      editingObjectId =
+        null;
+
+      selectedObjectText.textContent =
+        "Nothing selected.";
+
+      renderObjects();
+
+    }
 
   }
 );
 
 
 /* =========================================================
-   RESIZE WINDOW
+   WINDOW RESIZE
 ========================================================= */
 
 window.addEventListener(
