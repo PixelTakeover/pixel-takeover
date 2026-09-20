@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Pixel Takeover - Design Your Pixels</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -13,162 +12,170 @@
     box-sizing: border-box;
 }
 
-html,
-body {
+html, body {
     margin: 0;
     padding: 0;
     min-height: 100%;
+    background: #08080d;
+    color: white;
     font-family: Arial, sans-serif;
-    background: #08080c;
-    color: #fff;
 }
 
 body {
     padding: 20px;
 }
 
-h1,
-h2,
-h3,
-p {
-    margin-top: 0;
-}
-
-button,
-input,
-select,
-textarea {
-    font: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
 .page {
     width: 100%;
-    max-width: 1250px;
-    margin: 0 auto;
+    max-width: 1200px;
+    margin: auto;
 }
 
 .header {
     text-align: center;
-    margin-bottom: 24px;
+    margin-bottom: 25px;
 }
 
 .header h1 {
-    font-size: clamp(28px, 6vw, 48px);
-    margin-bottom: 8px;
-    letter-spacing: 1px;
+    margin: 0 0 8px;
+    font-size: clamp(30px, 6vw, 48px);
 }
 
 .header p {
-    color: #aaa;
     margin: 0;
+    color: #aaa;
 }
 
 .layout {
     display: grid;
-    grid-template-columns: minmax(280px, 380px) 1fr;
+    grid-template-columns: 350px minmax(0, 1fr);
     gap: 24px;
     align-items: start;
 }
 
 .panel {
-    background: #121219;
-    border: 1px solid #292934;
+    background: #12121a;
+    border: 1px solid #292933;
     border-radius: 16px;
     padding: 20px;
 }
 
 .panel h2 {
-    font-size: 20px;
-    margin-bottom: 18px;
+    margin: 0 0 18px;
+    font-size: 21px;
 }
 
 .field {
-    margin-bottom: 16px;
+    margin-bottom: 17px;
 }
 
 .field label {
     display: block;
+    margin-bottom: 7px;
     font-size: 14px;
     font-weight: bold;
-    margin-bottom: 7px;
     color: #ddd;
 }
 
 input[type="text"],
-input[type="number"],
 textarea,
 select {
     width: 100%;
-    border: 1px solid #363640;
-    border-radius: 9px;
-    background: #09090d;
-    color: #fff;
     padding: 11px 12px;
+    border-radius: 9px;
+    border: 1px solid #393944;
+    background: #09090e;
+    color: white;
     outline: none;
 }
 
 textarea {
-    min-height: 80px;
+    min-height: 85px;
     resize: vertical;
 }
 
 input[type="text"]:focus,
-input[type="number"]:focus,
 textarea:focus,
 select:focus {
     border-color: #7777ff;
 }
 
-.color-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-.color-control {
+.pixel-info {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
-input[type="color"] {
-    width: 52px;
-    height: 40px;
-    padding: 2px;
-    border: 1px solid #444;
-    border-radius: 8px;
-    background: #111;
+.pixel-info > div {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    background: #09090e;
+    border-radius: 10px;
+}
+
+.pixel-info strong {
+    display: block;
+    font-size: 21px;
+}
+
+.pixel-info span {
+    color: #777;
+    font-size: 11px;
+    text-transform: uppercase;
 }
 
 .font-row {
     display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 10px;
+    grid-template-columns: 1fr 55px;
+    gap: 8px;
 }
 
 .bold-button {
-    min-width: 55px;
     border: 1px solid #444;
     border-radius: 9px;
-    background: #1b1b24;
-    color: #fff;
+    background: #20202a;
+    color: white;
     font-weight: bold;
+    font-size: 18px;
 }
 
 .bold-button.active {
-    background: #fff;
-    color: #000;
+    background: white;
+    color: black;
+}
+
+.color-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.color-box {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+input[type="color"] {
+    width: 48px;
+    height: 38px;
+    padding: 2px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: #111;
+}
+
+.color-value {
+    color: #999;
+    font-size: 11px;
 }
 
 .upload-box {
+    padding: 12px;
     border: 1px dashed #555;
     border-radius: 10px;
-    padding: 13px;
-    background: #0b0b10;
+    background: #09090e;
 }
 
 .upload-box input {
@@ -176,48 +183,53 @@ input[type="color"] {
 }
 
 .image-name {
-    color: #999;
-    font-size: 12px;
     margin-top: 7px;
+    color: #888;
+    font-size: 12px;
     word-break: break-word;
 }
 
 .button-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 9px;
+    margin-top: 10px;
 }
 
 .btn {
     border: 0;
-    border-radius: 10px;
-    padding: 13px 15px;
+    border-radius: 9px;
+    padding: 13px 10px;
     font-weight: bold;
 }
 
 .btn-primary {
-    background: #fff;
-    color: #000;
+    background: white;
+    color: black;
 }
 
 .btn-secondary {
-    background: #272733;
-    color: #fff;
+    background: #272731;
+    color: white;
+}
+
+.btn-danger {
+    background: #351919;
+    color: #ff9999;
 }
 
 .btn:hover {
-    filter: brightness(1.1);
+    filter: brightness(1.12);
 }
 
 .status {
+    min-height: 38px;
     margin-top: 14px;
     padding: 10px 12px;
     border-radius: 9px;
-    background: #0b0b10;
-    color: #aaa;
+    background: #09090e;
+    color: #999;
     font-size: 13px;
-    min-height: 38px;
 }
 
 .status.success {
@@ -228,41 +240,13 @@ input[type="color"] {
     color: #ff8585;
 }
 
-.pixel-info {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 16px;
-    padding: 12px;
-    border-radius: 10px;
-    background: #0b0b10;
-}
-
-.pixel-info div {
-    text-align: center;
-    flex: 1;
-}
-
-.pixel-info strong {
-    display: block;
-    font-size: 20px;
-}
-
-.pixel-info span {
-    color: #888;
-    font-size: 11px;
-    text-transform: uppercase;
-}
-
-.preview-panel {
-    min-width: 0;
-}
+/* PREVIEW */
 
 .preview-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
     margin-bottom: 12px;
 }
 
@@ -271,21 +255,20 @@ input[type="color"] {
 }
 
 .preview-title span {
-    color: #888;
+    color: #777;
     font-size: 12px;
-    text-align: right;
 }
 
 #previewWindow {
     position: relative;
     width: 100%;
-    max-width: 700px;
     aspect-ratio: 1 / 1;
-    margin: 0 auto;
+    max-width: 700px;
+    margin: auto;
     overflow: hidden;
-    border-radius: 10px;
     background: #050507;
-    border: 2px solid #292934;
+    border: 2px solid #292933;
+    border-radius: 10px;
     touch-action: none;
     user-select: none;
 }
@@ -299,26 +282,24 @@ input[type="color"] {
     pointer-events: none;
 }
 
-.pixel {
-    box-sizing: border-box;
-}
-
 #designLayer {
     position: absolute;
     inset: 0;
     pointer-events: none;
 }
 
+/* DESIGN OBJECT */
+
 .design-object {
     position: absolute;
     transform-origin: center center;
     pointer-events: auto;
-    user-select: none;
     touch-action: none;
+    user-select: none;
 }
 
 .design-object.selected {
-    outline: 1px dashed rgba(255,255,255,.8);
+    outline: 1px dashed rgba(255,255,255,.85);
 }
 
 .design-object img {
@@ -327,229 +308,229 @@ input[type="color"] {
     height: 100%;
     object-fit: contain;
     pointer-events: none;
-    user-select: none;
 }
 
-.text-object-content {
+.text-content {
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    white-space: pre-wrap;
-    word-break: break-word;
     overflow: hidden;
+    word-break: break-word;
+    white-space: pre-wrap;
     pointer-events: none;
 }
 
 /*
-    Handles are large invisible hit zones.
-    They only show their visual indicator while hovering,
-    touching, or actively resizing.
+    Invisible resize zones.
+    They become visible only while selected/hovered.
 */
-.handle {
+
+.resize-handle {
     position: absolute;
     z-index: 20;
     background: transparent;
     opacity: 0;
 }
 
-.design-object.selected .handle:hover,
-.design-object.selected .handle.active {
+.design-object.selected .resize-handle:hover,
+.design-object.selected .resize-handle.active {
     opacity: 1;
 }
 
-.handle::after {
+.resize-handle::after {
     content: "";
     position: absolute;
     width: 9px;
     height: 9px;
-    border: 2px solid #fff;
-    background: #111;
     border-radius: 50%;
-    box-shadow: 0 0 0 1px #000;
+    border: 2px solid white;
+    background: #111;
 }
 
-/* Edges */
-.handle.e,
-.handle.w {
-    top: 12px;
-    bottom: 12px;
-    width: 26px;
+/* Horizontal */
+
+.resize-handle.e,
+.resize-handle.w {
+    top: 10px;
+    bottom: 10px;
+    width: 30px;
 }
 
-.handle.e {
-    right: -13px;
+.resize-handle.e {
+    right: -15px;
     cursor: ew-resize;
 }
 
-.handle.w {
-    left: -13px;
+.resize-handle.w {
+    left: -15px;
     cursor: ew-resize;
 }
 
-.handle.e::after,
-.handle.w::after {
+.resize-handle.e::after,
+.resize-handle.w::after {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-/* Top/bottom */
-.handle.n,
-.handle.s {
-    left: 12px;
-    right: 12px;
-    height: 26px;
+/* Vertical */
+
+.resize-handle.n,
+.resize-handle.s {
+    left: 10px;
+    right: 10px;
+    height: 30px;
 }
 
-.handle.n {
-    top: -13px;
+.resize-handle.n {
+    top: -15px;
     cursor: ns-resize;
 }
 
-.handle.s {
-    bottom: -13px;
+.resize-handle.s {
+    bottom: -15px;
     cursor: ns-resize;
 }
 
-.handle.n::after,
-.handle.s::after {
+.resize-handle.n::after,
+.resize-handle.s::after {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
 /* Corners */
-.handle.nw,
-.handle.ne,
-.handle.sw,
-.handle.se {
-    width: 30px;
-    height: 30px;
+
+.resize-handle.nw,
+.resize-handle.ne,
+.resize-handle.sw,
+.resize-handle.se {
+    width: 34px;
+    height: 34px;
 }
 
-.handle.nw {
-    left: -15px;
-    top: -15px;
+.resize-handle.nw {
+    left: -17px;
+    top: -17px;
     cursor: nwse-resize;
 }
 
-.handle.ne {
-    right: -15px;
-    top: -15px;
+.resize-handle.ne {
+    right: -17px;
+    top: -17px;
     cursor: nesw-resize;
 }
 
-.handle.sw {
-    left: -15px;
-    bottom: -15px;
+.resize-handle.sw {
+    left: -17px;
+    bottom: -17px;
     cursor: nesw-resize;
 }
 
-.handle.se {
-    right: -15px;
-    bottom: -15px;
+.resize-handle.se {
+    right: -17px;
+    bottom: -17px;
     cursor: nwse-resize;
 }
 
-.handle.nw::after,
-.handle.ne::after,
-.handle.sw::after,
-.handle.se::after {
+.resize-handle.nw::after,
+.resize-handle.ne::after,
+.resize-handle.sw::after,
+.resize-handle.se::after {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-/* Delete */
-.delete-handle {
-    position: absolute;
-    right: -15px;
-    top: -42px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 1px solid #fff;
-    background: #111;
-    color: #fff;
-    font-size: 17px;
-    line-height: 27px;
-    text-align: center;
-    padding: 0;
-    z-index: 30;
-    opacity: 0;
-}
+/* ROTATE */
 
-.design-object.selected .delete-handle {
-    opacity: 1;
-}
-
-/* Rotate */
 .rotate-handle {
     position: absolute;
     left: 50%;
-    top: -48px;
-    width: 30px;
-    height: 30px;
-    margin-left: -15px;
+    top: -50px;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 32px;
+    border: 1px solid white;
     border-radius: 50%;
-    border: 1px solid #fff;
     background: #111;
-    color: #fff;
+    color: white;
     font-size: 17px;
-    line-height: 27px;
+    line-height: 28px;
     text-align: center;
     padding: 0;
-    z-index: 30;
     opacity: 0;
     cursor: grab;
+    z-index: 30;
 }
 
 .design-object.selected .rotate-handle {
     opacity: 1;
 }
 
-.editor-help {
+/* DELETE */
+
+.delete-handle {
+    position: absolute;
+    right: -17px;
+    top: -50px;
+    width: 32px;
+    height: 32px;
+    border: 1px solid white;
+    border-radius: 50%;
+    background: #111;
+    color: white;
+    font-size: 20px;
+    line-height: 27px;
     text-align: center;
-    color: #888;
-    font-size: 12px;
-    margin: 10px 0 20px;
+    padding: 0;
+    opacity: 0;
+    z-index: 30;
 }
 
+.design-object.selected .delete-handle {
+    opacity: 1;
+}
+
+/* OBJECT LIST */
+
 .object-list {
-    margin-top: 20px;
+    margin-top: 22px;
 }
 
 .object-list h3 {
+    margin: 0 0 10px;
     font-size: 15px;
-    color: #ddd;
-    margin-bottom: 10px;
 }
 
 .object-item {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 10px;
-    background: #0b0b10;
-    border: 1px solid #292934;
-    border-radius: 9px;
-    padding: 9px 10px;
+    align-items: center;
+    gap: 8px;
+    padding: 9px;
     margin-bottom: 7px;
+    border-radius: 8px;
+    background: #09090e;
+    border: 1px solid #292933;
+}
+
+.object-item span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .object-item button {
-    background: #20202a;
-    color: #fff;
     border: 0;
-    border-radius: 7px;
+    border-radius: 6px;
     padding: 6px 9px;
-}
-
-.object-item button:hover {
-    background: #33333f;
+    background: #252530;
+    color: white;
 }
 
 .empty-list {
@@ -557,10 +538,14 @@ input[type="color"] {
     font-size: 13px;
 }
 
+.editor-help {
+    text-align: center;
+    color: #777;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
 @media (max-width: 850px) {
-    body {
-        padding: 12px;
-    }
 
     .layout {
         grid-template-columns: 1fr;
@@ -569,20 +554,16 @@ input[type="color"] {
     .preview-panel {
         order: -1;
     }
-
-    #previewWindow {
-        max-width: 100%;
-    }
 }
 
 @media (max-width: 500px) {
-    .panel {
-        padding: 15px;
-        border-radius: 12px;
+
+    body {
+        padding: 12px;
     }
 
-    .button-row {
-        grid-template-columns: 1fr;
+    .panel {
+        padding: 15px;
     }
 
     .color-row {
@@ -590,12 +571,12 @@ input[type="color"] {
     }
 
     .preview-title {
-        align-items: flex-start;
         flex-direction: column;
+        align-items: flex-start;
     }
 
-    .preview-title span {
-        text-align: left;
+    .button-row {
+        grid-template-columns: 1fr;
     }
 }
 </style>
@@ -613,9 +594,11 @@ input[type="color"] {
     <div class="layout">
 
         <!-- CONTROLS -->
+
         <div class="panel">
 
             <div class="pixel-info">
+
                 <div>
                     <strong id="pixelCount">0</strong>
                     <span>Pixels</span>
@@ -625,51 +608,112 @@ input[type="color"] {
                     <strong id="totalAmount">$0</strong>
                     <span>Total</span>
                 </div>
+
             </div>
 
-            <h2>Build Your Design</h2>
+            <h2>Create Your Design</h2>
 
             <div class="field">
-                <label for="designTitle">Design Title</label>
+
+                <label for="designTitle">
+                    Design Title
+                </label>
+
                 <input
                     type="text"
                     id="designTitle"
                     placeholder="Give your design a name"
                     maxlength="100"
                 >
+
             </div>
 
             <div class="field">
-                <label for="designMessage">Message / Text</label>
+
+                <label for="designMessage">
+                    Message / Text
+                </label>
+
                 <textarea
                     id="designMessage"
-                    placeholder="Add your message..."
+                    placeholder="Start typing your message..."
                     maxlength="500"
                 ></textarea>
+
             </div>
 
             <div class="field">
-                <label>Text Style</label>
+
+                <label>Font</label>
 
                 <div class="font-row">
-                    <select id="fontFamily">
-                        <option value="Arial">Arial</option>
-                        <option value="Georgia">Georgia</option>
-                        <option value="Impact">Impact</option>
-                        <option value="Trebuchet MS">Trebuchet MS</option>
-                        <option value="Courier New">Courier New</option>
-                        <option value="Brush Script MT">Brush Script MT</option>
 
-                        <option value="Arial Black">Arial Black</option>
-                        <option value="Verdana">Verdana</option>
-                        <option value="Tahoma">Tahoma</option>
-                        <option value="Times New Roman">Times New Roman</option>
-                        <option value="Lucida Console">Lucida Console</option>
-                        <option value="Comic Sans MS">Comic Sans MS</option>
-                        <option value="Garamond">Garamond</option>
-                        <option value="Palatino Linotype">Palatino Linotype</option>
-                        <option value="Copperplate">Copperplate</option>
-                        <option value="Papyrus">Papyrus</option>
+                    <select id="fontFamily">
+
+                        <option value="Arial">
+                            Arial
+                        </option>
+
+                        <option value="Georgia">
+                            Georgia
+                        </option>
+
+                        <option value="Impact">
+                            Impact
+                        </option>
+
+                        <option value="Trebuchet MS">
+                            Trebuchet MS
+                        </option>
+
+                        <option value="Courier New">
+                            Courier New
+                        </option>
+
+                        <option value="Brush Script MT">
+                            Brush Script MT
+                        </option>
+
+                        <option value="Arial Black">
+                            Arial Black
+                        </option>
+
+                        <option value="Verdana">
+                            Verdana
+                        </option>
+
+                        <option value="Tahoma">
+                            Tahoma
+                        </option>
+
+                        <option value="Times New Roman">
+                            Times New Roman
+                        </option>
+
+                        <option value="Lucida Console">
+                            Lucida Console
+                        </option>
+
+                        <option value="Comic Sans MS">
+                            Comic Sans MS
+                        </option>
+
+                        <option value="Garamond">
+                            Garamond
+                        </option>
+
+                        <option value="Palatino Linotype">
+                            Palatino Linotype
+                        </option>
+
+                        <option value="Copperplate">
+                            Copperplate
+                        </option>
+
+                        <option value="Papyrus">
+                            Papyrus
+                        </option>
+
                     </select>
 
                     <button
@@ -677,11 +721,16 @@ input[type="color"] {
                         id="boldButton"
                         class="bold-button"
                     >B</button>
+
                 </div>
+
             </div>
 
             <div class="field">
-                <label for="messageSize">Text Size</label>
+
+                <label for="messageSize">
+                    Text Size
+                </label>
 
                 <input
                     type="range"
@@ -692,47 +741,77 @@ input[type="color"] {
                     style="width:100%;"
                 >
 
-                <div style="display:flex;justify-content:space-between;color:#777;font-size:11px;">
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    color:#777;
+                    font-size:11px;
+                ">
                     <span>Small</span>
                     <span id="messageSizeValue">40</span>
                     <span>Large</span>
                 </div>
+
             </div>
 
             <div class="field color-row">
 
                 <div>
-                    <label for="backgroundColor">Pixel Color</label>
 
-                    <div class="color-control">
+                    <label for="backgroundColor">
+                        Pixel Color
+                    </label>
+
+                    <div class="color-box">
+
                         <input
                             type="color"
                             id="backgroundColor"
                             value="#ffffff"
                         >
-                        <span id="backgroundColorValue">#ffffff</span>
+
+                        <span
+                            id="backgroundColorValue"
+                            class="color-value"
+                        >#ffffff</span>
+
                     </div>
+
                 </div>
 
                 <div>
-                    <label for="messageColor">Text Color</label>
 
-                    <div class="color-control">
+                    <label for="messageColor">
+                        Text Color
+                    </label>
+
+                    <div class="color-box">
+
                         <input
                             type="color"
                             id="messageColor"
                             value="#000000"
                         >
-                        <span id="messageColorValue">#000000</span>
+
+                        <span
+                            id="messageColorValue"
+                            class="color-value"
+                        >#000000</span>
+
                     </div>
+
                 </div>
 
             </div>
 
             <div class="field">
-                <label for="designImage">Upload Image</label>
+
+                <label for="designImage">
+                    Upload Image
+                </label>
 
                 <div class="upload-box">
+
                     <input
                         type="file"
                         id="designImage"
@@ -742,64 +821,90 @@ input[type="color"] {
                     <div
                         id="imageName"
                         class="image-name"
-                    >No image selected</div>
+                    >
+                        No image selected
+                    </div>
+
                 </div>
+
             </div>
 
             <div class="button-row">
+
                 <button
                     type="button"
                     id="addTextButton"
                     class="btn btn-secondary"
-                >Add Text</button>
+                >
+                    Add Text
+                </button>
 
                 <button
                     type="button"
                     id="clearObjectsButton"
-                    class="btn btn-secondary"
-                >Clear Objects</button>
+                    class="btn btn-danger"
+                >
+                    Delete All
+                </button>
+
             </div>
 
             <div class="button-row">
+
                 <button
                     type="button"
                     id="saveButton"
                     class="btn btn-secondary"
-                >Save Design</button>
+                >
+                    Save Design
+                </button>
 
                 <button
                     type="button"
                     id="continueButton"
                     class="btn btn-primary"
-                >Continue</button>
+                >
+                    Continue
+                </button>
+
             </div>
 
             <div
                 id="status"
                 class="status"
-            >Ready.</div>
+            >
+                Ready.
+            </div>
 
             <div class="object-list">
+
                 <h3>Your Design Elements</h3>
 
                 <div id="objectList">
+
                     <div class="empty-list">
-                        No text or images added yet.
+                        Nothing added yet.
                     </div>
+
                 </div>
+
             </div>
 
         </div>
 
-        <!-- PREVIEW -->
+
+        <!-- LIVE PREVIEW -->
+
         <div class="panel preview-panel">
 
             <div class="preview-title">
+
                 <h2>Live Preview</h2>
 
                 <span>
-                    Your selected pixels are shown below.
+                    See your design as you create it.
                 </span>
+
             </div>
 
             <div id="previewWindow">
@@ -811,18 +916,21 @@ input[type="color"] {
             </div>
 
             <div class="editor-help">
-                Drag to move • edges resize • corners resize proportionally • ↻ rotate • × delete
+                Tap an item to select it • drag to move • edges resize • corners resize proportionally • ↻ rotate • × delete
             </div>
 
         </div>
 
     </div>
+
 </div>
 
+
 <script>
-/* =========================================================
+
+/* ============================================================
    SUPABASE
-========================================================= */
+============================================================ */
 
 const SUPABASE_URL =
     "https://bbnvqmeyivteehsdlptw.supabase.co";
@@ -837,9 +945,9 @@ const supabaseClient =
     );
 
 
-/* =========================================================
-   PAGE ELEMENTS
-========================================================= */
+/* ============================================================
+   ELEMENTS
+============================================================ */
 
 const previewWindow =
     document.getElementById("previewWindow");
@@ -850,37 +958,43 @@ const pixelLayer =
 const designLayer =
     document.getElementById("designLayer");
 
-const pixelCountEl =
+const pixelCount =
     document.getElementById("pixelCount");
 
-const totalAmountEl =
+const totalAmount =
     document.getElementById("totalAmount");
 
-const designTitleInput =
+const designTitle =
     document.getElementById("designTitle");
 
-const designMessageInput =
+const designMessage =
     document.getElementById("designMessage");
 
-const fontFamilyInput =
+const fontFamily =
     document.getElementById("fontFamily");
 
-const messageColorInput =
-    document.getElementById("messageColor");
+const boldButton =
+    document.getElementById("boldButton");
 
-const backgroundColorInput =
-    document.getElementById("backgroundColor");
-
-const messageSizeInput =
+const messageSize =
     document.getElementById("messageSize");
 
 const messageSizeValue =
     document.getElementById("messageSizeValue");
 
-const boldButton =
-    document.getElementById("boldButton");
+const messageColor =
+    document.getElementById("messageColor");
 
-const designImageInput =
+const messageColorValue =
+    document.getElementById("messageColorValue");
+
+const backgroundColor =
+    document.getElementById("backgroundColor");
+
+const backgroundColorValue =
+    document.getElementById("backgroundColorValue");
+
+const designImage =
     document.getElementById("designImage");
 
 const imageName =
@@ -898,16 +1012,16 @@ const saveButton =
 const continueButton =
     document.getElementById("continueButton");
 
-const statusEl =
+const statusBox =
     document.getElementById("status");
 
 const objectList =
     document.getElementById("objectList");
 
 
-/* =========================================================
+/* ============================================================
    STATE
-========================================================= */
+============================================================ */
 
 let selectedPixels = [];
 
@@ -917,217 +1031,199 @@ let selectedObjectId = null;
 
 let objectCounter = 0;
 
-let isBold = false;
+let bold = false;
 
-let activeInteraction = null;
+let interaction = null;
 
 
-/* =========================================================
-   HELPERS
-========================================================= */
+/* ============================================================
+   BASIC HELPERS
+============================================================ */
 
 function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-}
-
-
-function setStatus(message, type = "") {
-    statusEl.textContent = message;
-    statusEl.className = "status";
-
-    if (type) {
-        statusEl.classList.add(type);
-    }
-}
-
-
-function getSelectedObject() {
-    return objects.find(
-        object => object.id === selectedObjectId
-    ) || null;
-}
-
-
-function getObjectElement(id) {
-    return designLayer.querySelector(
-        `[data-object-id="${CSS.escape(id)}"]`
+    return Math.max(
+        min,
+        Math.min(max, value)
     );
 }
 
 
-function createObject(type) {
+function setStatus(message, type = "") {
 
-    objectCounter++;
+    statusBox.textContent =
+        message;
 
-    return {
-        id:
-            "object-" +
-            Date.now() +
-            "-" +
-            objectCounter,
+    statusBox.className =
+        "status";
 
-        type: type,
-
-        x: 50,
-        y: 50,
-
-        width: type === "image" ? 45 : 50,
-
-        height: type === "image" ? 45 : 20,
-
-        rotation: 0,
-
-        text: "",
-
-        fontFamily: "Arial",
-
-        color: "#000000",
-
-        fontWeight: "normal",
-
-        fontSize: 40,
-
-        imageData: null
-    };
+    if (type) {
+        statusBox.classList.add(type);
+    }
 }
 
 
-/* =========================================================
-   GET SELECTED PIXELS FROM index.html
-========================================================= */
+function getObject(id) {
+
+    return objects.find(
+        object =>
+            object.id === id
+    );
+}
+
+
+function getElement(id) {
+
+    return designLayer.querySelector(
+        `[data-object-id="${id}"]`
+    );
+}
+
+
+function getSelectedObject() {
+
+    return getObject(
+        selectedObjectId
+    );
+}
+
+
+/* ============================================================
+   LOAD PIXELS
+============================================================ */
 
 function loadSelectedPixels() {
 
     const params =
-        new URLSearchParams(window.location.search);
+        new URLSearchParams(
+            window.location.search
+        );
 
     const encoded =
         params.get("pixels");
 
-    if (!encoded) {
+    if (encoded) {
 
-        selectedPixels = [];
-
-        /*
-         * Also support the sessionStorage method
-         * in case an older index.html is still using it.
-         */
         try {
 
-            const stored =
+            const parsed =
+                JSON.parse(
+                    decodeURIComponent(
+                        encoded
+                    )
+                );
+
+            if (Array.isArray(parsed)) {
+
+                selectedPixels =
+                    parsed.map(pixel => {
+
+                        if (
+                            typeof pixel === "string"
+                        ) {
+
+                            const parts =
+                                pixel.split(",");
+
+                            return {
+                                x:
+                                    Number(parts[0]),
+
+                                y:
+                                    Number(parts[1])
+                            };
+                        }
+
+                        return {
+                            x:
+                                Number(pixel.x),
+
+                            y:
+                                Number(pixel.y)
+                        };
+
+                    }).filter(pixel =>
+                        Number.isFinite(pixel.x) &&
+                        Number.isFinite(pixel.y)
+                    );
+                }
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    } else {
+
+        try {
+
+            const saved =
                 sessionStorage.getItem(
                     "pixelTakeoverSelection"
                 );
 
-            if (stored) {
+            if (saved) {
 
                 const parsed =
-                    JSON.parse(stored);
+                    JSON.parse(saved);
 
                 if (Array.isArray(parsed)) {
-                    selectedPixels = parsed;
+
+                    selectedPixels =
+                        parsed.map(pixel => {
+
+                            if (
+                                typeof pixel === "string"
+                            ) {
+
+                                const parts =
+                                    pixel.split(",");
+
+                                return {
+                                    x:
+                                        Number(parts[0]),
+
+                                    y:
+                                        Number(parts[1])
+                                };
+                            }
+
+                            return {
+                                x:
+                                    Number(pixel.x),
+
+                                y:
+                                    Number(pixel.y)
+                            };
+
+                        }).filter(pixel =>
+                            Number.isFinite(pixel.x) &&
+                            Number.isFinite(pixel.y)
+                        );
                 }
             }
 
         } catch (error) {
 
-            console.log(
-                "No stored pixel selection.",
-                error
-            );
+            console.error(error);
+
         }
-
-        return;
-    }
-
-    try {
-
-        const parsed =
-            JSON.parse(
-                decodeURIComponent(encoded)
-            );
-
-        if (!Array.isArray(parsed)) {
-            selectedPixels = [];
-            return;
-        }
-
-        /*
-         * index.html sends:
-         *
-         * ["0,0","1,0","2,0"]
-         *
-         * Convert those to:
-         *
-         * [{x:0,y:0},{x:1,y:0},{x:2,y:0}]
-         */
-
-        selectedPixels =
-            parsed
-                .map(pixel => {
-
-                    if (
-                        typeof pixel === "string"
-                    ) {
-
-                        const parts =
-                            pixel.split(",");
-
-                        return {
-                            x: Number(parts[0]),
-                            y: Number(parts[1])
-                        };
-                    }
-
-                    if (
-                        pixel &&
-                        typeof pixel === "object"
-                    ) {
-
-                        return {
-                            x: Number(pixel.x),
-                            y: Number(pixel.y)
-                        };
-                    }
-
-                    return null;
-                })
-                .filter(
-                    pixel =>
-                        pixel &&
-                        Number.isFinite(pixel.x) &&
-                        Number.isFinite(pixel.y)
-                );
-
-    } catch (error) {
-
-        console.error(
-            "Could not read selected pixels:",
-            error
-        );
-
-        selectedPixels = [];
-
-        setStatus(
-            "We couldn't read your selected pixels.",
-            "error"
-        );
     }
 }
 
 
-/* =========================================================
+/* ============================================================
    DRAW PIXELS
-========================================================= */
+============================================================ */
 
 function drawPixels() {
 
     pixelLayer.innerHTML = "";
 
-    pixelCountEl.textContent =
+    pixelCount.textContent =
         selectedPixels.length;
 
-    totalAmountEl.textContent =
+    totalAmount.textContent =
         "$" + selectedPixels.length;
 
     if (!selectedPixels.length) {
@@ -1141,11 +1237,17 @@ function drawPixels() {
 
     selectedPixels.forEach(pixel => {
 
-        minX = Math.min(minX, pixel.x);
-        maxX = Math.max(maxX, pixel.x);
+        minX =
+            Math.min(minX, pixel.x);
 
-        minY = Math.min(minY, pixel.y);
-        maxY = Math.max(maxY, pixel.y);
+        maxX =
+            Math.max(maxX, pixel.x);
+
+        minY =
+            Math.min(minY, pixel.y);
+
+        maxY =
+            Math.max(maxY, pixel.y);
     });
 
     const columns =
@@ -1154,27 +1256,21 @@ function drawPixels() {
     const rows =
         maxY - minY + 1;
 
-    /*
-     * Keep the selected area visually proportional
-     * without turning one tiny pixel into a giant poster.
-     */
-    const previewSize =
-        previewWindow.clientWidth;
-
-    let pixelSize =
+    let size =
         Math.floor(
-            (previewSize * 0.72) /
+            previewWindow.clientWidth *
+            .72 /
             Math.max(columns, rows)
         );
 
-    pixelSize =
-        clamp(pixelSize, 12, 22);
+    size =
+        clamp(size, 12, 22);
 
     pixelLayer.style.gridTemplateColumns =
-        `repeat(${columns}, ${pixelSize}px)`;
+        `repeat(${columns}, ${size}px)`;
 
     pixelLayer.style.gridTemplateRows =
-        `repeat(${rows}, ${pixelSize}px)`;
+        `repeat(${rows}, ${size}px)`;
 
     const selectedSet =
         new Set(
@@ -1184,39 +1280,41 @@ function drawPixels() {
             )
         );
 
-    for (let y = minY; y <= maxY; y++) {
+    for (
+        let y = minY;
+        y <= maxY;
+        y++
+    ) {
 
-        for (let x = minX; x <= maxX; x++) {
+        for (
+            let x = minX;
+            x <= maxX;
+            x++
+        ) {
 
             const cell =
                 document.createElement("div");
 
-            cell.className = "pixel";
+            cell.className =
+                "pixel";
 
             cell.style.width =
-                pixelSize + "px";
+                size + "px";
 
             cell.style.height =
-                pixelSize + "px";
+                size + "px";
 
-            const isSelected =
-                selectedSet.has(`${x},${y}`);
-
-            if (isSelected) {
-
-                cell.style.background =
-                    backgroundColorInput.value;
-
-                cell.style.border =
-                    "1px solid rgba(0,0,0,.12)";
-
-            } else {
+            if (
+                selectedSet.has(
+                    `${x},${y}`
+                )
+            ) {
 
                 cell.style.background =
-                    "transparent";
+                    backgroundColor.value;
 
                 cell.style.border =
-                    "1px solid transparent";
+                    "1px solid rgba(0,0,0,.15)";
             }
 
             pixelLayer.appendChild(cell);
@@ -1225,62 +1323,66 @@ function drawPixels() {
 }
 
 
-/* =========================================================
-   OBJECT TRANSFORM
-========================================================= */
+/* ============================================================
+   CREATE OBJECT
+============================================================ */
 
-function applyObjectStyle(object, element) {
+function createObject(type) {
 
-    if (!element) return;
+    objectCounter++;
 
-    element.style.left =
-        object.x + "%";
+    return {
 
-    element.style.top =
-        object.y + "%";
+        id:
+            "object-" +
+            Date.now() +
+            "-" +
+            objectCounter,
 
-    element.style.width =
-        object.width + "%";
+        type,
 
-    element.style.height =
-        object.height + "%";
+        x: 50,
 
-    element.style.transform =
-        `translate(-50%, -50%) rotate(${object.rotation}deg)`;
+        y: 50,
 
-    if (object.type === "text") {
+        width:
+            type === "image"
+                ? 45
+                : 55,
 
-        const content =
-            element.querySelector(
-                ".text-object-content"
-            );
+        height:
+            type === "image"
+                ? 45
+                : 20,
 
-        if (content) {
+        rotation: 0,
 
-            content.textContent =
-                object.text;
+        text: "",
 
-            content.style.fontFamily =
-                object.fontFamily;
+        fontFamily:
+            fontFamily.value,
 
-            content.style.color =
-                object.color;
+        color:
+            messageColor.value,
 
-            content.style.fontWeight =
-                object.fontWeight;
+        fontWeight:
+            bold
+                ? "bold"
+                : "normal",
 
-            content.style.fontSize =
-                object.fontSize + "px";
-        }
-    }
+        fontSize:
+            Number(messageSize.value),
+
+        imageData: null
+    };
 }
 
 
-/* =========================================================
-   ROTATED BOUNDING BOX
-========================================================= */
+/* ============================================================
+   OBJECT BOUNDS
+============================================================ */
 
-function getRotatedBounds(object) {
+function getBounds(object) {
 
     const angle =
         object.rotation *
@@ -1288,33 +1390,32 @@ function getRotatedBounds(object) {
         180;
 
     const cos =
-        Math.abs(Math.cos(angle));
+        Math.abs(
+            Math.cos(angle)
+        );
 
     const sin =
-        Math.abs(Math.sin(angle));
-
-    const halfW =
-        object.width / 2;
-
-    const halfH =
-        object.height / 2;
+        Math.abs(
+            Math.sin(angle)
+        );
 
     return {
+
         halfW:
-            halfW * cos +
-            halfH * sin,
+            object.width / 2 * cos +
+            object.height / 2 * sin,
 
         halfH:
-            halfW * sin +
-            halfH * cos
+            object.width / 2 * sin +
+            object.height / 2 * cos
     };
 }
 
 
-function clampObjectInside(object) {
+function keepInside(object) {
 
     const bounds =
-        getRotatedBounds(object);
+        getBounds(object);
 
     object.x =
         clamp(
@@ -1332,349 +1433,405 @@ function clampObjectInside(object) {
 }
 
 
-/* =========================================================
-   RENDER OBJECTS
-========================================================= */
+/* ============================================================
+   APPLY STYLE
+============================================================ */
 
-/*
- * IMPORTANT:
- *
- * This function is ONLY used when the editor needs
- * to create/update the DOM.
- *
- * We DO NOT call this during pointermove.
- *
- * That was the major bug in the old editor.
- */
+function applyStyle(
+    object,
+    element
+) {
+
+    if (!element) {
+        return;
+    }
+
+    element.style.left =
+        object.x + "%";
+
+    element.style.top =
+        object.y + "%";
+
+    element.style.width =
+        object.width + "%";
+
+    element.style.height =
+        object.height + "%";
+
+    element.style.transform =
+        `translate(-50%, -50%) rotate(${object.rotation}deg)`;
+
+    if (
+        object.type === "text"
+    ) {
+
+        const content =
+            element.querySelector(
+                ".text-content"
+            );
+
+        if (content) {
+
+            content.textContent =
+                object.text;
+
+            content.style.fontFamily =
+                object.fontFamily;
+
+            content.style.color =
+                object.color;
+
+            content.style.fontWeight =
+                object.fontWeight;
+
+            /*
+             * Font size is scaled relative to
+             * the preview so it remains usable
+             * on phones and desktops.
+             */
+            const previewWidth =
+                previewWindow.clientWidth;
+
+            const scaledSize =
+                object.fontSize *
+                previewWidth /
+                700;
+
+            content.style.fontSize =
+                Math.max(
+                    8,
+                    scaledSize
+                ) + "px";
+        }
+    }
+}
+
+
+/* ============================================================
+   CREATE DOM ELEMENT
+============================================================ */
+
+function createElementForObject(
+    object
+) {
+
+    const element =
+        document.createElement("div");
+
+    element.className =
+        "design-object";
+
+    element.dataset.objectId =
+        object.id;
+
+
+    /* MAIN CONTENT */
+
+    if (
+        object.type === "image"
+    ) {
+
+        const image =
+            document.createElement("img");
+
+        image.src =
+            object.imageData;
+
+        image.draggable =
+            false;
+
+        element.appendChild(
+            image
+        );
+
+    } else {
+
+        const content =
+            document.createElement("div");
+
+        content.className =
+            "text-content";
+
+        element.appendChild(
+            content
+        );
+    }
+
+
+    /* DELETE BUTTON */
+
+    const deleteButton =
+        document.createElement("button");
+
+    deleteButton.type =
+        "button";
+
+    deleteButton.className =
+        "delete-handle";
+
+    deleteButton.textContent =
+        "×";
+
+    deleteButton.addEventListener(
+        "pointerdown",
+        event => {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            deleteObject(
+                object.id
+            );
+        }
+    );
+
+    element.appendChild(
+        deleteButton
+    );
+
+
+    /* ROTATE BUTTON */
+
+    const rotateButton =
+        document.createElement("button");
+
+    rotateButton.type =
+        "button";
+
+    rotateButton.className =
+        "rotate-handle";
+
+    rotateButton.textContent =
+        "↻";
+
+    rotateButton.addEventListener(
+        "pointerdown",
+        event => {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            selectObject(
+                object.id
+            );
+
+            startRotate(
+                event,
+                object,
+                element
+            );
+        }
+    );
+
+    element.appendChild(
+        rotateButton
+    );
+
+
+    /* RESIZE HANDLES */
+
+    [
+        "n",
+        "s",
+        "e",
+        "w",
+        "nw",
+        "ne",
+        "sw",
+        "se"
+    ].forEach(direction => {
+
+        const handle =
+            document.createElement("div");
+
+        handle.className =
+            "resize-handle " +
+            direction;
+
+        handle.dataset.direction =
+            direction;
+
+        handle.addEventListener(
+            "pointerdown",
+            event => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                selectObject(
+                    object.id
+                );
+
+                startResize(
+                    event,
+                    object,
+                    element,
+                    direction
+                );
+            }
+        );
+
+        element.appendChild(
+            handle
+        );
+    });
+
+
+    /* MOVE */
+
+    element.addEventListener(
+        "pointerdown",
+        event => {
+
+            if (
+                event.target.closest(
+                    ".resize-handle"
+                ) ||
+                event.target.closest(
+                    ".rotate-handle"
+                ) ||
+                event.target.closest(
+                    ".delete-handle"
+                )
+            ) {
+                return;
+            }
+
+            event.preventDefault();
+
+            selectObject(
+                object.id
+            );
+
+            startMove(
+                event,
+                object,
+                element
+            );
+        }
+    );
+
+
+    return element;
+}
+
+
+/* ============================================================
+   RENDER
+============================================================ */
 
 function renderObjects() {
 
-    const existingIds =
-        new Set(
-            Array.from(
-                designLayer.children
-            ).map(
-                element =>
-                    element.dataset.objectId
-            )
-        );
-
-    const objectIds =
+    /*
+     * Remove DOM objects that no longer exist.
+     */
+    const validIds =
         new Set(
             objects.map(
-                object => object.id
+                object =>
+                    object.id
             )
         );
 
-    /*
-     * Remove objects that no longer exist.
-     */
     Array.from(
         designLayer.children
     ).forEach(element => {
 
         if (
-            !objectIds.has(
+            !validIds.has(
                 element.dataset.objectId
             )
         ) {
+
             element.remove();
         }
     });
 
 
-    /*
-     * Create missing objects.
-     */
     objects.forEach(object => {
 
         let element =
-            getObjectElement(object.id);
+            getElement(
+                object.id
+            );
 
         if (!element) {
 
             element =
-                document.createElement("div");
-
-            element.className =
-                "design-object";
-
-            element.dataset.objectId =
-                object.id;
-
-            /*
-             * Main object interaction
-             */
-            element.addEventListener(
-                "pointerdown",
-                handleObjectPointerDown
-            );
-
-            /*
-             * Delete
-             */
-            const deleteButton =
-                document.createElement("button");
-
-            deleteButton.type =
-                "button";
-
-            deleteButton.className =
-                "delete-handle";
-
-            deleteButton.textContent =
-                "×";
-
-            deleteButton.addEventListener(
-                "pointerdown",
-                function(event) {
-
-                    event.stopPropagation();
-
-                    deleteObject(
-                        object.id
-                    );
-                }
-            );
-
-            element.appendChild(
-                deleteButton
-            );
-
-
-            /*
-             * Rotate
-             */
-            const rotateButton =
-                document.createElement("button");
-
-            rotateButton.type =
-                "button";
-
-            rotateButton.className =
-                "rotate-handle";
-
-            rotateButton.textContent =
-                "↻";
-
-            rotateButton.addEventListener(
-                "pointerdown",
-                function(event) {
-
-                    event.stopPropagation();
-
-                    startRotate(
-                        event,
-                        object,
-                        element
-                    );
-                }
-            );
-
-            element.appendChild(
-                rotateButton
-            );
-
-
-            /*
-             * Resize handles
-             */
-            [
-                "n",
-                "s",
-                "e",
-                "w",
-                "nw",
-                "ne",
-                "sw",
-                "se"
-            ].forEach(direction => {
-
-                const handle =
-                    document.createElement("div");
-
-                handle.className =
-                    "handle " + direction;
-
-                handle.dataset.direction =
-                    direction;
-
-                handle.addEventListener(
-                    "pointerdown",
-                    function(event) {
-
-                        event.stopPropagation();
-
-                        startResize(
-                            event,
-                            object,
-                            element,
-                            direction
-                        );
-                    }
+                createElementForObject(
+                    object
                 );
-
-                element.appendChild(
-                    handle
-                );
-            });
-
-
-            /*
-             * Object content
-             */
-            if (object.type === "image") {
-
-                const image =
-                    document.createElement("img");
-
-                image.src =
-                    object.imageData;
-
-                image.draggable =
-                    false;
-
-                element.appendChild(
-                    image
-                );
-
-            } else {
-
-                const text =
-                    document.createElement("div");
-
-                text.className =
-                    "text-object-content";
-
-                element.appendChild(
-                    text
-                );
-            }
 
             designLayer.appendChild(
                 element
             );
         }
 
-        /*
-         * Update existing DOM without replacing it.
-         */
-        applyObjectStyle(
+        applyStyle(
             object,
             element
         );
 
-        if (
+        element.classList.toggle(
+            "selected",
             object.id ===
             selectedObjectId
-        ) {
-
-            element.classList.add(
-                "selected"
-            );
-
-        } else {
-
-            element.classList.remove(
-                "selected"
-            );
-        }
+        );
     });
 
     updateObjectList();
 }
 
 
-/* =========================================================
-   SELECT OBJECT
-========================================================= */
+/* ============================================================
+   SELECT
+============================================================ */
 
 function selectObject(id) {
 
-    selectedObjectId = id;
-
-    renderObjects();
+    selectedObjectId =
+        id;
 
     const object =
-        getSelectedObject();
+        getObject(id);
 
-    if (!object) return;
+    if (
+        object &&
+        object.type === "text"
+    ) {
 
-    if (object.type === "text") {
-
-        designMessageInput.value =
+        designMessage.value =
             object.text;
 
-        fontFamilyInput.value =
+        fontFamily.value =
             object.fontFamily;
 
-        messageColorInput.value =
+        messageColor.value =
             object.color;
 
-        messageSizeInput.value =
+        messageSize.value =
             object.fontSize;
 
         messageSizeValue.textContent =
             object.fontSize;
 
-        isBold =
-            object.fontWeight === "bold";
+        bold =
+            object.fontWeight ===
+            "bold";
 
         boldButton.classList.toggle(
             "active",
-            isBold
+            bold
         );
     }
 
-    setStatus(
-        object.type === "image"
-            ? "Image selected."
-            : "Text selected."
-    );
+    renderObjects();
 }
 
 
-/* =========================================================
-   OBJECT POINTER DOWN / MOVE
-========================================================= */
-
-function handleObjectPointerDown(event) {
-
-    /*
-     * Do not start moving when a handle was touched.
-     */
-    if (
-        event.target.closest(".handle") ||
-        event.target.closest(".rotate-handle") ||
-        event.target.closest(".delete-handle")
-    ) {
-        return;
-    }
-
-    event.preventDefault();
-
-    const element =
-        event.currentTarget;
-
-    const id =
-        element.dataset.objectId;
-
-    const object =
-        objects.find(
-            item => item.id === id
-        );
-
-    if (!object) return;
-
-    selectObject(id);
-
-    startMove(
-        event,
-        object,
-        element
-    );
-}
-
+/* ============================================================
+   MOVE
+============================================================ */
 
 function startMove(
     event,
@@ -1682,28 +1839,30 @@ function startMove(
     element
 ) {
 
-    event.preventDefault();
-
     const rect =
         previewWindow.getBoundingClientRect();
 
-    const startPointer = {
-        x: event.clientX,
-        y: event.clientY
-    };
+    interaction = {
 
-    const startPosition = {
-        x: object.x,
-        y: object.y
-    };
-
-    activeInteraction = {
         type: "move",
+
         object,
+
         element,
+
         rect,
-        startPointer,
-        startPosition
+
+        pointerX:
+            event.clientX,
+
+        pointerY:
+            event.clientY,
+
+        startX:
+            object.x,
+
+        startY:
+            object.y
     };
 
     try {
@@ -1726,62 +1885,51 @@ function startMove(
 }
 
 
-/* =========================================================
-   MOVE
-========================================================= */
-
-function moveObject(interaction, event) {
-
-    const {
-        object,
-        element,
-        rect,
-        startPointer,
-        startPosition
-    } = interaction;
+function moveObject(
+    data,
+    event
+) {
 
     const dx =
         (
             event.clientX -
-            startPointer.x
+            data.pointerX
         ) /
-        rect.width *
+        data.rect.width *
         100;
 
     const dy =
         (
             event.clientY -
-            startPointer.y
+            data.pointerY
         ) /
-        rect.height *
+        data.rect.height *
         100;
 
-    object.x =
-        startPosition.x + dx;
+    data.object.x =
+        data.startX + dx;
 
-    object.y =
-        startPosition.y + dy;
+    data.object.y =
+        data.startY + dy;
 
-    clampObjectInside(
-        object
+    keepInside(
+        data.object
     );
 
     /*
-     * CRITICAL:
-     *
-     * Only update the current DOM element.
-     * DO NOT rebuild designLayer.
+     * ONLY update this object.
+     * Do not rebuild the editor.
      */
-    applyObjectStyle(
-        object,
-        element
+    applyStyle(
+        data.object,
+        data.element
     );
 }
 
 
-/* =========================================================
+/* ============================================================
    RESIZE
-========================================================= */
+============================================================ */
 
 function startResize(
     event,
@@ -1790,43 +1938,54 @@ function startResize(
     direction
 ) {
 
-    event.preventDefault();
-
     const rect =
         previewWindow.getBoundingClientRect();
 
-    const startPointer = {
-        x: event.clientX,
-        y: event.clientY
-    };
+    interaction = {
 
-    const start = {
-        x: object.x,
-        y: object.y,
-        width: object.width,
-        height: object.height,
-        rotation: object.rotation
-    };
-
-    const aspect =
-        object.width /
-        Math.max(
-            0.01,
-            object.height
-        );
-
-    activeInteraction = {
         type: "resize",
+
         object,
+
         element,
-        rect,
+
         direction,
-        startPointer,
-        start,
-        aspect
+
+        rect,
+
+        pointerX:
+            event.clientX,
+
+        pointerY:
+            event.clientY,
+
+        startX:
+            object.x,
+
+        startY:
+            object.y,
+
+        startWidth:
+            object.width,
+
+        startHeight:
+            object.height,
+
+        startRotation:
+            object.rotation,
+
+        aspect:
+            object.width /
+            Math.max(
+                object.height,
+                0.01
+            )
     };
 
-    event.currentTarget.classList.add(
+    const handle =
+        event.currentTarget;
+
+    handle.classList.add(
         "active"
     );
 
@@ -1850,206 +2009,177 @@ function startResize(
 }
 
 
-/*
- * Convert screen movement into the object's
- * local coordinate system.
- */
-function screenDeltaToLocal(
-    dx,
-    dy,
+function toLocal(
+    x,
+    y,
     rotation
 ) {
 
-    const angle =
-        -rotation *
+    const radians =
+        rotation *
         Math.PI /
         180;
 
     return {
+
         x:
-            dx * Math.cos(angle) -
-            dy * Math.sin(angle),
+            x *
+            Math.cos(radians) +
+            y *
+            Math.sin(radians),
 
         y:
-            dx * Math.sin(angle) +
-            dy * Math.cos(angle)
+            -x *
+            Math.sin(radians) +
+            y *
+            Math.cos(radians)
     };
 }
 
 
 function resizeObject(
-    interaction,
+    data,
     event
 ) {
 
-    const {
-        object,
-        element,
-        rect,
-        direction,
-        startPointer,
-        start,
-        aspect
-    } = interaction;
+    const object =
+        data.object;
 
     const screenDX =
         (
             event.clientX -
-            startPointer.x
+            data.pointerX
         ) /
-        rect.width *
+        data.rect.width *
         100;
 
     const screenDY =
         (
             event.clientY -
-            startPointer.y
+            data.pointerY
         ) /
-        rect.height *
+        data.rect.height *
         100;
 
     const local =
-        screenDeltaToLocal(
+        toLocal(
             screenDX,
             screenDY,
-            start.rotation
+            data.startRotation
         );
 
-    const isCorner =
+    const direction =
+        data.direction;
+
+    const corner =
         direction.length === 2;
 
 
     /*
-     * -----------------------------------------------------
-     * EDGE RESIZE
-     * -----------------------------------------------------
+     * EDGE RESIZING
      *
-     * E/W = width ONLY
-     * N/S = height ONLY
+     * Horizontal edge:
+     * width changes ONLY.
+     *
+     * Vertical edge:
+     * height changes ONLY.
      */
-    if (!isCorner) {
+    if (!corner) {
 
         let width =
-            start.width;
+            data.startWidth;
 
         let height =
-            start.height;
+            data.startHeight;
 
-        let centerLocalX = 0;
-        let centerLocalY = 0;
+        let shiftX = 0;
+        let shiftY = 0;
 
 
-        if (
-            direction === "e"
-        ) {
+        if (direction === "e") {
 
             width =
                 Math.max(
                     5,
-                    start.width +
+                    data.startWidth +
                     local.x
                 );
 
-            /*
-             * Left edge stays fixed.
-             */
-            centerLocalX =
-                (width -
-                start.width) / 2;
+            shiftX =
+                (
+                    width -
+                    data.startWidth
+                ) / 2;
         }
 
 
-        if (
-            direction === "w"
-        ) {
+        if (direction === "w") {
 
             width =
                 Math.max(
                     5,
-                    start.width -
+                    data.startWidth -
                     local.x
                 );
 
-            /*
-             * Right edge stays fixed.
-             */
-            centerLocalX =
-                -(width -
-                start.width) / 2;
+            shiftX =
+                -(
+                    width -
+                    data.startWidth
+                ) / 2;
         }
 
 
-        if (
-            direction === "s"
-        ) {
+        if (direction === "s") {
 
             height =
                 Math.max(
                     5,
-                    start.height +
+                    data.startHeight +
                     local.y
                 );
 
-            /*
-             * Top edge stays fixed.
-             */
-            centerLocalY =
-                (height -
-                start.height) / 2;
+            shiftY =
+                (
+                    height -
+                    data.startHeight
+                ) / 2;
         }
 
 
-        if (
-            direction === "n"
-        ) {
+        if (direction === "n") {
 
             height =
                 Math.max(
                     5,
-                    start.height -
+                    data.startHeight -
                     local.y
                 );
 
-            /*
-             * Bottom edge stays fixed.
-             */
-            centerLocalY =
-                -(height -
-                start.height) / 2;
+            shiftY =
+                -(
+                    height -
+                    data.startHeight
+                ) / 2;
         }
 
 
-        /*
-         * Convert the local center shift
-         * back into screen coordinates.
-         */
-        const screenShift =
-            screenDeltaToLocal(
-                centerLocalX,
-                centerLocalY,
-                -start.rotation
-            );
-
-        /*
-         * The helper above reverses rotation,
-         * so calculate the normal forward transform.
-         */
-        const angle =
-            start.rotation *
+        const radians =
+            data.startRotation *
             Math.PI /
             180;
 
-        const rotatedX =
-            centerLocalX *
-            Math.cos(angle) -
-            centerLocalY *
-            Math.sin(angle);
+        const screenShiftX =
+            shiftX *
+            Math.cos(radians) -
+            shiftY *
+            Math.sin(radians);
 
-        const rotatedY =
-            centerLocalX *
-            Math.sin(angle) +
-            centerLocalY *
-            Math.cos(angle);
+        const screenShiftY =
+            shiftX *
+            Math.sin(radians) +
+            shiftY *
+            Math.cos(radians);
 
         object.width =
             width;
@@ -2058,178 +2188,163 @@ function resizeObject(
             height;
 
         object.x =
-            start.x +
-            rotatedX;
+            data.startX +
+            screenShiftX;
 
         object.y =
-            start.y +
-            rotatedY;
+            data.startY +
+            screenShiftY;
     }
 
 
     /*
-     * -----------------------------------------------------
-     * CORNER RESIZE
-     * -----------------------------------------------------
+     * CORNER RESIZING
      *
-     * Corners ALWAYS preserve the image/text proportions.
+     * Always preserves proportions.
      */
     else {
 
-        const signX =
+        const horizontalSign =
             direction.includes("e")
                 ? 1
                 : -1;
 
-        const signY =
+        const verticalSign =
             direction.includes("s")
                 ? 1
                 : -1;
 
-        /*
-         * Movement in the direction of the
-         * dragged corner.
-         */
-        const projectedX =
-            local.x * signX;
+        const horizontalAmount =
+            local.x *
+            horizontalSign;
 
-        const projectedY =
-            local.y * signY;
+        const verticalAmount =
+            local.y *
+            verticalSign;
 
         /*
-         * Use the larger movement so the corner
-         * follows the finger/mouse naturally.
+         * Choose the movement that most closely
+         * follows the dragged corner.
          */
-        let scaleDelta;
+        let newWidth;
 
         if (
-            Math.abs(projectedX) >=
-            Math.abs(projectedY)
+            Math.abs(horizontalAmount) >
+            Math.abs(verticalAmount)
         ) {
 
-            scaleDelta =
-                projectedX;
+            newWidth =
+                data.startWidth +
+                horizontalAmount;
 
         } else {
 
-            scaleDelta =
-                projectedY *
-                aspect;
+            newWidth =
+                data.startWidth +
+                verticalAmount *
+                data.aspect;
         }
 
-        let width =
-            start.width +
-            scaleDelta;
-
-        width =
+        newWidth =
             Math.max(
                 5,
-                width
+                newWidth
             );
 
-        let height =
-            width /
-            aspect;
+        let newHeight =
+            newWidth /
+            data.aspect;
 
         /*
-         * Keep the object from becoming
-         * impossibly large.
+         * Keep a sensible maximum.
          */
-        const maxDimension = 95;
+        const maximum =
+            92;
 
         if (
-            width > maxDimension ||
-            height > maxDimension
+            newWidth > maximum ||
+            newHeight > maximum
         ) {
 
             const factor =
-                maxDimension /
+                maximum /
                 Math.max(
-                    width,
-                    height
+                    newWidth,
+                    newHeight
                 );
 
-            width *= factor;
-            height *= factor;
+            newWidth *= factor;
+            newHeight *= factor;
         }
 
-        const widthChange =
-            width -
-            start.width;
+        const changeWidth =
+            newWidth -
+            data.startWidth;
 
-        const heightChange =
-            height -
-            start.height;
+        const changeHeight =
+            newHeight -
+            data.startHeight;
 
-        /*
-         * Opposite corner remains anchored.
-         * Move center half the size change
-         * toward the dragged corner.
-         */
-        const localCenterX =
-            widthChange /
+        const localShiftX =
+            changeWidth /
             2 *
-            signX;
+            horizontalSign;
 
-        const localCenterY =
-            heightChange /
+        const localShiftY =
+            changeHeight /
             2 *
-            signY;
+            verticalSign;
 
-        const angle =
-            start.rotation *
+        const radians =
+            data.startRotation *
             Math.PI /
             180;
 
-        const rotatedX =
-            localCenterX *
-            Math.cos(angle) -
-            localCenterY *
-            Math.sin(angle);
+        const screenShiftX =
+            localShiftX *
+            Math.cos(radians) -
+            localShiftY *
+            Math.sin(radians);
 
-        const rotatedY =
-            localCenterX *
-            Math.sin(angle) +
-            localCenterY *
-            Math.cos(angle);
+        const screenShiftY =
+            localShiftX *
+            Math.sin(radians) +
+            localShiftY *
+            Math.cos(radians);
 
         object.width =
-            width;
+            newWidth;
 
         object.height =
-            height;
+            newHeight;
 
         object.x =
-            start.x +
-            rotatedX;
+            data.startX +
+            screenShiftX;
 
         object.y =
-            start.y +
-            rotatedY;
+            data.startY +
+            screenShiftY;
     }
 
 
-    /*
-     * Never let the object leave the preview.
-     */
-    clampObjectInside(
+    keepInside(
         object
     );
 
     /*
-     * CRITICAL:
-     * Update only the existing element.
+     * Update only the existing object.
      */
-    applyObjectStyle(
+    applyStyle(
         object,
-        element
+        data.element
     );
 }
 
 
-/* =========================================================
+/* ============================================================
    ROTATE
-========================================================= */
+============================================================ */
 
 function startRotate(
     event,
@@ -2237,47 +2352,47 @@ function startRotate(
     element
 ) {
 
-    event.preventDefault();
-
     const rect =
         previewWindow.getBoundingClientRect();
 
     const centerX =
         rect.left +
-        (
-            object.x / 100
-        ) *
+        object.x /
+        100 *
         rect.width;
 
     const centerY =
         rect.top +
-        (
-            object.y / 100
-        ) *
+        object.y /
+        100 *
         rect.height;
 
     const startAngle =
         Math.atan2(
-            event.clientY - centerY,
-            event.clientX - centerX
+            event.clientY -
+            centerY,
+
+            event.clientX -
+            centerX
         );
 
-    activeInteraction = {
+    interaction = {
+
         type: "rotate",
+
         object,
+
         element,
+
         centerX,
+
         centerY,
+
         startAngle,
+
         startRotation:
             object.rotation
     };
-
-    try {
-        event.currentTarget.setPointerCapture(
-            event.pointerId
-        );
-    } catch (error) {}
 
     window.addEventListener(
         "pointermove",
@@ -2294,140 +2409,130 @@ function startRotate(
 
 
 function rotateObject(
-    interaction,
+    data,
     event
 ) {
 
-    const {
-        object,
-        element,
-        centerX,
-        centerY,
-        startAngle,
-        startRotation
-    } = interaction;
-
     const currentAngle =
         Math.atan2(
-            event.clientY - centerY,
-            event.clientX - centerX
+            event.clientY -
+            data.centerY,
+
+            event.clientX -
+            data.centerX
         );
 
-    let difference =
+    const difference =
         (
             currentAngle -
-            startAngle
+            data.startAngle
         ) *
         180 /
         Math.PI;
 
-    object.rotation =
-        startRotation +
-        difference;
-
-    /*
-     * Normalize rotation.
-     */
-    object.rotation =
+    data.object.rotation =
         (
-            object.rotation +
+            data.startRotation +
+            difference +
             360
         ) % 360;
 
-    /*
-     * Keep the rotated object inside.
-     */
-    clampObjectInside(
-        object
+    keepInside(
+        data.object
     );
 
-    applyObjectStyle(
-        object,
-        element
+    applyStyle(
+        data.object,
+        data.element
     );
 }
 
 
-/* =========================================================
-   ACTIVE INTERACTION
-========================================================= */
+/* ============================================================
+   INTERACTION MOVE
+============================================================ */
 
 function handleInteractionMove(event) {
 
-    if (!activeInteraction) {
+    if (!interaction) {
         return;
     }
 
     event.preventDefault();
 
     if (
-        activeInteraction.type ===
+        interaction.type ===
         "move"
     ) {
 
         moveObject(
-            activeInteraction,
+            interaction,
             event
         );
-    }
 
-    else if (
-        activeInteraction.type ===
+    } else if (
+        interaction.type ===
         "resize"
     ) {
 
         resizeObject(
-            activeInteraction,
+            interaction,
             event
         );
-    }
 
-    else if (
-        activeInteraction.type ===
+    } else if (
+        interaction.type ===
         "rotate"
     ) {
 
         rotateObject(
-            activeInteraction,
+            interaction,
             event
         );
     }
 }
 
 
+/* ============================================================
+   FINISH INTERACTION
+============================================================ */
+
 function finishInteraction() {
 
-    if (!activeInteraction) {
+    if (!interaction) {
         return;
     }
 
     const element =
-        activeInteraction.element;
+        interaction.element;
 
     if (element) {
 
         element
-            .querySelectorAll(".handle")
+            .querySelectorAll(
+                ".resize-handle"
+            )
             .forEach(handle => {
+
                 handle.classList.remove(
                     "active"
                 );
             });
     }
 
-    activeInteraction = null;
+    interaction =
+        null;
 
     /*
-     * Render ONCE after the interaction.
-     * Never during pointermove.
+     * One final render AFTER dragging ends.
      */
     renderObjects();
 }
 
 
-/* =========================================================
-   DELETE
-========================================================= */
+/* ============================================================
+   DELETE ONE OBJECT
+============================================================ */
 
 function deleteObject(id) {
 
@@ -2441,20 +2546,21 @@ function deleteObject(id) {
         selectedObjectId === id
     ) {
 
-        selectedObjectId = null;
+        selectedObjectId =
+            null;
     }
 
     renderObjects();
 
     setStatus(
-        "Element deleted."
+        "That item was deleted."
     );
 }
 
 
-/* =========================================================
+/* ============================================================
    OBJECT LIST
-========================================================= */
+============================================================ */
 
 function updateObjectList() {
 
@@ -2469,7 +2575,7 @@ function updateObjectList() {
             "empty-list";
 
         empty.textContent =
-            "No text or images added yet.";
+            "Nothing added yet.";
 
         objectList.appendChild(
             empty
@@ -2481,43 +2587,43 @@ function updateObjectList() {
     objects.forEach(
         (object, index) => {
 
-            const item =
+            const row =
                 document.createElement("div");
 
-            item.className =
+            row.className =
                 "object-item";
 
-            const name =
+            const label =
                 document.createElement("span");
 
             if (
                 object.type === "image"
             ) {
 
-                name.textContent =
+                label.textContent =
                     "Image " +
                     (index + 1);
 
             } else {
 
-                name.textContent =
+                label.textContent =
                     object.text ||
                     "Text " +
                     (index + 1);
             }
 
-            const button =
+            const edit =
                 document.createElement("button");
 
-            button.type =
+            edit.type =
                 "button";
 
-            button.textContent =
-                "Edit";
+            edit.textContent =
+                "Select";
 
-            button.addEventListener(
+            edit.addEventListener(
                 "click",
-                function() {
+                () => {
 
                     selectObject(
                         object.id
@@ -2525,66 +2631,181 @@ function updateObjectList() {
                 }
             );
 
-            item.appendChild(
-                name
+            row.appendChild(
+                label
             );
 
-            item.appendChild(
-                button
+            row.appendChild(
+                edit
             );
 
             objectList.appendChild(
-                item
+                row
             );
         }
     );
 }
 
 
-/* =========================================================
-   ADD TEXT
-========================================================= */
+/* ============================================================
+   LIVE TEXT PREVIEW
+============================================================ */
+
+/*
+ * This is the important part:
+ *
+ * As soon as the user types, the text is displayed
+ * in the preview.
+ */
+
+designMessage.addEventListener(
+    "input",
+    function() {
+
+        let object =
+            getSelectedObject();
+
+        /*
+         * If a text object is selected,
+         * update that object.
+         */
+        if (
+            object &&
+            object.type === "text"
+        ) {
+
+            object.text =
+                designMessage.value;
+
+            object.fontFamily =
+                fontFamily.value;
+
+            object.color =
+                messageColor.value;
+
+            object.fontSize =
+                Number(
+                    messageSize.value
+                );
+
+            object.fontWeight =
+                bold
+                    ? "bold"
+                    : "normal";
+
+            applyStyle(
+                object,
+                getElement(
+                    object.id
+                )
+            );
+
+            updateObjectList();
+
+            return;
+        }
+
+        /*
+         * No text object selected:
+         *
+         * Create a live text object automatically
+         * as soon as the user starts typing.
+         */
+        if (
+            designMessage.value.trim()
+        ) {
+
+            object =
+                createObject(
+                    "text"
+                );
+
+            object.text =
+                designMessage.value;
+
+            objects.push(
+                object
+            );
+
+            selectedObjectId =
+                object.id;
+
+            renderObjects();
+
+            setStatus(
+                "Your text is now live in the preview.",
+                "success"
+            );
+        }
+    }
+);
+
+
+/* ============================================================
+   ADD TEXT BUTTON
+============================================================ */
 
 addTextButton.addEventListener(
     "click",
     function() {
 
-        const text =
-            designMessageInput.value.trim();
+        if (
+            !designMessage.value.trim()
+        ) {
 
-        if (!text) {
+            designMessage.focus();
 
             setStatus(
-                "Enter some text first.",
+                "Type something first.",
                 "error"
             );
 
-            designMessageInput.focus();
+            return;
+        }
+
+        /*
+         * If an existing text object is selected,
+         * don't make a duplicate.
+         */
+        const selected =
+            getSelectedObject();
+
+        if (
+            selected &&
+            selected.type === "text"
+        ) {
+
+            selected.text =
+                designMessage.value;
+
+            selected.fontFamily =
+                fontFamily.value;
+
+            selected.color =
+                messageColor.value;
+
+            selected.fontSize =
+                Number(
+                    messageSize.value
+                );
+
+            selected.fontWeight =
+                bold
+                    ? "bold"
+                    : "normal";
+
+            renderObjects();
 
             return;
         }
 
         const object =
-            createObject("text");
+            createObject(
+                "text"
+            );
 
         object.text =
-            text;
-
-        object.fontFamily =
-            fontFamilyInput.value;
-
-        object.color =
-            messageColorInput.value;
-
-        object.fontWeight =
-            isBold
-                ? "bold"
-                : "normal";
-
-        object.fontSize =
-            Number(
-                messageSizeInput.value
-            );
+            designMessage.value;
 
         objects.push(
             object
@@ -2596,17 +2817,173 @@ addTextButton.addEventListener(
         renderObjects();
 
         setStatus(
-            "Text added."
+            "Text added.",
+            "success"
         );
     }
 );
 
 
-/* =========================================================
-   IMAGE UPLOAD
-========================================================= */
+/* ============================================================
+   FONT
+============================================================ */
 
-designImageInput.addEventListener(
+fontFamily.addEventListener(
+    "change",
+    function() {
+
+        const object =
+            getSelectedObject();
+
+        if (
+            !object ||
+            object.type !== "text"
+        ) {
+            return;
+        }
+
+        object.fontFamily =
+            fontFamily.value;
+
+        applyStyle(
+            object,
+            getElement(
+                object.id
+            )
+        );
+    }
+);
+
+
+/* ============================================================
+   BOLD
+============================================================ */
+
+boldButton.addEventListener(
+    "click",
+    function() {
+
+        bold =
+            !bold;
+
+        boldButton.classList.toggle(
+            "active",
+            bold
+        );
+
+        const object =
+            getSelectedObject();
+
+        if (
+            object &&
+            object.type === "text"
+        ) {
+
+            object.fontWeight =
+                bold
+                    ? "bold"
+                    : "normal";
+
+            applyStyle(
+                object,
+                getElement(
+                    object.id
+                )
+            );
+        }
+    }
+);
+
+
+/* ============================================================
+   TEXT SIZE
+============================================================ */
+
+messageSize.addEventListener(
+    "input",
+    function() {
+
+        messageSizeValue.textContent =
+            messageSize.value;
+
+        const object =
+            getSelectedObject();
+
+        if (
+            object &&
+            object.type === "text"
+        ) {
+
+            object.fontSize =
+                Number(
+                    messageSize.value
+                );
+
+            applyStyle(
+                object,
+                getElement(
+                    object.id
+                )
+            );
+        }
+    }
+);
+
+
+/* ============================================================
+   TEXT COLOR
+============================================================ */
+
+messageColor.addEventListener(
+    "input",
+    function() {
+
+        messageColorValue.textContent =
+            messageColor.value;
+
+        const object =
+            getSelectedObject();
+
+        if (
+            object &&
+            object.type === "text"
+        ) {
+
+            object.color =
+                messageColor.value;
+
+            applyStyle(
+                object,
+                getElement(
+                    object.id
+                )
+            );
+        }
+    }
+);
+
+
+/* ============================================================
+   PIXEL COLOR
+============================================================ */
+
+backgroundColor.addEventListener(
+    "input",
+    function() {
+
+        backgroundColorValue.textContent =
+            backgroundColor.value;
+
+        drawPixels();
+    }
+);
+
+
+/* ============================================================
+   IMAGE UPLOAD
+============================================================ */
+
+designImage.addEventListener(
     "change",
     function(event) {
 
@@ -2644,10 +3021,6 @@ designImageInput.addEventListener(
                         object.imageData =
                             imageData;
 
-                        /*
-                         * Preserve the uploaded
-                         * image's natural ratio.
-                         */
                         const ratio =
                             image.width /
                             Math.max(
@@ -2708,7 +3081,7 @@ designImageInput.addEventListener(
                         renderObjects();
 
                         setStatus(
-                            "Image added. Drag it, resize from an edge or corner, or rotate it.",
+                            "Image added. You can move, resize, rotate, or delete it.",
                             "success"
                         );
                     };
@@ -2733,224 +3106,42 @@ designImageInput.addEventListener(
 );
 
 
-/* =========================================================
-   TEXT CONTROLS
-========================================================= */
-
-fontFamilyInput.addEventListener(
-    "change",
-    function() {
-
-        const object =
-            getSelectedObject();
-
-        if (
-            !object ||
-            object.type !== "text"
-        ) {
-            return;
-        }
-
-        object.fontFamily =
-            fontFamilyInput.value;
-
-        const element =
-            getObjectElement(
-                object.id
-            );
-
-        applyObjectStyle(
-            object,
-            element
-        );
-    }
-);
-
-
-messageColorInput.addEventListener(
-    "input",
-    function() {
-
-        document.getElementById(
-            "messageColorValue"
-        ).textContent =
-            messageColorInput.value;
-
-        const object =
-            getSelectedObject();
-
-        if (
-            !object ||
-            object.type !== "text"
-        ) {
-            return;
-        }
-
-        object.color =
-            messageColorInput.value;
-
-        const element =
-            getObjectElement(
-                object.id
-            );
-
-        applyObjectStyle(
-            object,
-            element
-        );
-    }
-);
-
-
-messageSizeInput.addEventListener(
-    "input",
-    function() {
-
-        messageSizeValue.textContent =
-            messageSizeInput.value;
-
-        const object =
-            getSelectedObject();
-
-        if (
-            !object ||
-            object.type !== "text"
-        ) {
-            return;
-        }
-
-        object.fontSize =
-            Number(
-                messageSizeInput.value
-            );
-
-        const element =
-            getObjectElement(
-                object.id
-            );
-
-        applyObjectStyle(
-            object,
-            element
-        );
-    }
-);
-
-
-designMessageInput.addEventListener(
-    "input",
-    function() {
-
-        const object =
-            getSelectedObject();
-
-        if (
-            !object ||
-            object.type !== "text"
-        ) {
-            return;
-        }
-
-        object.text =
-            designMessageInput.value;
-
-        const element =
-            getObjectElement(
-                object.id
-            );
-
-        applyObjectStyle(
-            object,
-            element
-        );
-
-        updateObjectList();
-    }
-);
-
-
-boldButton.addEventListener(
-    "click",
-    function() {
-
-        isBold =
-            !isBold;
-
-        boldButton.classList.toggle(
-            "active",
-            isBold
-        );
-
-        const object =
-            getSelectedObject();
-
-        if (
-            !object ||
-            object.type !== "text"
-        ) {
-            return;
-        }
-
-        object.fontWeight =
-            isBold
-                ? "bold"
-                : "normal";
-
-        const element =
-            getObjectElement(
-                object.id
-            );
-
-        applyObjectStyle(
-            object,
-            element
-        );
-    }
-);
-
-
-/* =========================================================
-   PIXEL COLOR
-========================================================= */
-
-backgroundColorInput.addEventListener(
-    "input",
-    function() {
-
-        document.getElementById(
-            "backgroundColorValue"
-        ).textContent =
-            backgroundColorInput.value;
-
-        drawPixels();
-    }
-);
-
-
-/* =========================================================
-   CLEAR OBJECTS
-========================================================= */
+/* ============================================================
+   DELETE ALL
+============================================================ */
 
 clearObjectsButton.addEventListener(
     "click",
     function() {
 
+        if (!objects.length) {
+            return;
+        }
+
         objects = [];
 
-        selectedObjectId = null;
+        selectedObjectId =
+            null;
 
         renderObjects();
 
+        designMessage.value = "";
+
+        designImage.value = "";
+
+        imageName.textContent =
+            "No image selected";
+
         setStatus(
-            "All design elements cleared."
+            "All design elements deleted."
         );
     }
 );
 
 
-/* =========================================================
-   CLICK PREVIEW EMPTY AREA
-========================================================= */
+/* ============================================================
+   CLICK EMPTY PREVIEW
+============================================================ */
 
 previewWindow.addEventListener(
     "pointerdown",
@@ -2972,32 +3163,32 @@ previewWindow.addEventListener(
 );
 
 
-/* =========================================================
+/* ============================================================
    SAVE DATA
-========================================================= */
+============================================================ */
 
 function buildDesignData() {
 
     return {
 
         title:
-            designTitleInput.value.trim(),
+            designTitle.value.trim(),
 
         message:
-            designMessageInput.value,
+            designMessage.value,
 
         backgroundColor:
-            backgroundColorInput.value,
+            backgroundColor.value,
 
         messageColor:
-            messageColorInput.value,
+            messageColor.value,
 
         fontFamily:
-            fontFamilyInput.value,
+            fontFamily.value,
 
         messageSize:
             Number(
-                messageSizeInput.value
+                messageSize.value
             ),
 
         selectedPixels:
@@ -3018,9 +3209,9 @@ function buildDesignData() {
 }
 
 
-/* =========================================================
+/* ============================================================
    FIND CAMPAIGN
-========================================================= */
+============================================================ */
 
 async function findCampaign() {
 
@@ -3059,7 +3250,6 @@ async function findCampaign() {
         !result.data ||
         !result.data.length
     ) {
-
         throw new Error(
             "Pixel Takeover campaign was not found."
         );
@@ -3069,11 +3259,11 @@ async function findCampaign() {
 }
 
 
-/* =========================================================
-   SAVE DESIGN TO SUPABASE
-========================================================= */
+/* ============================================================
+   SAVE SUPABASE
+============================================================ */
 
-async function saveDesignToSupabase(
+async function saveToSupabase(
     designData
 ) {
 
@@ -3081,6 +3271,7 @@ async function saveDesignToSupabase(
         await findCampaign();
 
     const payload = {
+
         campaign_id:
             campaign.id,
 
@@ -3120,17 +3311,15 @@ async function saveDesignToSupabase(
 }
 
 
-/* =========================================================
+/* ============================================================
    SAVE BUTTON
-========================================================= */
+============================================================ */
 
 saveButton.addEventListener(
     "click",
     async function() {
 
-        if (
-            !selectedPixels.length
-        ) {
+        if (!selectedPixels.length) {
 
             setStatus(
                 "No pixels were selected.",
@@ -3140,22 +3329,25 @@ saveButton.addEventListener(
             return;
         }
 
-        if (
-            !designTitleInput.value.trim()
-        ) {
+        if (!designTitle.value.trim()) {
 
             setStatus(
                 "Please enter a design title.",
                 "error"
             );
 
-            designTitleInput.focus();
+            designTitle.focus();
 
             return;
         }
 
-        const designData =
+        const data =
             buildDesignData();
+
+        localStorage.setItem(
+            "pixelTakeoverDesign",
+            JSON.stringify(data)
+        );
 
         saveButton.disabled =
             true;
@@ -3163,21 +3355,10 @@ saveButton.addEventListener(
         saveButton.textContent =
             "Saving...";
 
-        setStatus(
-            "Saving your design..."
-        );
-
         try {
 
-            await saveDesignToSupabase(
-                designData
-            );
-
-            localStorage.setItem(
-                "pixelTakeoverDesign",
-                JSON.stringify(
-                    designData
-                )
+            await saveToSupabase(
+                data
             );
 
             setStatus(
@@ -3187,24 +3368,10 @@ saveButton.addEventListener(
 
         } catch (error) {
 
-            console.error(
-                "Supabase save error:",
-                error
-            );
-
-            /*
-             * Keep a local backup even if Supabase
-             * rejects the insert.
-             */
-            localStorage.setItem(
-                "pixelTakeoverDesign",
-                JSON.stringify(
-                    designData
-                )
-            );
+            console.error(error);
 
             setStatus(
-                "Supabase did not accept the save, but a backup was saved on this device.",
+                "A backup was saved on this device, but Supabase did not accept the design.",
                 "error"
             );
 
@@ -3220,17 +3387,15 @@ saveButton.addEventListener(
 );
 
 
-/* =========================================================
+/* ============================================================
    CONTINUE
-========================================================= */
+============================================================ */
 
 continueButton.addEventListener(
     "click",
     async function() {
 
-        if (
-            !selectedPixels.length
-        ) {
+        if (!selectedPixels.length) {
 
             setStatus(
                 "No pixels were selected.",
@@ -3240,40 +3405,30 @@ continueButton.addEventListener(
             return;
         }
 
-        if (
-            !designTitleInput.value.trim()
-        ) {
+        if (!designTitle.value.trim()) {
 
             setStatus(
-                "Please enter a design title before continuing.",
+                "Please enter a design title.",
                 "error"
             );
 
-            designTitleInput.focus();
+            designTitle.focus();
 
             return;
         }
 
-        const designData =
+        const data =
             buildDesignData();
 
         localStorage.setItem(
             "pixelTakeoverDesign",
-            JSON.stringify(
-                designData
-            )
+            JSON.stringify(data)
         );
 
-        /*
-         * Save the design now.
-         *
-         * Payment is intentionally NOT being
-         * added yet.
-         */
         try {
 
-            await saveDesignToSupabase(
-                designData
+            await saveToSupabase(
+                data
             );
 
             setStatus(
@@ -3283,12 +3438,10 @@ continueButton.addEventListener(
 
         } catch (error) {
 
-            console.error(
-                error
-            );
+            console.error(error);
 
             setStatus(
-                "Design backed up on this device. Payment setup comes next.",
+                "Design backed up. Payment setup comes next.",
                 "success"
             );
         }
@@ -3296,9 +3449,9 @@ continueButton.addEventListener(
 );
 
 
-/* =========================================================
-   RESIZE PREVIEW
-========================================================= */
+/* ============================================================
+   WINDOW RESIZE
+============================================================ */
 
 window.addEventListener(
     "resize",
@@ -3306,29 +3459,24 @@ window.addEventListener(
 
         drawPixels();
 
-        /*
-         * Reapply positions but don't
-         * create new objects.
-         */
-        objects.forEach(object => {
+        objects.forEach(
+            object => {
 
-            const element =
-                getObjectElement(
-                    object.id
+                applyStyle(
+                    object,
+                    getElement(
+                        object.id
+                    )
                 );
-
-            applyObjectStyle(
-                object,
-                element
-            );
-        });
+            }
+        );
     }
 );
 
 
-/* =========================================================
-   INITIALIZE
-========================================================= */
+/* ============================================================
+   START
+============================================================ */
 
 loadSelectedPixels();
 
@@ -3337,23 +3485,29 @@ drawPixels();
 renderObjects();
 
 messageSizeValue.textContent =
-    messageSizeInput.value;
+    messageSize.value;
 
-document.getElementById(
-    "backgroundColorValue"
-).textContent =
-    backgroundColorInput.value;
+messageColorValue.textContent =
+    messageColor.value;
 
-document.getElementById(
-    "messageColorValue"
-).textContent =
-    messageColorInput.value;
+backgroundColorValue.textContent =
+    backgroundColor.value;
 
-setStatus(
-    selectedPixels.length
-        ? `${selectedPixels.length} pixel${selectedPixels.length === 1 ? "" : "s"} ready to design.`
-        : "No pixels were received."
-);
+if (selectedPixels.length) {
+
+    setStatus(
+        `${selectedPixels.length} pixel${selectedPixels.length === 1 ? "" : "s"} ready to design.`,
+        "success"
+    );
+
+} else {
+
+    setStatus(
+        "No pixels were received.",
+        "error"
+    );
+}
+
 </script>
 
 </body>
