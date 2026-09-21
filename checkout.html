@@ -1,0 +1,643 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Pixel Takeover - Checkout</title>
+
+<script src="https://www.paypal.com/sdk/js?client-id=AWC__Xd9H1_gIXvNqGD73laBH-tXrRPFBWoI3hEL_-obkc8uYbEJeoCdrzwjaztNlj1mpo3-Rxb1IJIy&currency=USD"></script>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #080808;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 25px 20px;
+  text-align: center;
+  border-bottom: 1px solid #333;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 30px;
+  letter-spacing: 2px;
+}
+
+header p {
+  margin: 8px 0 0;
+  color: #aaa;
+}
+
+.container {
+  width: min(1100px, 94%);
+  margin: 30px auto;
+}
+
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.card {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+#preview {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+  background: white;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.preview-pixel {
+  position: absolute;
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 13px 0;
+  border-bottom: 1px solid #292929;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.label {
+  color: #aaa;
+}
+
+.value {
+  font-weight: bold;
+}
+
+.total {
+  font-size: 26px;
+  margin-top: 20px;
+}
+
+#paypal-button-container {
+  margin-top: 25px;
+}
+
+.message {
+  margin-top: 20px;
+  padding: 14px;
+  border-radius: 8px;
+  display: none;
+}
+
+.error {
+  background: #351414;
+  color: #ffb0b0;
+}
+
+.success {
+  background: #14351b;
+  color: #b5ffbf;
+}
+
+.back {
+  display: inline-block;
+  margin-top: 25px;
+  color: white;
+  text-decoration: none;
+  border: 1px solid #555;
+  padding: 10px 16px;
+  border-radius: 8px;
+}
+
+.back:hover {
+  background: #222;
+}
+
+@media (max-width: 800px) {
+  .checkout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>PIXEL TAKEOVER</h1>
+  <p>Complete Your Pixel Claim</p>
+</header>
+
+<div class="container">
+
+  <div class="checkout-grid">
+
+    <div class="card">
+      <h2>Your Design</h2>
+
+      <div id="preview"></div>
+
+      <a href="./design.html" class="back">
+        ← Back to Design
+      </a>
+    </div>
+
+    <div class="card">
+
+      <h2>Order Summary</h2>
+
+      <div class="info-row">
+        <span class="label">Pixels</span>
+        <span class="value" id="pixelCount">0</span>
+      </div>
+
+      <div class="info-row">
+        <span class="label">Price per pixel</span>
+        <span class="value">$1.00</span>
+      </div>
+
+      <div class="info-row total">
+        <span>Total</span>
+        <span id="total">$0.00</span>
+      </div>
+
+      <div id="paypal-button-container"></div>
+
+      <div id="errorMessage" class="message error"></div>
+
+      <div id="successMessage" class="message success">
+        Payment completed successfully!
+        <br><br>
+        Your pixels have been purchased.
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+const SUPABASE_URL =
+  "https://bbnvqmeyivteehsdlptw.supabase.co";
+
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFub24iLCJpYXQiOjE3ODkzOTc5NjgsImV4cCI6MjEwNDk3Mzk2OH0.0K0wWo4jJtMfsqGOhPBi-jbMKJZvIrq01ZcMf3QvXV4";
+
+let checkoutData = null;
+
+
+/* --------------------------------
+   LOAD SAVED DESIGN
+-------------------------------- */
+
+function loadCheckoutData() {
+
+  const saved =
+    localStorage.getItem("pixelTakeoverDesign");
+
+  if (!saved) {
+
+    showError(
+      "Your design information could not be found. Please return to the design page."
+    );
+
+    return false;
+  }
+
+  try {
+
+    checkoutData = JSON.parse(saved);
+
+  } catch (error) {
+
+    showError(
+      "Your design information could not be read."
+    );
+
+    return false;
+  }
+
+  return true;
+}
+
+
+/* --------------------------------
+   GET PIXEL COUNT
+-------------------------------- */
+
+function getPixelCount() {
+
+  if (
+    checkoutData &&
+    Array.isArray(checkoutData.selectedPixels)
+  ) {
+
+    return checkoutData.selectedPixels.length;
+
+  }
+
+  if (
+    checkoutData &&
+    Number.isInteger(checkoutData.pixelCount)
+  ) {
+
+    return checkoutData.pixelCount;
+
+  }
+
+  return 0;
+}
+
+
+/* --------------------------------
+   DISPLAY ORDER INFORMATION
+-------------------------------- */
+
+function displayOrder() {
+
+  const count = getPixelCount();
+
+  document.getElementById(
+    "pixelCount"
+  ).textContent = count;
+
+  document.getElementById(
+    "total"
+  ).textContent =
+    "$" + count.toFixed(2);
+
+}
+
+
+/* --------------------------------
+   DESIGN PREVIEW
+-------------------------------- */
+
+function renderPreview() {
+
+  const preview =
+    document.getElementById("preview");
+
+  preview.innerHTML = "";
+
+  if (!checkoutData) return;
+
+  preview.style.background =
+    checkoutData.backgroundColor || "#ffffff";
+
+  const pixels =
+    checkoutData.selectedPixels || [];
+
+  if (!pixels.length) return;
+
+  let maxX = 0;
+  let maxY = 0;
+
+  pixels.forEach(pixel => {
+
+    let x;
+    let y;
+
+    if (typeof pixel === "string") {
+
+      const parts = pixel.split(",");
+
+      x = Number(parts[0]);
+      y = Number(parts[1]);
+
+    } else {
+
+      x = Number(pixel.x);
+      y = Number(pixel.y);
+
+    }
+
+    if (x > maxX) maxX = x;
+    if (y > maxY) maxY = y;
+
+  });
+
+  const columns = maxX + 1;
+  const rows = maxY + 1;
+
+  const pixelWidth =
+    100 / columns;
+
+  const pixelHeight =
+    100 / rows;
+
+  pixels.forEach(pixel => {
+
+    let x;
+    let y;
+
+    if (typeof pixel === "string") {
+
+      const parts = pixel.split(",");
+
+      x = Number(parts[0]);
+      y = Number(parts[1]);
+
+    } else {
+
+      x = Number(pixel.x);
+      y = Number(pixel.y);
+
+    }
+
+    const square =
+      document.createElement("div");
+
+    square.className =
+      "preview-pixel";
+
+    square.style.left =
+      (x * pixelWidth) + "%";
+
+    square.style.top =
+      (y * pixelHeight) + "%";
+
+    square.style.width =
+      pixelWidth + "%";
+
+    square.style.height =
+      pixelHeight + "%";
+
+    square.style.background =
+      checkoutData.backgroundColor ||
+      "#ffffff";
+
+    preview.appendChild(square);
+
+  });
+
+}
+
+
+/* --------------------------------
+   ERROR MESSAGE
+-------------------------------- */
+
+function showError(message) {
+
+  const box =
+    document.getElementById(
+      "errorMessage"
+    );
+
+  box.textContent = message;
+
+  box.style.display = "block";
+}
+
+
+/* --------------------------------
+   CALL SUPABASE CREATE ORDER
+-------------------------------- */
+
+async function createPayPalOrder() {
+
+  const pixelCount =
+    getPixelCount();
+
+  if (!pixelCount || pixelCount < 1) {
+
+    throw new Error(
+      "No pixels were selected."
+    );
+
+  }
+
+  const response =
+    await fetch(
+      SUPABASE_URL +
+      "/functions/v1/paypal-create-order",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+
+          "apikey":
+            SUPABASE_ANON_KEY
+        },
+
+        body: JSON.stringify({
+          pixelCount: pixelCount
+        })
+      }
+    );
+
+  const data =
+    await response.json();
+
+  if (!response.ok) {
+
+    throw new Error(
+      data.error ||
+      "Unable to create PayPal order."
+    );
+
+  }
+
+  return data.orderID;
+
+}
+
+
+/* --------------------------------
+   CALL SUPABASE CAPTURE ORDER
+-------------------------------- */
+
+async function capturePayPalOrder(orderID) {
+
+  const response =
+    await fetch(
+      SUPABASE_URL +
+      "/functions/v1/paypal-capture-order",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+
+          "apikey":
+            SUPABASE_ANON_KEY
+        },
+
+        body: JSON.stringify({
+          orderID: orderID
+        })
+      }
+    );
+
+  const data =
+    await response.json();
+
+  if (!response.ok || !data.success) {
+
+    throw new Error(
+      data.error ||
+      "Payment could not be completed."
+    );
+
+  }
+
+  return data;
+
+}
+
+
+/* --------------------------------
+   PAYPAL BUTTONS
+-------------------------------- */
+
+function setupPayPal() {
+
+  paypal.Buttons({
+
+    style: {
+      layout: "vertical",
+      shape: "rect",
+      label: "paypal"
+    },
+
+    createOrder: async function() {
+
+      try {
+
+        hideError();
+
+        const orderID =
+          await createPayPalOrder();
+
+        return orderID;
+
+      } catch (error) {
+
+        showError(
+          error.message
+        );
+
+        throw error;
+      }
+
+    },
+
+    onApprove: async function(
+      data
+    ) {
+
+      try {
+
+        hideError();
+
+        await capturePayPalOrder(
+          data.orderID
+        );
+
+        document.getElementById(
+          "successMessage"
+        ).style.display = "block";
+
+        document.getElementById(
+          "paypal-button-container"
+        ).style.display = "none";
+
+        /*
+          For now we stop here.
+
+          The next step will connect the
+          successful payment to Supabase
+          so the purchased pixels become
+          permanently claimed and appear
+          on the live canvas.
+        */
+
+      } catch (error) {
+
+        showError(
+          error.message
+        );
+
+      }
+
+    },
+
+    onCancel: function() {
+
+      showError(
+        "Payment was cancelled. Your pixels have not been purchased."
+      );
+
+    },
+
+    onError: function(error) {
+
+      console.error(error);
+
+      showError(
+        "PayPal encountered an error. Please try again."
+      );
+
+    }
+
+  }).render(
+    "#paypal-button-container"
+  );
+
+}
+
+
+function hideError() {
+
+  document.getElementById(
+    "errorMessage"
+  ).style.display = "none";
+
+}
+
+
+/* --------------------------------
+   START
+-------------------------------- */
+
+if (loadCheckoutData()) {
+
+  displayOrder();
+
+  renderPreview();
+
+  setupPayPal();
+
+}
+
+</script>
+
+</body>
+</html>
