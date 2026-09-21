@@ -3391,62 +3391,39 @@ saveButton.addEventListener(
    CONTINUE
 ============================================================ */
 
-continueButton.addEventListener(
-    "click",
-    async function() {
-
-        if (!selectedPixels.length) {
-
-            setStatus(
-                "No pixels were selected.",
-                "error"
-            );
-
-            return;
-        }
-
-        if (!designTitle.value.trim()) {
-
-            setStatus(
-                "Please enter a design title.",
-                "error"
-            );
-
-            designTitle.focus();
-
-            return;
-        }
-
-        const data =
-            buildDesignData();
-
-        localStorage.setItem(
-            "pixelTakeoverDesign",
-            JSON.stringify(data)
-        );
-
-        try {
-
-            await saveToSupabase(
-                data
-            );
-
-            setStatus(
-                "Design saved. Payment setup comes next.",
-                "success"
-            );
-
-        } catch (error) {
-
-            console.error(error);
-
-            setStatus(
-                "Design backed up. Payment setup comes next.",
-                "success"
-            );
-        }
+continueBtn.addEventListener("click", () => {
+  try {
+    if (!selectedPixels || selectedPixels.length === 0) {
+      alert("Please select at least one pixel first.");
+      return;
     }
-);
+
+    if (!designTitle.value.trim()) {
+      alert("Please enter a design title first.");
+      designTitle.focus();
+      return;
+    }
+
+    // Build the complete design information
+    const designData = buildDesignData();
+
+    // Save the design locally so checkout.html can read it
+    localStorage.setItem(
+      "pixelTakeoverDesign",
+      JSON.stringify(designData)
+    );
+
+    // Go to checkout
+    window.location.href = "./checkout.html";
+
+  } catch (error) {
+    console.error("Continue error:", error);
+
+    alert(
+      "Your design could not be prepared for checkout. Please try again."
+    );
+  }
+});
 
 
 /* ============================================================
