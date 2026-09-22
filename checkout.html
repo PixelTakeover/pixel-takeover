@@ -893,13 +893,11 @@ async function createPayPalOrder() {
       {
         method: "POST",
 
-        headers: {
-          "Content-Type":
-            "application/json",
-
-          "apikey":
-            SUPABASE_ANON_KEY
-        },
+       headers: {
+  "Content-Type": "application/json",
+  "apikey": SUPABASE_ANON_KEY,
+  "Authorization": "Bearer " + SUPABASE_ANON_KEY
+},
 
         body:
           JSON.stringify({
@@ -951,12 +949,10 @@ async function capturePayPalOrder(
         method: "POST",
 
         headers: {
-          "Content-Type":
-            "application/json",
-
-          "apikey":
-            SUPABASE_ANON_KEY
-        },
+  "Content-Type": "application/json",
+  "apikey": SUPABASE_ANON_KEY,
+  "Authorization": "Bearer " + SUPABASE_ANON_KEY
+},
 
         body:
           JSON.stringify({
