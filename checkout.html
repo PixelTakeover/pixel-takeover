@@ -3,11 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Pixel Takeover - Checkout</title>
-
 <script src="https://www.paypal.com/sdk/js?client-id=AWC__Xd9H1_gIXvNqGD73laBH-tXrRPFBWoI3hEL_-obkc8uYbEJeoCdrzwjaztNlj1mpo3-Rxb1IJIy&currency=USD"></script>
-
 <style>
 * {
   box-sizing: border-box;
@@ -65,17 +62,31 @@ header p {
   font-size: 14px;
 }
 
-/* --------------------------------
+/* ==========================================
    DESIGN PREVIEW
--------------------------------- */
+========================================== */
 
 #preview {
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
-  background: white;
+  background: #050507;
   overflow: hidden;
   border-radius: 10px;
+}
+
+/*
+   This layer represents the ORIGINAL
+   pixel coordinate system.
+
+   The selected pixels are placed into
+   this layer using their real x/y values.
+*/
+#pixelCanvas {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* Selected pixel cells */
@@ -86,6 +97,15 @@ header p {
 }
 
 /* Design objects */
+
+#designObjects {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
 
 .preview-object {
   position: absolute;
@@ -112,9 +132,9 @@ header p {
   display: block;
 }
 
-/* --------------------------------
+/* ==========================================
    ORDER INFORMATION
--------------------------------- */
+========================================== */
 
 .info-row {
   display: flex;
@@ -144,9 +164,9 @@ header p {
   margin-top: 25px;
 }
 
-/* --------------------------------
+/* ==========================================
    MESSAGES
--------------------------------- */
+========================================== */
 
 .message {
   margin-top: 20px;
@@ -165,9 +185,9 @@ header p {
   color: #b5ffbf;
 }
 
-/* --------------------------------
+/* ==========================================
    BACK BUTTON
--------------------------------- */
+========================================== */
 
 .back {
   display: inline-block;
@@ -183,9 +203,9 @@ header p {
   background: #222;
 }
 
-/* --------------------------------
+/* ==========================================
    MOBILE
--------------------------------- */
+========================================== */
 
 @media (max-width: 800px) {
 
@@ -196,81 +216,75 @@ header p {
   header h1 {
     font-size: 25px;
   }
-
 }
 </style>
 </head>
-
 <body>
-
 <header>
   <h1>PIXEL TAKEOVER</h1>
   <p>Complete Your Pixel Claim</p>
 </header>
-
 <div class="container">
-
   <div class="checkout-grid">
+<!-- DESIGN PREVIEW -->
 
-    <!-- ============================
-         DESIGN PREVIEW
-    ============================= -->
+<div class="card">
 
-    <div class="card">
+  <h2>Your Design</h2>
 
-      <h2>Your Design</h2>
+  <div id="designTitle" class="design-title"></div>
 
-      <div id="designTitle" class="design-title"></div>
+  <div id="preview">
 
-      <div id="preview"></div>
+    <!-- Exact pixel shape goes here -->
+    <div id="pixelCanvas"></div>
 
-      <a href="./design.html" class="back">
-        ← Back to Design
-      </a>
-
-    </div>
-
-
-    <!-- ============================
-         ORDER SUMMARY
-    ============================= -->
-
-    <div class="card">
-
-      <h2>Order Summary</h2>
-
-      <div class="info-row">
-        <span class="label">Pixels</span>
-        <span class="value" id="pixelCount">0</span>
-      </div>
-
-      <div class="info-row">
-        <span class="label">Price per pixel</span>
-        <span class="value">$1.00</span>
-      </div>
-
-      <div class="info-row total">
-        <span>Total</span>
-        <span id="total">$0.00</span>
-      </div>
-
-      <div id="paypal-button-container"></div>
-
-      <div id="errorMessage" class="message error"></div>
-
-      <div id="successMessage" class="message success">
-        Payment completed successfully!
-        <br><br>
-        Your pixels have been purchased.
-      </div>
-
-    </div>
+    <!-- Text/image objects go here -->
+    <div id="designObjects"></div>
 
   </div>
+
+  <a href="./design.html" class="back">
+    ← Back to Design
+  </a>
 
 </div>
 
 
+<!-- ORDER SUMMARY -->
+
+<div class="card">
+
+  <h2>Order Summary</h2>
+
+  <div class="info-row">
+    <span class="label">Pixels</span>
+    <span class="value" id="pixelCount">0</span>
+  </div>
+
+  <div class="info-row">
+    <span class="label">Price per pixel</span>
+    <span class="value">$1.00</span>
+  </div>
+
+  <div class="info-row total">
+    <span>Total</span>
+    <span id="total">$0.00</span>
+  </div>
+
+  <div id="paypal-button-container"></div>
+
+  <div id="errorMessage" class="message error"></div>
+
+  <div id="successMessage" class="message success">
+    Payment completed successfully!
+    <br><br>
+    Your pixels have been purchased.
+  </div>
+
+</div>
+  </div>
+</div>
 <script>
 
 /* ==========================================
@@ -281,8 +295,7 @@ const SUPABASE_URL =
   "https://bbnvqmeyivteehsdlptw.supabase.co";
 
 const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzIiwicmVmIjoiYW5vbiIsImlhdCI6MTc4OTM5Nzk2OCwiZXhwIjoyMTA0OTczOTY4fQ.0K0wWo4jJtMfsqGOhPBi-jbMKJZvIrq01ZcMf3QvXV4";
-
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6ImJibnZxbWV5aXZ0ZWVobGRwdHciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc4OTM5Nzk2OCwiZXhwIjoyMTA0OTczOTY4fQ.0K0wWo4jJtMfsqGOhPBi-jbMKJZvIrq01ZcMf3QvXV4";
 
 let checkoutData = null;
 
@@ -294,7 +307,9 @@ let checkoutData = null;
 function loadCheckoutData() {
 
   const saved =
-    localStorage.getItem("pixelTakeoverDesign");
+    localStorage.getItem(
+      "pixelTakeoverDesign"
+    );
 
   if (!saved) {
 
@@ -307,7 +322,8 @@ function loadCheckoutData() {
 
   try {
 
-    checkoutData = JSON.parse(saved);
+    checkoutData =
+      JSON.parse(saved);
 
   } catch (error) {
 
@@ -335,20 +351,12 @@ function getPixelCount() {
 
   if (
     checkoutData &&
-    Array.isArray(checkoutData.selectedPixels)
+    Array.isArray(
+      checkoutData.selectedPixels
+    )
   ) {
 
     return checkoutData.selectedPixels.length;
-
-  }
-
-  if (
-    checkoutData &&
-    Number.isInteger(checkoutData.pixelCount)
-  ) {
-
-    return checkoutData.pixelCount;
-
   }
 
   return 0;
@@ -356,7 +364,7 @@ function getPixelCount() {
 
 
 /* ==========================================
-   DISPLAY ORDER
+   ORDER DISPLAY
 ========================================== */
 
 function displayOrder() {
@@ -366,15 +374,15 @@ function displayOrder() {
 
   document.getElementById(
     "pixelCount"
-  ).textContent = count;
+  ).textContent =
+    count;
 
   document.getElementById(
     "total"
   ).textContent =
-    "$" + count.toFixed(2);
+    "$" +
+    count.toFixed(2);
 
-
-  /* Design title */
 
   const titleBox =
     document.getElementById(
@@ -394,14 +402,12 @@ function displayOrder() {
 
     titleBox.textContent =
       "Your Pixel Design";
-
   }
-
 }
 
 
 /* ==========================================
-   GET PIXEL COORDINATES
+   COORDINATES
 ========================================== */
 
 function getPixelCoordinate(pixel) {
@@ -417,48 +423,34 @@ function getPixelCoordinate(pixel) {
       x: Number(parts[0]),
       y: Number(parts[1])
     };
-
   }
 
   return {
     x: Number(pixel.x),
     y: Number(pixel.y)
   };
-
 }
 
 
 /* ==========================================
-   DESIGN PREVIEW
+   RENDER EXACT PIXEL SHAPE
 ========================================== */
 
-function renderPreview() {
+function renderPixelShape() {
 
   const preview =
     document.getElementById(
       "preview"
     );
 
-  preview.innerHTML = "";
+  const canvas =
+    document.getElementById(
+      "pixelCanvas"
+    );
 
 
-  if (!checkoutData) {
-    return;
-  }
+  canvas.innerHTML = "";
 
-
-  /* --------------------------------
-     BACKGROUND
-  -------------------------------- */
-
-  preview.style.background =
-    checkoutData.backgroundColor ||
-    "#ffffff";
-
-
-  /* --------------------------------
-     SELECTED PIXELS
-  -------------------------------- */
 
   const pixels =
     Array.isArray(
@@ -473,43 +465,48 @@ function renderPreview() {
   }
 
 
-  /*
-    Find the actual boundaries of
-    the selected pixels.
-
-    This is important because the
-    user may select pixels that do
-    NOT start at 0,0.
-  */
-
   const coordinates =
-    pixels.map(
-      getPixelCoordinate
-    );
+    pixels
+      .map(getPixelCoordinate)
+      .filter(
+        pixel =>
+          Number.isFinite(pixel.x) &&
+          Number.isFinite(pixel.y)
+      );
 
 
-  let minX =
+  if (!coordinates.length) {
+    return;
+  }
+
+
+  /*
+   * Find the TRUE boundaries of the
+   * selected pixels.
+   */
+
+  const minX =
     Math.min(
       ...coordinates.map(
         p => p.x
       )
     );
 
-  let maxX =
+  const maxX =
     Math.max(
       ...coordinates.map(
         p => p.x
       )
     );
 
-  let minY =
+  const minY =
     Math.min(
       ...coordinates.map(
         p => p.y
       )
     );
 
-  let maxY =
+  const maxY =
     Math.max(
       ...coordinates.map(
         p => p.y
@@ -518,35 +515,43 @@ function renderPreview() {
 
 
   const columns =
-    Math.max(
-      1,
-      maxX - minX + 1
-    );
+    maxX - minX + 1;
 
   const rows =
-    Math.max(
-      1,
-      maxY - minY + 1
+    maxY - minY + 1;
+
+
+  /*
+   * Fit the ORIGINAL selection inside
+   * the checkout preview.
+
+   * The important difference:
+   * We are NOT filling missing cells.
+   */
+
+  const maxPreviewSize =
+    preview.clientWidth * 0.72;
+
+  const cellSize =
+    Math.min(
+      maxPreviewSize / columns,
+      maxPreviewSize / rows
     );
 
 
-  const pixelWidth =
-    100 / columns;
+  canvas.style.width =
+    columns * cellSize + "px";
 
-  const pixelHeight =
-    100 / rows;
+  canvas.style.height =
+    rows * cellSize + "px";
 
 
-  /* --------------------------------
-     DRAW SELECTED PIXELS
-  -------------------------------- */
+  /*
+   * Only create cells for pixels
+   * that actually exist.
+   */
 
-  pixels.forEach(pixel => {
-
-    const position =
-      getPixelCoordinate(
-        pixel
-      );
+  coordinates.forEach(pixel => {
 
     const square =
       document.createElement(
@@ -559,24 +564,24 @@ function renderPreview() {
 
     square.style.left =
       (
-        (position.x - minX) *
-        pixelWidth
-      ) + "%";
+        (pixel.x - minX) *
+        cellSize
+      ) + "px";
 
 
     square.style.top =
       (
-        (position.y - minY) *
-        pixelHeight
-      ) + "%";
+        (pixel.y - minY) *
+        cellSize
+      ) + "px";
 
 
     square.style.width =
-      pixelWidth + "%";
+      cellSize + "px";
 
 
     square.style.height =
-      pixelHeight + "%";
+      cellSize + "px";
 
 
     square.style.background =
@@ -584,16 +589,44 @@ function renderPreview() {
       "#ffffff";
 
 
-    preview.appendChild(
+    canvas.appendChild(
       square
     );
 
   });
 
 
-  /* =================================
-     DRAW DESIGN OBJECTS
-  ================================= */
+  /*
+   * The pixel shape itself now
+   * remains exactly the same.
+   */
+
+  console.log(
+    "Exact pixel selection:",
+    coordinates
+  );
+}
+
+
+/* ==========================================
+   RENDER DESIGN OBJECTS
+========================================== */
+
+function renderDesignObjects() {
+
+  const preview =
+    document.getElementById(
+      "preview"
+    );
+
+  const designObjects =
+    document.getElementById(
+      "designObjects"
+    );
+
+
+  designObjects.innerHTML = "";
+
 
   const objects =
     Array.isArray(
@@ -621,9 +654,10 @@ function renderPreview() {
 
 
     /*
-      Objects on design.html use
-      percentage-based coordinates.
-    */
+     * These coordinates are the same
+     * percentage coordinates used by
+     * design.html.
+     */
 
     wrapper.style.left =
       Number(object.x || 0) +
@@ -646,14 +680,12 @@ function renderPreview() {
 
 
     wrapper.style.transform =
-      "rotate(" +
+      "translate(-50%, -50%) rotate(" +
       Number(object.rotation || 0) +
       "deg)";
 
 
-    /* --------------------------------
-       TEXT OBJECT
-    -------------------------------- */
+    /* TEXT */
 
     if (
       object.type === "text"
@@ -683,7 +715,6 @@ function renderPreview() {
 
       text.style.color =
         object.color ||
-        object.messageColor ||
         checkoutData.messageColor ||
         "#000000";
 
@@ -696,22 +727,10 @@ function renderPreview() {
 
       text.style.fontWeight =
         object.fontWeight ||
-        (
-          object.bold
-            ? "700"
-            : "400"
-        );
+        "normal";
 
 
-      /*
-        The design page stores the
-        font size as a pixel value.
-
-        Convert it to a value that
-        scales with the checkout preview.
-      */
-
-      let fontSize =
+      const originalFontSize =
         Number(
           object.fontSize ||
           checkoutData.messageSize ||
@@ -719,44 +738,26 @@ function renderPreview() {
         );
 
 
-      /*
-        Design preview is square and
-        generally around 500px wide.
-
-        Scale the original font down
-        proportionally for checkout.
-      */
-
       const scale =
         preview.clientWidth /
-        500;
-
-
-      fontSize =
-        Math.max(
-          8,
-          fontSize * scale
-        );
+        700;
 
 
       text.style.fontSize =
-        fontSize + "px";
-
-
-      text.style.lineHeight =
-        "1.1";
+        Math.max(
+          8,
+          originalFontSize * scale
+        ) +
+        "px";
 
 
       wrapper.appendChild(
         text
       );
-
     }
 
 
-    /* --------------------------------
-       IMAGE OBJECT
-    -------------------------------- */
+    /* IMAGE */
 
     else if (
       object.type === "image"
@@ -772,11 +773,6 @@ function renderPreview() {
         "preview-image";
 
 
-      /*
-        The design page stores the
-        uploaded image as imageData.
-      */
-
       image.src =
         object.imageData ||
         object.src ||
@@ -791,34 +787,58 @@ function renderPreview() {
         wrapper.appendChild(
           image
         );
-
       }
-
     }
 
-
-    /*
-      If the object is not a text or
-      image object, don't add anything.
-    */
 
     if (
       wrapper.children.length
     ) {
 
-      preview.appendChild(
+      designObjects.appendChild(
         wrapper
       );
-
     }
 
   });
-
 }
 
 
 /* ==========================================
-   ERROR MESSAGE
+   RENDER EVERYTHING
+========================================== */
+
+function renderPreview() {
+
+  if (!checkoutData) {
+    return;
+  }
+
+
+  const preview =
+    document.getElementById(
+      "preview"
+    );
+
+
+  /*
+   * Keep the checkout background dark.
+   * The actual purchased pixels get
+   * their saved pixel color.
+   */
+
+  preview.style.background =
+    "#050507";
+
+
+  renderPixelShape();
+
+  renderDesignObjects();
+}
+
+
+/* ==========================================
+   ERROR
 ========================================== */
 
 function showError(message) {
@@ -833,7 +853,6 @@ function showError(message) {
 
   box.style.display =
     "block";
-
 }
 
 
@@ -843,12 +862,11 @@ function hideError() {
     "errorMessage"
   ).style.display =
     "none";
-
 }
 
 
 /* ==========================================
-   CREATE PAYPAL ORDER
+   PAYPAL CREATE ORDER
 ========================================== */
 
 async function createPayPalOrder() {
@@ -865,7 +883,6 @@ async function createPayPalOrder() {
     throw new Error(
       "No pixels were selected."
     );
-
   }
 
 
@@ -903,28 +920,23 @@ async function createPayPalOrder() {
       data.error ||
       "Unable to create PayPal order."
     );
-
   }
 
 
-  if (
-    !data.orderID
-  ) {
+  if (!data.orderID) {
 
     throw new Error(
       "PayPal did not return an order ID."
     );
-
   }
 
 
   return data.orderID;
-
 }
 
 
 /* ==========================================
-   CAPTURE PAYPAL ORDER
+   PAYPAL CAPTURE
 ========================================== */
 
 async function capturePayPalOrder(
@@ -968,12 +980,10 @@ async function capturePayPalOrder(
       data.error ||
       "Payment could not be completed."
     );
-
   }
 
 
   return data;
-
 }
 
 
@@ -992,10 +1002,6 @@ function setupPayPal() {
     },
 
 
-    /* --------------------------------
-       CREATE ORDER
-    -------------------------------- */
-
     createOrder:
       async function() {
 
@@ -1003,38 +1009,23 @@ function setupPayPal() {
 
           hideError();
 
+          return await createPayPalOrder();
 
-          const orderID =
-            await createPayPalOrder();
-
-
-          return orderID;
-
-        }
-
-        catch (error) {
+        } catch (error) {
 
           console.error(
             "Create order error:",
             error
           );
 
-
           showError(
             error.message
           );
 
-
           throw error;
-
         }
-
       },
 
-
-    /* --------------------------------
-       PAYMENT APPROVED
-    -------------------------------- */
 
     onApprove:
       async function(data) {
@@ -1042,7 +1033,6 @@ function setupPayPal() {
         try {
 
           hideError();
-
 
           await capturePayPalOrder(
             data.orderID
@@ -1061,28 +1051,19 @@ function setupPayPal() {
             "none";
 
 
-        }
-
-        catch (error) {
+        } catch (error) {
 
           console.error(
             "Capture error:",
             error
           );
 
-
           showError(
             error.message
           );
-
         }
-
       },
 
-
-    /* --------------------------------
-       PAYMENT CANCELLED
-    -------------------------------- */
 
     onCancel:
       function() {
@@ -1090,13 +1071,8 @@ function setupPayPal() {
         showError(
           "Payment was cancelled. Your pixels have not been purchased."
         );
-
       },
 
-
-    /* --------------------------------
-       PAYPAL ERROR
-    -------------------------------- */
 
     onError:
       function(error) {
@@ -1106,22 +1082,19 @@ function setupPayPal() {
           error
         );
 
-
         showError(
           "PayPal encountered an error. Please try again."
         );
-
       }
 
   }).render(
     "#paypal-button-container"
   );
-
 }
 
 
 /* ==========================================
-   START CHECKOUT
+   START
 ========================================== */
 
 if (
@@ -1133,10 +1106,24 @@ if (
   renderPreview();
 
   setupPayPal();
-
 }
 
-</script>
 
+/* ==========================================
+   RESIZE
+========================================== */
+
+window.addEventListener(
+  "resize",
+  function() {
+
+    if (checkoutData) {
+      renderPreview();
+    }
+
+  }
+);
+
+</script>
 </body>
 </html>
