@@ -871,63 +871,62 @@ function hideError() {
 
 async function createPayPalOrder() {
 
-  const pixelCount =
-    getPixelCount();
+  const pixelCount = getPixelCount();
 
-
-  if (
-    !pixelCount ||
-    pixelCount < 1
-  ) {
-
-    throw new Error(
-      "No pixels were selected."
-    );
+  if (!pixelCount || pixelCount < 1) {
+    throw new Error("No pixels were selected.");
   }
 
+  const response = await fetch(
+    SUPABASE_URL + "/functions/v1/paypal-create-order",
+    {
+      method: "POST",
 
-  const response =
-    await fetch(
-      SUPABASE_URL +
-      "/functions/v1/paypal-create-order",
-      {
-        method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY
+      },
 
-       headers: {
-  "Content-Type": "application/json",
-  "apikey": SUPABASE_ANON_KEY,
-  "Authorization": "Bearer " + SUPABASE_ANON_KEY
-},
+      body: JSON.stringify({
+        pixelCount: pixelCount
+      })
+    }
+  );
 
-        body:
-          JSON.stringify({
-            pixelCount:
-              pixelCount
-          })
-      }
-    );
+  const responseText = await response.text();
 
-
-  const data =
-    await response.json();
-
+  console.log("PayPal create-order HTTP status:", response.status);
+  console.log("PayPal create-order response:", responseText);
 
   if (!response.ok) {
-
     throw new Error(
-      data.error ||
-      "Unable to create PayPal order."
+      "Supabase returned HTTP " +
+      response.status +
+      ": " +
+      (responseText || "No response body")
     );
   }
 
+  let data;
+
+  try {
+    data = JSON.parse(responseText);
+  } catch (error) {
+    throw new Error(
+      "Supabase returned something that was not JSON: " +
+      responseText
+    );
+  }
+
+  console.log("PayPal order data:", data);
 
   if (!data.orderID) {
-
     throw new Error(
-      "PayPal did not return an order ID."
+      "No PayPal order ID was returned. Response: " +
+      responseText
     );
   }
-
 
   return data.orderID;
 }
