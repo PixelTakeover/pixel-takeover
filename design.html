@@ -3263,49 +3263,112 @@ async function findCampaign() {
    SAVE SUPABASE
 ============================================================ */
 
-async function saveToSupabase(
-    designData
-) {
+async function saveToSupabase(designData) {
+
+    console.log("========== SUPABASE SAVE START ==========");
+
+    console.log("Design data:", designData);
+
+    // Find the campaign
+    const campaignResult = await supabaseClient
+        .from("campaigns")
+        .select("id, name")
+        .eq("name", "Pixel Takeover")
+        .limit(1);
+
+    console.log("Campaign result:", campaignResult);
+
+    if (campaignResult.error) {
+        console.error(
+            "CAMPAIGN ERROR:",
+            campaignResult.error
+        );
+
+        throw new Error(
+            "Campaign lookup failed: " +
+            campaignResult.error.message
+        );
+    }
+
+    if (
+        !campaignResult.data ||
+        campaignResult.data.length === 0
+    ) {
+        throw new Error(
+            "Pixel Takeover campaign was not found."
+        );
+    }
 
     const campaign =
-        await findCampaign();
+        campaignResult.data[0];
 
+    console.log(
+        "Campaign found:",
+        campaign
+    );
+
+    // Data being inserted
     const payload = {
-
-        campaign_id:
-            campaign.id,
-
-        owner_email:
-            "",
-
-        design_data:
-            designData
+        campaign_id: campaign.id,
+        owner_email: "",
+        design_data: designData
     };
 
-    let result =
-        await supabaseClient
-            .from("pixel_claims")
-            .insert(payload)
-            .select()
-            .single();
+    console.log(
+        "INSERT PAYLOAD:",
+        payload
+    );
 
-    if (
-        result.error
-    ) {
+    // Insert the design
+    const result = await supabaseClient
+        .from("pixel_claims")
+        .insert(payload)
+        .select()
+        .single();
 
-        result =
-            await supabaseClient
-                .from("Pixel_claims")
-                .insert(payload)
-                .select()
-                .single();
+    console.log(
+        "INSERT RESULT:",
+        result
+    );
+
+    if (result.error) {
+
+        console.error(
+            "========== SUPABASE INSERT ERROR =========="
+        );
+
+        console.error(
+            "message:",
+            result.error.message
+        );
+
+        console.error(
+            "details:",
+            result.error.details
+        );
+
+        console.error(
+            "hint:",
+            result.error.hint
+        );
+
+        console.error(
+            "code:",
+            result.error.code
+        );
+
+        throw new Error(
+            `Supabase rejected the design.
+Code: ${result.error.code || "unknown"}
+Message: ${result.error.message}
+Details: ${result.error.details || "none"}
+Hint: ${result.error.hint || "none"}`
+        );
     }
 
-    if (
-        result.error
-    ) {
-        throw result.error;
-    }
+    console.log(
+        "========== SUPABASE SAVE SUCCESS =========="
+    );
 
     return result.data;
 }
@@ -3370,10 +3433,10 @@ saveButton.addEventListener(
 
             console.error(error);
 
-            setStatus(
-                "A backup was saved on this device, but Supabase did not accept the design.",
-                "error"
-            );
+           setStatus(
+    "Supabase save failed: " + error.message,
+    "error"
+);
 
         } finally {
 
